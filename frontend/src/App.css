@@ -1,0 +1,66 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #111;
+}
+
+p {
+  color: white;
+}
+
+.card {
+  background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    ),
+    linear-gradient(180deg, #e70002 0%, #000 50.07%, #fcd201 100%);
+  box-shadow: 0px 4px 4px 0px #000;
+  border-radius: 10px; /* Ensuring corners are rounded */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevents overflow of child elements */
+  color: white; /* Set text color to white for better contrast */
+}
+
+.card img {
+  border-radius: 10px 10px 0 0; /* Rounded corners for the image */
+}
+
+.card .title {
+  color: #ffffff; /* Use a brighter color for the title */
+}
+
+.card .description {
+  color: #fff; /* Keep description text white */
+}
+
+.card .price {
+  color: #ffffff; /* Bright color for price */
+}
+
+.card .discounted-price {
+  text-decoration: line-through; /* Line through for discounted price */
+  color: red; /* Color for the discounted price */
+}
+
+.arrow-button {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.7
+  ); /* Light background for better visibility */
+  color: black; /* Black icon color */
+  border-radius: 50%; /* Round buttons */
+  padding: 10px; /* Padding for better touch targets */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.arrow-button:hover {
+  background-color: rgba(255, 255, 255, 1); /* Change background on hover */
+}
