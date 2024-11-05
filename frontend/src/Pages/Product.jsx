@@ -1,0 +1,174 @@
+import React, { useState } from 'react';
+import { Typography, Card, CardContent, Grid, Select, MenuItem, FormControl, InputLabel, Slider, Box, Checkbox, FormGroup, FormControlLabel } from '@mui/material';
+
+function Product() {
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [priceRange, setPriceRange] = useState([0, 3000]); // Price range slider
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedSpecs, setSelectedSpecs] = useState([]); // Specs filter
+
+  // Updated product list with more popular items
+  const products = [
+    { id: 1, title: 'Apple MacBook Air (M1)', description: '13-inch, 8GB RAM, 256GB SSD', category: 'Laptop', price: 999, brand: 'Apple', specs: { memory: '8GB RAM', display: '13-inch', feature: '' } },
+    { id: 2, title: 'Samsung Galaxy S23 Ultra', description: '256GB, 6.8-inch Display, 108MP Camera', category: 'Smartphones', price: 1200, brand: 'Samsung', specs: { memory: '', display: '6.8-inch', feature: '108MP Camera' } },
+    { id: 3, title: 'Sony PlayStation 5', description: '825GB SSD, 4K Gaming Console', category: 'Games', price: 499, brand: 'Sony', specs: { memory: '', display: '4K', feature: '825GB SSD' } },
+    { id: 4, title: 'Logitech MX Master 3', description: 'Wireless Bluetooth Mouse, Ergonomic Design', category: 'Mouse', price: 99, brand: 'Logitech', specs: { memory: '', display: '', feature: 'Wireless' } },
+    { id: 5, title: 'Dell UltraSharp 27" 4K Monitor', description: 'IPS, 60Hz, USB-C', category: 'Monitor', price: 699, brand: 'Dell', specs: { memory: '', display: '27-inch 4K', feature: 'USB-C' } },
+    { id: 6, title: 'Razer BlackWidow V3', description: 'Mechanical Gaming Keyboard, Green Switches', category: 'Keyboards', price: 149, brand: 'Razer', specs: { memory: '', display: '', feature: 'Mechanical' } },
+    { id: 7, title: 'Apple iPhone 14 Pro', description: '128GB, 6.1-inch Display', category: 'Smartphones', price: 1099, brand: 'Apple', specs: { memory: '', display: '6.1-inch', feature: '' } },
+    { id: 8, title: 'Acer Nitro 5 Gaming Laptop', description: '15.6-inch, 16GB RAM, 512GB SSD', category: 'Laptop', price: 1299, brand: 'Acer', specs: { memory: '16GB RAM', display: '15.6-inch', feature: '512GB SSD' } },
+    { id: 9, title: 'Samsung Odyssey G9', description: '49-inch Curved Gaming Monitor', category: 'Monitor', price: 1799, brand: 'Samsung', specs: { memory: '', display: '49-inch Curved', feature: '' } },
+    { id: 10, title: 'Asus ROG Strix G15', description: 'Gaming Laptop, 32GB RAM, 1TB SSD', category: 'Laptop', price: 1999, brand: 'Asus', specs: { memory: '32GB RAM', display: '15.6-inch', feature: '1TB SSD' } },
+    { id: 11, title: 'Corsair K70 RGB', description: 'Mechanical Gaming Keyboard, Cherry MX Red', category: 'Keyboards', price: 179, brand: 'Corsair', specs: { memory: '', display: '', feature: 'Mechanical' } },
+    { id: 12, title: 'Sony WH-1000XM5', description: 'Wireless Noise Cancelling Headphones', category: 'Headphones', price: 399, brand: 'Sony', specs: { memory: '', display: '', feature: 'Noise Cancelling' } }
+  ];
+
+  const categories = ['All', 'Laptop', 'Monitor', 'Games', 'Mouse', 'Smartphones', 'Keyboards', 'Headphones'];
+
+  const handlePriceChange = (event, newValue) => {
+    setPriceRange(newValue);
+  };
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+    setSelectedSpecs([]); // Reset specs filter when category changes
+  };
+
+  const handleBrandChange = (event) => {
+    const value = event.target.value;
+    if (selectedBrands.includes(value)) {
+      setSelectedBrands(selectedBrands.filter((brand) => brand !== value));
+    } else {
+      setSelectedBrands([...selectedBrands, value]);
+    }
+  };
+
+  const handleSpecsChange = (event) => {
+    const value = event.target.value;
+    if (selectedSpecs.includes(value)) {
+      setSelectedSpecs(selectedSpecs.filter((spec) => spec !== value));
+    } else {
+      setSelectedSpecs([...selectedSpecs, value]);
+    }
+  };
+
+  // Filter products based on price, category, brand, and specs
+  const filteredProducts = products.filter((product) => {
+    const isWithinPriceRange = product.price >= priceRange[0] && product.price <= priceRange[1];
+    const isCategoryMatch = selectedCategory === 'All' || product.category === selectedCategory;
+    const isBrandMatch = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
+    const isSpecsMatch = selectedSpecs.length === 0 || selectedSpecs.every(spec => Object.values(product.specs).includes(spec));
+    return isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch;
+  });
+
+  return (
+    <Box display="flex">
+      {/* Sidebar for Filters */}
+      <Box sx={{ width: '300px', backgroundColor: '#2c2c2c', color: 'white', padding: 2, position: 'sticky', top: 0, height: 'auto', marginBottom: '30px'}}>
+        <Typography variant="h6">Filter</Typography>
+
+        {/* Category Filter */}
+        <FormControl fullWidth variant="outlined" margin="normal" sx={{ color: 'white' }}>
+          <InputLabel sx={{ color: 'white' }}>Category</InputLabel>
+          <Select
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+            label="Category"
+            sx={{ color: 'white', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'white' } }}
+          >
+            {categories.map(category => (
+              <MenuItem key={category} value={category}>
+                {category}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {/* Price Filter */}
+        <Typography>Price</Typography>
+        <Slider
+          value={priceRange}
+          onChange={handlePriceChange}
+          valueLabelDisplay="auto"
+          min={0}
+          max={3000} // Updated max price for high-end products
+          sx={{ color: 'white' }}
+        />
+        <Typography>{`€${priceRange[0]} - €${priceRange[1]}`}</Typography>
+
+        {/* Brand Filter */}
+        <Typography>Brand</Typography>
+        <FormGroup>
+          {['Apple', 'Samsung', 'Sony', 'Logitech', 'Razer', 'Asus', 'Corsair', 'Dell'].map((brand) => (
+            <FormControlLabel
+              key={brand}
+              control={<Checkbox checked={selectedBrands.includes(brand)} onChange={handleBrandChange} value={brand} sx={{ color: 'white' }} />}
+              label={brand}
+            />
+          ))}
+        </FormGroup>
+
+        {/* Memory Filter */}
+        <Typography>Memory</Typography>
+        <FormGroup>
+          {['8GB RAM', '16GB RAM', '32GB RAM'].map((spec) => (
+            <FormControlLabel
+              key={spec}
+              control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
+              label={spec}
+            />
+          ))}
+        </FormGroup>
+
+        {/* Display Filter */}
+        <Typography>Display</Typography>
+        <FormGroup>
+          {['13-inch', '15.6-inch', '27-inch 4K', '49-inch Curved'].map((spec) => (
+            <FormControlLabel
+              key={spec}
+              control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
+              label={spec}
+            />
+          ))}
+        </FormGroup>
+
+        {/* Features Filter */}
+        <Typography>Features</Typography>
+        <FormGroup>
+          {['108MP Camera', 'Mechanical', 'Wireless', 'Noise Cancelling', '512GB SSD', '1TB SSD'].map((spec) => (
+            <FormControlLabel
+              key={spec}
+              control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
+              label={spec}
+            />
+          ))}
+        </FormGroup>
+      </Box>
+
+      {/* Main Content */}
+      <Box sx={{ flexGrow: 1, paddingLeft: 3, width: '300px'}}>
+        {/* Title */}
+        <Typography variant="h4" gutterBottom sx={{ color: 'white' }}>
+          Products Page
+        </Typography>
+
+        {/* Product Grid */}
+        <Grid container spacing={2}>
+          {filteredProducts.map((product) => (
+            <Grid item xs={12} sm={6} md={4} key={product.id}>
+              <Card sx={{ width: 265, height: 200 }}> {/* Adjusted card size to be smaller */}
+                <CardContent>
+                  <Typography variant="h6" sx={{ color: 'black' }}>{product.title}</Typography> {/* Title in black */}
+                  <Typography sx={{ color: 'black' }}>{product.description}</Typography> {/* Description in black */}
+                  <Typography sx={{ color: 'black' }}>{`€${product.price}`}</Typography> {/* Price in black */}
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </Box>
+  );
+}
+
+export default Product;
