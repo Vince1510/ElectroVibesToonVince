@@ -1,13 +1,34 @@
-import React from 'react';
-import { Typography, Card, CardContent, Grid } from '@mui/material';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Typography, Card, CardContent, Grid, Button } from "@mui/material";
 
 function SmartPhone() {
   // Sample smartphone data
   const smartphones = [
-    { id: 1, name: 'SmartPhone A', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 2, name: 'SmartPhone B', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 3, name: 'SmartPhone C', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 4, name: 'SmartPhone D', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
+    {
+      id: 1,
+      name: "SmartPhone A",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
+    {
+      id: 2,
+      name: "SmartPhone B",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
+    {
+      id: 3,
+      name: "SmartPhone C",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
+    {
+      id: 4,
+      name: "SmartPhone D",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
     // Add more smartphones as needed
   ];
 
@@ -24,6 +45,11 @@ function SmartPhone() {
               <CardContent>
                 <Typography variant="h5">{smartphone.name}</Typography>
                 <Typography>{smartphone.description}</Typography>
+                <Link to={`/smartphone/${smartphone.id}`}>
+                  <Button variant="contained" color="primary">
+                    View Details
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </Grid>
