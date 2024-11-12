@@ -1,9 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Box } from "@mui/material";
-import CardSlider from "./CardSlider"; // Import the CardSlider component
+import CardSlider from "./CardSlider";
 
-// Importing icons
 import VideogameAssetIcon from "@mui/icons-material/VideogameAsset";
 import KeyboardIcon from "@mui/icons-material/Keyboard";
 import LaptopMacIcon from "@mui/icons-material/LaptopMac";
@@ -18,14 +17,14 @@ const Home = () => {
         <Button
           color="inherit"
           component={Link}
-          to="/games"
-          startIcon={<VideogameAssetIcon sx={{ color: "white" }} />} // Set icon color to white
+          to="/product?category=Games"
+          startIcon={<VideogameAssetIcon sx={{ color: "white" }} />}
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textTransform: "none",
-            color: "white", // Set text color to white
+            color: "white",
           }}
         >
           Games
@@ -33,14 +32,14 @@ const Home = () => {
         <Button
           color="inherit"
           component={Link}
-          to="/keyboard"
-          startIcon={<KeyboardIcon sx={{ color: "white" }} />} // Set icon color to white
+          to="/product?category=Keyboards"
+          startIcon={<KeyboardIcon sx={{ color: "white" }} />}
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textTransform: "none",
-            color: "white", // Set text color to white
+            color: "white",
           }}
         >
           Keyboard
@@ -48,14 +47,14 @@ const Home = () => {
         <Button
           color="inherit"
           component={Link}
-          to="/laptop"
-          startIcon={<LaptopMacIcon sx={{ color: "white" }} />} // Set icon color to white
+          to="/product?category=Laptop"
+          startIcon={<LaptopMacIcon sx={{ color: "white" }} />}
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textTransform: "none",
-            color: "white", // Set text color to white
+            color: "white",
           }}
         >
           Laptop
@@ -63,14 +62,14 @@ const Home = () => {
         <Button
           color="inherit"
           component={Link}
-          to="/monitor"
-          startIcon={<MonitorIcon sx={{ color: "white" }} />} // Set icon color to white
+          to="/product?category=Monitor"
+          startIcon={<MonitorIcon sx={{ color: "white" }} />}
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textTransform: "none",
-            color: "white", // Set text color to white
+            color: "white",
           }}
         >
           Monitor
@@ -78,14 +77,14 @@ const Home = () => {
         <Button
           color="inherit"
           component={Link}
-          to="/mouse"
-          startIcon={<MouseIcon sx={{ color: "white" }} />} // Set icon color to white
+          to="/product?category=Mouse"
+          startIcon={<MouseIcon sx={{ color: "white" }} />}
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textTransform: "none",
-            color: "white", // Set text color to white
+            color: "white",
           }}
         >
           Mouse
@@ -93,14 +92,14 @@ const Home = () => {
         <Button
           color="inherit"
           component={Link}
-          to="/smartphone"
-          startIcon={<PhoneIphoneIcon sx={{ color: "white" }} />} // Set icon color to white
+          to="/product?category=Smartphones"
+          startIcon={<PhoneIphoneIcon sx={{ color: "white" }} />}
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textTransform: "none",
-            color: "white", // Set text color to white
+            color: "white",
           }}
         >
           SmartPhone

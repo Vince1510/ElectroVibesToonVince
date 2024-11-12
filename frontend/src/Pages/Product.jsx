@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Typography, Card, CardContent, CardMedia, Grid, Select, MenuItem, FormControl, InputLabel, Slider, Box, Checkbox, FormGroup, FormControlLabel } from '@mui/material';
 
 function Product() {
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [priceRange, setPriceRange] = useState([0, 3000]); // Price range slider
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedSpecs, setSelectedSpecs] = useState([]); // Specs filter
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialCategory = queryParams.get('category') || 'All';
 
-  // Updated product list with more popular items and image locations
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [priceRange, setPriceRange] = useState([0, 3000]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedSpecs, setSelectedSpecs] = useState([]);
+
+  useEffect(() => {
+    setSelectedCategory(initialCategory);
+  }, [initialCategory]);
+
   const products = [
     { id: 1, title: 'Apple MacBook Air (M1)', description: '13-inch, 8GB RAM, 256GB SSD', category: 'Laptop', price: 999, brand: 'Apple', specs: { memory: '8GB RAM', display: '13-inch', feature: '' }, image: './assets/images/macbook_air.jpg' },
     { id: 2, title: 'Samsung Galaxy S23 Ultra', description: '256GB, 6.8-inch Display, 108MP Camera', category: 'Smartphones', price: 1200, brand: 'Samsung', specs: { memory: '', display: '6.8-inch', feature: '108MP Camera' }, image: './assets/images/galaxy_s23_ultra.png' },
@@ -31,7 +39,7 @@ function Product() {
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
-    setSelectedSpecs([]); // Reset specs filter when category changes
+    setSelectedSpecs([]);
   };
 
   const handleBrandChange = (event) => {
@@ -52,7 +60,6 @@ function Product() {
     }
   };
 
-  // Filter products based on price, category, brand, and specs
   const filteredProducts = products.filter((product) => {
     const isWithinPriceRange = product.price >= priceRange[0] && product.price <= priceRange[1];
     const isCategoryMatch = selectedCategory === 'All' || product.category === selectedCategory;
@@ -91,13 +98,13 @@ function Product() {
           onChange={handlePriceChange}
           valueLabelDisplay="auto"
           min={0}
-          max={3000} // Updated max price for high-end products
+          max={3000}
           sx={{ color: 'white' }}
         />
         <Typography>{`€${priceRange[0]} - €${priceRange[1]}`}</Typography>
 
         {/* Brand Filter */}
-        <Typography sx={{paddingTop: '20px'}}>Brand</Typography>
+        <Typography sx={{ paddingTop: '20px' }}>Brand</Typography>
         <FormGroup>
           {['Apple', 'Samsung', 'Sony', 'Logitech', 'Razer', 'Asus', 'Corsair', 'Dell'].map((brand) => (
             <FormControlLabel
@@ -109,7 +116,7 @@ function Product() {
         </FormGroup>
 
         {/* Memory Filter */}
-        <Typography sx={{paddingTop: '20px'}}>Memory</Typography>
+        <Typography sx={{ paddingTop: '20px' }}>Memory</Typography>
         <FormGroup>
           {['8GB RAM', '16GB RAM', '32GB RAM'].map((spec) => (
             <FormControlLabel
@@ -121,7 +128,7 @@ function Product() {
         </FormGroup>
 
         {/* Display Filter */}
-        <Typography sx={{paddingTop: '20px'}}>Display</Typography>
+        <Typography sx={{ paddingTop: '20px' }}>Display</Typography>
         <FormGroup>
           {['13-inch', '15.6-inch', '27-inch 4K', '49-inch Curved'].map((spec) => (
             <FormControlLabel
@@ -133,7 +140,7 @@ function Product() {
         </FormGroup>
 
         {/* Features Filter */}
-        <Typography sx={{paddingTop: '20px'}}>Features</Typography>
+        <Typography sx={{ paddingTop: '20px' }}>Features</Typography>
         <FormGroup>
           {['108MP Camera', 'Mechanical', 'Wireless', 'Noise Cancelling', '512GB SSD', '1TB SSD'].map((spec) => (
             <FormControlLabel

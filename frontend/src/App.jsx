@@ -12,12 +12,6 @@ import SearchBar from "./components/SearchBar/SearchBar";
 
 // Import from the category pages
 import Product from './pages/Product'
-import Games from "./Pages/Category/Games/Games";
-import Keyboard from "./Pages/Category/Keyboard/Keyboard";
-import Laptop from "./Pages/Category/Laptop/Laptop";
-import Monitor from "./Pages/Category/Monitor/Monitor";
-import Mouse from "./Pages/Category/Mouse/Mouse";
-import SmartPhone from "./Pages/Category/SmartPhone/SmartPhone";
 import DetailPage from "./Pages/DetailPage/DetailPage"; // Import the DetailPage
 
 function App() {
