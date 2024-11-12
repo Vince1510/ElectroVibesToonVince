@@ -11,6 +11,7 @@ import BreadCrumb from "./components/BreadCrumbs/BreadCrumbs";
 import SearchBar from "./components/SearchBar/SearchBar";
 
 // Import from the category pages
+import Product from './pages/Product'
 import Games from "./Pages/Category/Games/Games";
 import Keyboard from "./Pages/Category/Keyboard/Keyboard";
 import Laptop from "./Pages/Category/Laptop/Laptop";
@@ -56,8 +57,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-
-          {/* Category Pages */}
+          <Route path="/product" element={<Product />} />
           <Route path="/games" element={<Games />} />
           <Route path="/keyboard" element={<Keyboard />} />
           <Route path="/laptop" element={<Laptop />} />
