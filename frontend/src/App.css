@@ -5,13 +5,16 @@
 }
 
 body {
-  background: #111;
+  background: #111; /* Dark background */
+  color: #fff; /* Default text color is white */
+  font-family: "Roboto", sans-serif; /* Apply consistent font */
 }
 
 p {
-  color: white;
+  color: white; /* Ensures paragraph text is white */
 }
 
+/* Card Component */
 .card {
   background: linear-gradient(
       0deg,
@@ -20,47 +23,43 @@ p {
     ),
     linear-gradient(180deg, #e70002 0%, #000 50.07%, #fcd201 100%);
   box-shadow: 0px 4px 4px 0px #000;
-  border-radius: 10px; /* Ensuring corners are rounded */
+  border-radius: 10px; /* Rounded corners */
   display: flex;
   flex-direction: column;
   overflow: hidden; /* Prevents overflow of child elements */
-  color: white; /* Set text color to white for better contrast */
+  color: white; /* Ensure all text inside card is white */
 }
 
 .card img {
-  border-radius: 10px 10px 0 0; /* Rounded corners for the image */
+  border-radius: 10px 10px 0 0; /* Rounded corners for image */
 }
 
 .card .title {
-  color: #ffffff; /* Use a brighter color for the title */
+  color: #ffffff; /* Bright white for title */
 }
 
 .card .description {
-  color: #fff; /* Keep description text white */
+  color: #fff; /* White for description */
 }
 
 .card .price {
-  color: #ffffff; /* Bright color for price */
+  color: #ffffff; /* White for price */
 }
 
 .card .discounted-price {
   text-decoration: line-through; /* Line through for discounted price */
-  color: red; /* Color for the discounted price */
+  color: red; /* Red for discounted price */
 }
 
+/* Arrow Button Styling */
 .arrow-button {
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.7
-  ); /* Light background for better visibility */
+  background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
   color: black; /* Black icon color */
-  border-radius: 50%; /* Round buttons */
+  border-radius: 50%; /* Round button */
   padding: 10px; /* Padding for better touch targets */
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  transition: background-color 0.3s; /* Smooth transition for hover */
 }
 
 .arrow-button:hover {
-  background-color: rgba(255, 255, 255, 1); /* Change background on hover */
+  background-color: rgba(255, 255, 255, 1); /* Fully white on hover */
 }
