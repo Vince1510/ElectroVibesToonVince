@@ -57,13 +57,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/product" element={<Product />} />
-          <Route path="/games" element={<Games />} />
-          <Route path="/keyboard" element={<Keyboard />} />
-          <Route path="/laptop" element={<Laptop />} />
-          <Route path="/monitor" element={<Monitor />} />
-          <Route path="/mouse" element={<Mouse />} />
-          <Route path="/smartphone" element={<SmartPhone />} />
+          <Route path="/product" element={<Product />} /> 
 
           {/* Dynamic Product Pages */}
           <Route path="/:category/:productId" element={<DetailPage />} />
