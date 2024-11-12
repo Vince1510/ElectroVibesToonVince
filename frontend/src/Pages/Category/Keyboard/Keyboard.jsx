@@ -1,36 +1,50 @@
-import React from 'react';
-import { Typography, Card, CardContent, Grid } from '@mui/material';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
 
-function Keyboard() {
-  // Sample keyboard data
-  const keyboards = [
-    { id: 1, name: 'Mechanical Keyboard', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 2, name: 'Wireless Keyboard', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 3, name: 'Ergonomic Keyboard', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 4, name: 'Compact Keyboard', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    // Add more keyboards as needed
+const Keyboard = () => {
+  const keyboardData = [
+    {
+      id: 1,
+      name: "Mechanical Keyboard",
+      description: "Description for mechanical keyboard",
+      img: "https://via.placeholder.com/150",
+    },
+    {
+      id: 2,
+      name: "Wireless Keyboard",
+      description: "Description for wireless keyboard",
+      img: "https://via.placeholder.com/150",
+    },
   ];
 
   return (
-    <div>
+    <Box>
       <Typography variant="h4" gutterBottom>
-        Keyboard Page
+        Keyboards
       </Typography>
-      <Typography gutterBottom>This is the Keyboard page content.</Typography>
-      <Grid container spacing={2}>
-        {keyboards.map((keyboard) => (
+      <Grid container spacing={3}>
+        {keyboardData.map((keyboard) => (
           <Grid item xs={12} sm={6} md={4} key={keyboard.id}>
             <Card>
+              <img
+                src={keyboard.img}
+                alt={keyboard.name}
+                style={{ width: "100%", height: "auto" }}
+              />
               <CardContent>
-                <Typography variant="h5">{keyboard.name}</Typography>
-                <Typography>{keyboard.description}</Typography>
+                <Typography variant="h6">{keyboard.name}</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {keyboard.description}
+                </Typography>
+                <Link to={`/keyboard/${keyboard.id}`}>View Details</Link>
               </CardContent>
             </Card>
           </Grid>
         ))}
       </Grid>
-    </div>
+    </Box>
   );
-}
+};
 
 export default Keyboard;

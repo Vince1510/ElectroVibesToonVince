@@ -1,13 +1,34 @@
-import React from 'react';
-import { Typography, Card, CardContent, Grid } from '@mui/material';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Typography, Card, CardContent, Grid, Button } from "@mui/material";
 
 function Monitor() {
   // Sample monitor data
   const monitors = [
-    { id: 1, name: 'Gaming Monitor', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 2, name: '4K Monitor', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 3, name: 'Curved Monitor', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 4, name: 'Portable Monitor', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
+    {
+      id: 1,
+      name: "Gaming Monitor",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
+    {
+      id: 2,
+      name: "4K Monitor",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
+    {
+      id: 3,
+      name: "Curved Monitor",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
+    {
+      id: 4,
+      name: "Portable Monitor",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
     // Add more monitors as needed
   ];
 
@@ -24,6 +45,11 @@ function Monitor() {
               <CardContent>
                 <Typography variant="h5">{monitor.name}</Typography>
                 <Typography>{monitor.description}</Typography>
+                <Link to={`/monitor/${monitor.id}`}>
+                  <Button variant="contained" color="primary">
+                    View Details
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </Grid>

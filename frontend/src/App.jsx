@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AppBar, Toolbar, Button, Container, Box } from "@mui/material";
 
-import Home from "./Pages/Home/Home"; // Proper import for Home component
+import Home from "./Pages/Home/Home";
 import About from "./Pages/About/About";
 import Contact from "./Pages/Contact/Contact";
 import Login from "./Pages/Login/Login";
 import Admin from "./Pages/Admin/Admin";
 import BreadCrumb from "./components/BreadCrumbs/BreadCrumbs";
-import SearchBar from "./components/SearchBar/SearchBar"; // Import the SearchBar
+import SearchBar from "./components/SearchBar/SearchBar";
 
 // Import from the category pages
 import Games from "./Pages/Category/Games/Games";
@@ -17,6 +17,7 @@ import Laptop from "./Pages/Category/Laptop/Laptop";
 import Monitor from "./Pages/Category/Monitor/Monitor";
 import Mouse from "./Pages/Category/Mouse/Mouse";
 import SmartPhone from "./Pages/Category/SmartPhone/SmartPhone";
+import DetailPage from "./Pages/DetailPage/DetailPage"; // Import the DetailPage
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,7 +38,6 @@ function App() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {/* Search Bar */}
           <SearchBar />
 
           <Button color="inherit" component={Link} to="/admin">
@@ -53,15 +53,25 @@ function App() {
       <Container>
         <BreadCrumb />
         <Routes>
-          <Route path="/" element={<Home />} />{" "}
+          <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+
+          {/* Category Pages */}
           <Route path="/games" element={<Games />} />
           <Route path="/keyboard" element={<Keyboard />} />
           <Route path="/laptop" element={<Laptop />} />
           <Route path="/monitor" element={<Monitor />} />
           <Route path="/mouse" element={<Mouse />} />
           <Route path="/smartphone" element={<SmartPhone />} />
+
+          {/* Dynamic Product Pages */}
+          <Route path="/:category/:productId" element={<DetailPage />} />
+          <Route path="/laptop/:productId" element={<DetailPage />} />
+          <Route path="/monitor/:productId" element={<DetailPage />} />
+          <Route path="/mouse/:productId" element={<DetailPage />} />
+          <Route path="/smartphone/:productId" element={<DetailPage />} />
+
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>

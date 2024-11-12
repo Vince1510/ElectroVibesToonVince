@@ -1,13 +1,34 @@
-import React from 'react';
-import { Typography, Card, CardContent, Grid } from '@mui/material';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Typography, Card, CardContent, Grid, Button } from "@mui/material";
 
 function Mouse() {
   // Sample mouse data
   const mice = [
-    { id: 1, name: 'Gaming Mouse', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 2, name: 'Wireless Mouse', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 3, name: 'Vertical Mouse', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
-    { id: 4, name: 'Bluetooth Mouse', description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.' },
+    {
+      id: 1,
+      name: "Gaming Mouse",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
+    {
+      id: 2,
+      name: "Wireless Mouse",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
+    {
+      id: 3,
+      name: "Vertical Mouse",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
+    {
+      id: 4,
+      name: "Bluetooth Mouse",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem, consequatur fuga sunt fugiat vero, veritatis doloremque omnis nulla officia, dolorum laudantium commodi reprehenderit voluptatibus? Iste reiciendis excepturi iusto id.",
+    },
     // Add more mice as needed
   ];
 
@@ -24,6 +45,11 @@ function Mouse() {
               <CardContent>
                 <Typography variant="h5">{mouse.name}</Typography>
                 <Typography>{mouse.description}</Typography>
+                <Link to={`/mouse/${mouse.id}`}>
+                  <Button variant="contained" color="primary">
+                    View Details
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </Grid>
