@@ -67,10 +67,6 @@ function App() {
 
           {/* Dynamic Product Pages */}
           <Route path="/:category/:productId" element={<DetailPage />} />
-          <Route path="/laptop/:productId" element={<DetailPage />} />
-          <Route path="/monitor/:productId" element={<DetailPage />} />
-          <Route path="/mouse/:productId" element={<DetailPage />} />
-          <Route path="/smartphone/:productId" element={<DetailPage />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<Admin />} />
