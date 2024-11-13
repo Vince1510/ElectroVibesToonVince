@@ -1,6 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Typography, Card, CardContent, CardMedia, Grid, Select, MenuItem, FormControl, InputLabel, Slider, Box, Checkbox, FormGroup, FormControlLabel } from '@mui/material';
+import {
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Slider,
+  Box,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  IconButton,
+  Drawer,
+  Button,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
 function Product() {
   const location = useLocation();
@@ -11,6 +30,7 @@ function Product() {
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedSpecs, setSelectedSpecs] = useState([]);
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
   useEffect(() => {
     setSelectedCategory(initialCategory);
@@ -64,114 +84,141 @@ function Product() {
     const isWithinPriceRange = product.price >= priceRange[0] && product.price <= priceRange[1];
     const isCategoryMatch = selectedCategory === 'All' || product.category === selectedCategory;
     const isBrandMatch = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
-    const isSpecsMatch = selectedSpecs.length === 0 || selectedSpecs.every(spec => Object.values(product.specs).includes(spec));
+    const isSpecsMatch = selectedSpecs.length === 0 || selectedSpecs.every((spec) => Object.values(product.specs).includes(spec));
     return isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch;
   });
 
+  const renderFilters = () => (
+    <Box sx={{ width: 300, padding: 2, backgroundColor: '#191919', color: 'white' }}>
+      <Typography variant="h6">Filter</Typography>
+
+      <FormControl fullWidth variant="outlined" margin="normal" sx={{ color: 'white' }}>
+        <InputLabel sx={{ color: 'white' }}>Category</InputLabel>
+        <Select
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          label="Category"
+          sx={{ color: 'white', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'white' } }}
+        >
+          {categories.map((category) => (
+            <MenuItem key={category} value={category}>
+              {category}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <Typography>Price</Typography>
+      <Slider
+        value={priceRange}
+        onChange={handlePriceChange}
+        valueLabelDisplay="auto"
+        min={0}
+        max={3000}
+        sx={{ color: 'white' }}
+      />
+      <Typography>{`€${priceRange[0]} - €${priceRange[1]}`}</Typography>
+
+      <Typography sx={{ paddingTop: '20px' }}>Brand</Typography>
+      <FormGroup>
+        {['Apple', 'Samsung', 'Sony', 'Logitech', 'Razer', 'Asus', 'Corsair', 'Dell'].map((brand) => (
+          <FormControlLabel
+            key={brand}
+            control={<Checkbox checked={selectedBrands.includes(brand)} onChange={handleBrandChange} value={brand} sx={{ color: 'white' }} />}
+            label={brand}
+          />
+        ))}
+      </FormGroup>
+
+      <Typography sx={{ paddingTop: '20px' }}>Memory</Typography>
+      <FormGroup>
+        {['8GB RAM', '16GB RAM', '32GB RAM'].map((spec) => (
+          <FormControlLabel
+            key={spec}
+            control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
+            label={spec}
+          />
+        ))}
+      </FormGroup>
+
+      <Typography sx={{ paddingTop: '20px' }}>Display</Typography>
+      <FormGroup>
+        {['13-inch', '15.6-inch', '27-inch 4K', '49-inch Curved'].map((spec) => (
+          <FormControlLabel
+            key={spec}
+            control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
+            label={spec}
+          />
+        ))}
+      </FormGroup>
+
+      <Typography sx={{ paddingTop: '20px' }}>Features</Typography>
+      <FormGroup>
+        {['108MP Camera', 'Mechanical', 'Wireless', 'Noise Cancelling', '512GB SSD', '1TB SSD'].map((spec) => (
+          <FormControlLabel
+            key={spec}
+            control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
+            label={spec}
+          />
+        ))}
+      </FormGroup>
+    </Box>
+  );
+
   return (
-    <Box display="flex">
-      {/* Sidebar for Filters */}
-      <Box sx={{ width: '300px', backgroundColor: '#191919', color: 'white', padding: 2, position: 'sticky', top: 0, height: 'auto', marginBottom: '30px'}}>
-        <Typography variant="h6">Filter</Typography>
-
-        {/* Category Filter */}
-        <FormControl fullWidth variant="outlined" margin="normal" sx={{ color: 'white' }}>
-          <InputLabel sx={{ color: 'white' }}>Category</InputLabel>
-          <Select
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            label="Category"
-            sx={{ color: 'white', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'white' } }}
-          >
-            {categories.map(category => (
-              <MenuItem key={category} value={category}>
-                {category}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {/* Price Filter */}
-        <Typography>Price</Typography>
-        <Slider
-          value={priceRange}
-          onChange={handlePriceChange}
-          valueLabelDisplay="auto"
-          min={0}
-          max={3000}
-          sx={{ color: 'white' }}
-        />
-        <Typography>{`€${priceRange[0]} - €${priceRange[1]}`}</Typography>
-
-        {/* Brand Filter */}
-        <Typography sx={{ paddingTop: '20px' }}>Brand</Typography>
-        <FormGroup>
-          {['Apple', 'Samsung', 'Sony', 'Logitech', 'Razer', 'Asus', 'Corsair', 'Dell'].map((brand) => (
-            <FormControlLabel
-              key={brand}
-              control={<Checkbox checked={selectedBrands.includes(brand)} onChange={handleBrandChange} value={brand} sx={{ color: 'white' }} />}
-              label={brand}
-            />
-          ))}
-        </FormGroup>
-
-        {/* Memory Filter */}
-        <Typography sx={{ paddingTop: '20px' }}>Memory</Typography>
-        <FormGroup>
-          {['8GB RAM', '16GB RAM', '32GB RAM'].map((spec) => (
-            <FormControlLabel
-              key={spec}
-              control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
-              label={spec}
-            />
-          ))}
-        </FormGroup>
-
-        {/* Display Filter */}
-        <Typography sx={{ paddingTop: '20px' }}>Display</Typography>
-        <FormGroup>
-          {['13-inch', '15.6-inch', '27-inch 4K', '49-inch Curved'].map((spec) => (
-            <FormControlLabel
-              key={spec}
-              control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
-              label={spec}
-            />
-          ))}
-        </FormGroup>
-
-        {/* Features Filter */}
-        <Typography sx={{ paddingTop: '20px' }}>Features</Typography>
-        <FormGroup>
-          {['108MP Camera', 'Mechanical', 'Wireless', 'Noise Cancelling', '512GB SSD', '1TB SSD'].map((spec) => (
-            <FormControlLabel
-              key={spec}
-              control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
-              label={spec}
-            />
-          ))}
-        </FormGroup>
+    <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }}>
+      <Box sx={{ display: { xs: 'block', sm: 'none' }, padding: 2 }}>
+        <Button
+          variant="contained"
+          startIcon={<MenuIcon />}
+          onClick={() => setIsFilterDrawerOpen(true)}
+        >
+          Filters
+        </Button>
+        <Drawer
+          anchor="left"
+          open={isFilterDrawerOpen}
+          onClose={() => setIsFilterDrawerOpen(false)}
+        >
+          {renderFilters()}
+        </Drawer>
       </Box>
 
-      {/* Main Content */}
-      <Box sx={{ width: '400px', flexGrow: 1, paddingLeft: 3 }}>
+      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>{renderFilters()}</Box>
+
+      <Box sx={{ flexGrow: 1, paddingLeft: { sm: 3 }, paddingTop: { xs: 2, sm: 0 } }}>
         <Typography variant="h4" gutterBottom sx={{ color: 'white' }}>
           Products Page
         </Typography>
 
-        <Grid container spacing={2}>
+        <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
           {filteredProducts.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
-              <Card sx={{ width: 265, height: 330, background: 'linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)', boxShadow: '0px 4px 4px 0px #000',  display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <Grid item xs={4} sm={4} md={4} key={product.id}>
+              <Card
+                sx={{
+                  width: '100%',
+                  height: 330,
+                  background: 'linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)',
+                  boxShadow: '0px 4px 4px 0px #000',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                }}
+              >
                 <CardMedia
                   component="img"
                   height="200"
                   image={product.image}
                   alt={product.title}
-                  sx={{ objectFit: 'contain ', color: 'white', paddingTop: '5px' }}
+                  sx={{ objectFit: 'contain', padding: '10px' }}
                 />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" color='white' sx={{ fontSize: '1rem' }}>{product.title}</Typography>
-                  <Typography sx={{ fontSize: '0.80rem', color: 'gray' }}>{product.description}</Typography>
+                <CardContent>
+                  <Typography variant="h6" color="white" sx={{ fontSize: '1rem' }}>
+                    {product.title}
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.8rem', color: 'gray' }}>
+                    {product.description}
+                  </Typography>
                 </CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 1 }}>
                   <Typography sx={{ fontWeight: 'bold' }}>{`€${product.price}`}</Typography>
