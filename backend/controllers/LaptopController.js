@@ -3,9 +3,17 @@ import mongoose from 'mongoose';
 
 // Get all laptops
 export const getAllLaptops = async (req, res) => {
-  const laptops = await Laptop.find({}).sort({ createdAt: -1 });
-  res.status(200).json(laptops);
+  console.log("GET /api/laptop - Fetching laptops...");
+  try {
+    const laptops = await Laptop.find({});
+    console.log("Laptops fetched:", laptops);
+    res.status(200).json(laptops);
+  } catch (error) {
+    console.error("Error fetching laptops:", error);
+    res.status(500).json({ error: error.message });
+  }
 };
+
 
 // Get a single laptop
 export const getLaptop = async (req, res) => {

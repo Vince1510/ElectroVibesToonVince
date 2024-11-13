@@ -12,6 +12,7 @@ import BreadCrumb from "./components/BreadCrumbs";
 import Product from "./Pages/Product";
 import DetailPage from "./Pages/DetailPage";
 
+
 function App() {
   return (
     <Router>

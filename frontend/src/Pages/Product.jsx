@@ -15,7 +15,6 @@ import {
   Checkbox,
   FormGroup,
   FormControlLabel,
-  IconButton,
   Drawer,
   Button,
 } from '@mui/material';
@@ -26,30 +25,49 @@ function Product() {
   const queryParams = new URLSearchParams(location.search);
   const initialCategory = queryParams.get('category') || 'All';
 
+  const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedSpecs, setSelectedSpecs] = useState([]);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
+  // Fetch products from backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const laptopResponse = await fetch('http://localhost:4000/api/laptop');
+        if (!laptopResponse.ok) {
+          throw new Error(`HTTP error! Status: ${laptopResponse.status}`);
+        }
+        const laptops = await laptopResponse.json();
+  
+        const keyboardResponse = await fetch('http://localhost:4000/api/keyboards');
+        if (!keyboardResponse.ok) {
+          throw new Error(`HTTP error! Status: ${keyboardResponse.status}`);
+        }
+        const keyboards = await keyboardResponse.json();
+  
+        const phoneResponse = await fetch('http://localhost:4000/api/phones');
+        if (!phoneResponse.ok) {
+          throw new Error(`HTTP error! Status: ${phoneResponse.status}`);
+        }
+        const phones = await phoneResponse.json();
+  
+        // Combine both laptops and keyboards into a single array
+        setProducts([...laptops, ...keyboards, ...phones]);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+  
+    fetchProducts();
+  }, []);
+  
+
   useEffect(() => {
     setSelectedCategory(initialCategory);
   }, [initialCategory]);
-
-  const products = [
-    { id: 1, title: 'Apple MacBook Air (M1)', description: '13-inch, 8GB RAM, 256GB SSD', category: 'Laptop', price: 999, brand: 'Apple', specs: { memory: '8GB RAM', display: '13-inch', feature: '' }, image: './assets/images/macbook_air.jpg' },
-    { id: 2, title: 'Samsung Galaxy S23 Ultra', description: '256GB, 6.8-inch Display, 108MP Camera', category: 'Smartphones', price: 1200, brand: 'Samsung', specs: { memory: '', display: '6.8-inch', feature: '108MP Camera' }, image: './assets/images/galaxy_s23_ultra.png' },
-    { id: 3, title: 'Sony PlayStation 5', description: '825GB SSD, 4K Gaming Console', category: 'Games', price: 499, brand: 'Sony', specs: { memory: '', display: '4K', feature: '825GB SSD' }, image: './assets/images/playstation_5.png' },
-    { id: 4, title: 'Logitech MX Master 3', description: 'Wireless Bluetooth Mouse, Ergonomic Design', category: 'Mouse', price: 99, brand: 'Logitech', specs: { memory: '', display: '', feature: 'Wireless' }, image: './assets/images/mx_master_3.webp' },
-    { id: 5, title: 'Dell UltraSharp 27" 4K Monitor', description: 'IPS, 60Hz, USB-C', category: 'Monitor', price: 699, brand: 'Dell', specs: { memory: '', display: '27-inch 4K', feature: 'USB-C' }, image: './assets/images/dell_ultrasharp.webp' },
-    { id: 6, title: 'Razer BlackWidow V3', description: 'Mechanical Gaming Keyboard, Green Switches', category: 'Keyboards', price: 149, brand: 'Razer', specs: { memory: '', display: '', feature: 'Mechanical' }, image: './assets/images/blackwidow_v3.png' },
-    { id: 7, title: 'Apple iPhone 14 Pro', description: '128GB, 6.1-inch Display', category: 'Smartphones', price: 1099, brand: 'Apple', specs: { memory: '', display: '6.1-inch', feature: '' }, image: './assets/images/iphone_14_pro.png' },
-    { id: 8, title: 'Acer Nitro 5 Gaming Laptop', description: '15.6-inch, 16GB RAM, 512GB SSD', category: 'Laptop', price: 1299, brand: 'Acer', specs: { memory: '16GB RAM', display: '15.6-inch', feature: '512GB SSD' }, image: './assets/images/acer_nitro_5.png' },
-    { id: 9, title: 'Samsung Odyssey G9', description: '49-inch Curved Gaming Monitor', category: 'Monitor', price: 1799, brand: 'Samsung', specs: { memory: '', display: '49-inch Curved', feature: '' }, image: './assets/images/odyssey_g9.avif' },
-    { id: 10, title: 'Asus ROG Strix G15', description: 'Gaming Laptop, 32GB RAM, 1TB SSD', category: 'Laptop', price: 1999, brand: 'Asus', specs: { memory: '32GB RAM', display: '15.6-inch', feature: '1TB SSD' }, image: './assets/images/rog_strix_g15.png' },
-    { id: 11, title: 'Corsair K70 RGB', description: 'Mechanical Gaming Keyboard, Cherry MX Red', category: 'Keyboards', price: 179, brand: 'Corsair', specs: { memory: '', display: '', feature: 'Mechanical' }, image: './assets/images/k70_rgb.png' },
-    { id: 12, title: 'Sony WH-1000XM5', description: 'Wireless Noise Cancelling Headphones', category: 'Headphones', price: 399, brand: 'Sony', specs: { memory: '', display: '', feature: 'Noise Cancelling' }, image: './assets/images/wh_1000xm5.avif' }
-  ];
 
   const categories = ['All', 'Laptop', 'Monitor', 'Games', 'Mouse', 'Smartphones', 'Keyboards', 'Headphones'];
 
@@ -121,44 +139,11 @@ function Product() {
 
       <Typography sx={{ paddingTop: '20px' }}>Brand</Typography>
       <FormGroup>
-        {['Apple', 'Samsung', 'Sony', 'Logitech', 'Razer', 'Asus', 'Corsair', 'Dell'].map((brand) => (
+        {['Apple', 'Samsung', 'Logitech', 'Asus', 'Corsair', 'Dell', 'Google'].map((brand) => (
           <FormControlLabel
             key={brand}
             control={<Checkbox checked={selectedBrands.includes(brand)} onChange={handleBrandChange} value={brand} sx={{ color: 'white' }} />}
             label={brand}
-          />
-        ))}
-      </FormGroup>
-
-      <Typography sx={{ paddingTop: '20px' }}>Memory</Typography>
-      <FormGroup>
-        {['8GB RAM', '16GB RAM', '32GB RAM'].map((spec) => (
-          <FormControlLabel
-            key={spec}
-            control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
-            label={spec}
-          />
-        ))}
-      </FormGroup>
-
-      <Typography sx={{ paddingTop: '20px' }}>Display</Typography>
-      <FormGroup>
-        {['13-inch', '15.6-inch', '27-inch 4K', '49-inch Curved'].map((spec) => (
-          <FormControlLabel
-            key={spec}
-            control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
-            label={spec}
-          />
-        ))}
-      </FormGroup>
-
-      <Typography sx={{ paddingTop: '20px' }}>Features</Typography>
-      <FormGroup>
-        {['108MP Camera', 'Mechanical', 'Wireless', 'Noise Cancelling', '512GB SSD', '1TB SSD'].map((spec) => (
-          <FormControlLabel
-            key={spec}
-            control={<Checkbox checked={selectedSpecs.includes(spec)} onChange={handleSpecsChange} value={spec} sx={{ color: 'white' }} />}
-            label={spec}
           />
         ))}
       </FormGroup>
@@ -193,7 +178,7 @@ function Product() {
 
         <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
           {filteredProducts.map((product) => (
-            <Grid item xs={4} sm={4} md={4} key={product.id}>
+            <Grid item xs={4} sm={4} md={4} key={product._id}>
               <Card
                 sx={{
                   width: '100%',
@@ -207,22 +192,62 @@ function Product() {
               >
                 <CardMedia
                   component="img"
-                  height="200"
-                  image={product.image}
-                  alt={product.title}
-                  sx={{ objectFit: 'contain', padding: '10px' }}
+                  height="160"
+                  image={product.imageCard}
+                  alt={product.name}
+                  sx={{
+                    objectFit: 'contain',
+                  }}
                 />
-                <CardContent>
-                  <Typography variant="h6" color="white" sx={{ fontSize: '1rem' }}>
-                    {product.title}
+                <CardContent
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    flexGrow: 1,
+                    paddingBottom: '0px',
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    color="white"
+                    sx={{ fontSize: '1rem', marginBottom: '5px' }}
+                  >
+                    {product.name}
                   </Typography>
-                  <Typography sx={{ fontSize: '0.8rem', color: 'gray' }}>
+                  <Typography
+                    sx={{
+                      fontSize: '0.8rem',
+                      color: 'gray',
+                      flexGrow: 1,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitBoxOrient: 'vertical',
+                      WebkitLineClamp: 2,
+                      marginBottom: '5px',
+                    }}
+                  >
                     {product.description}
                   </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      marginTop: 'auto',
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontWeight: 'bold',
+                        color: 'white',
+                        fontSize: '1rem',
+                      }}
+                    >
+                      {`€${product.price}`}
+                    </Typography>
+                  </Box>
                 </CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 1 }}>
-                  <Typography sx={{ fontWeight: 'bold' }}>{`€${product.price}`}</Typography>
-                </Box>
               </Card>
             </Grid>
           ))}
