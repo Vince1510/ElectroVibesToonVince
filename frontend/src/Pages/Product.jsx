@@ -139,7 +139,7 @@ function Product() {
 
       <Typography sx={{ paddingTop: '20px' }}>Brand</Typography>
       <FormGroup>
-        {['Apple', 'Samsung', 'Logitech', 'Asus', 'Corsair', 'Dell', 'Google', 'Sony'].map((brand) => (
+        {['Apple', 'Samsung', 'Logitech', 'Asus', 'Corsair', 'Dell', 'Google', 'Sony', 'OnePlus', 'Doogee'].map((brand) => (
           <FormControlLabel
             key={brand}
             control={<Checkbox checked={selectedBrands.includes(brand)} onChange={handleBrandChange} value={brand} sx={{ color: 'white' }} />}
