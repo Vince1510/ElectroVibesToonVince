@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AppBar, Toolbar, Button, Container, Box } from "@mui/material";
 
-import Home from "./Pages/Home/Home";
-import About from "./Pages/About/About";
-import Contact from "./Pages/Contact/Contact";
-import Login from "./Pages/Login/Login";
+import Home from "./Pages/Home";
+import About from "./Pages/About";
+import Contact from "./Pages/Contact";
+import Login from "./Pages/Login";
 import Admin from "./Pages/Admin/Admin";
-import BreadCrumb from "./components/BreadCrumbs/BreadCrumbs";
-import SearchBar from "./components/SearchBar/SearchBar";
+import BreadCrumb from "./components/BreadCrumbs";
+import SearchBar from "./components/SearchBar";
 
 // Import from the category pages
 import Product from './pages/Product'
-import DetailPage from "./Pages/DetailPage/DetailPage"; // Import the DetailPage
+import DetailPage from "./Pages/DetailPage"; // Import the DetailPage
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

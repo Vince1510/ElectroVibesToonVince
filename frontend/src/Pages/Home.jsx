@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Box } from "@mui/material";
-import CardSlider from "./CardSlider";
+import CardSlider from "../components/CardSlider";
 
 import VideogameAssetIcon from "@mui/icons-material/VideogameAsset";
 import KeyboardIcon from "@mui/icons-material/Keyboard";

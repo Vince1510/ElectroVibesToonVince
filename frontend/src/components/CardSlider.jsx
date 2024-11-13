@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import "../../App.css";
+import "../App.css";
 
 const CardSlider = () => {
   const sliderRef = useRef(null);
