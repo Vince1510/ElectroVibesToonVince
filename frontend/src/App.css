@@ -5,11 +5,11 @@
 }
 
 body {
-  background: #111; /* Dark background */
-  color: #fff; /* Default text color is white */
-  font-family: "Roboto", sans-serif; /* Apply consistent font */
+  background: #111;
+  color: #fff;
+  font-family: "Roboto", sans-serif;
 }
 
 p {
-  color: white; /* Ensures paragraph text is white */
+  color: white;
 }
