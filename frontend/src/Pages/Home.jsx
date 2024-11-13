@@ -32,7 +32,7 @@ const Home = () => {
         <Button
           color="inherit"
           component={Link}
-          to="/product?category=Keyboards"
+          to="/product?category=Keyboard"
           startIcon={<KeyboardIcon sx={{ color: "white" }} />}
           sx={{
             display: "flex",
@@ -92,7 +92,7 @@ const Home = () => {
         <Button
           color="inherit"
           component={Link}
-          to="/product?category=Smartphones"
+          to="/product?category=Phone"
           startIcon={<PhoneIphoneIcon sx={{ color: "white" }} />}
           sx={{
             display: "flex",
@@ -102,7 +102,7 @@ const Home = () => {
             color: "white",
           }}
         >
-          SmartPhone
+          Phone
         </Button>
       </Box>
 

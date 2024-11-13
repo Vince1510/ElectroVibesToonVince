@@ -69,7 +69,7 @@ function Product() {
     setSelectedCategory(initialCategory);
   }, [initialCategory]);
 
-  const categories = ['All', 'Laptop', 'Monitor', 'Games', 'Mouse', 'Smartphones', 'Keyboards', 'Headphones'];
+  const categories = ['All', 'Laptop', 'Monitor', 'Games', 'Mouse', 'Phone', 'Keyboard', 'Headphones'];
 
   const handlePriceChange = (event, newValue) => {
     setPriceRange(newValue);
