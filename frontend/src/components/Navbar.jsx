@@ -17,8 +17,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import logo from "/public/assets/images/ElectroVibe.png";
-import responsiveLogo from "/public/assets/images/EV.png";
+import logo from "/assets/images/ElectroVibe.png";
+import responsiveLogo from "/assets/images/EV.png";
 
 function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);

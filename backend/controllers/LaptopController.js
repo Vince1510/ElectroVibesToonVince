@@ -26,10 +26,10 @@ export const getLaptop = async (req, res) => {
 
 // Create a new laptop
 export const createLaptop = async (req, res) => {
-  const { name, code, description, brand, price, imageUrl, operatingSystem, screenSize, screenResolution, screenTechnology, processor, ram, storage, expandableStorage, gpu, refreshRate, touchScreen, batteryCapacity, batteryLife, chargingSpeed, connectivityPorts, wifiSupport, bluetoothVersion, weight, dimensions, colorOptions, fingerprintSensor, webcam } = req.body;
+  const { name, code, description, brand, price, imageCard, imageOverview, operatingSystem, screenSize, screenResolution, screenTechnology, processor, ram, storage, expandableStorage, gpu, refreshRate, touchScreen, batteryCapacity, batteryLife, chargingSpeed, connectivityPorts, wifiSupport, bluetoothVersion, weight, dimensions, colorOptions, fingerprintSensor, webcam } = req.body;
 
   try {
-    const laptop = await Laptop.create({ name, code, description, brand, price, imageUrl, operatingSystem, screenSize, screenResolution, screenTechnology, processor, ram, storage, expandableStorage, gpu, refreshRate, touchScreen, batteryCapacity, batteryLife, chargingSpeed, connectivityPorts, wifiSupport, bluetoothVersion, weight, dimensions, colorOptions, fingerprintSensor, webcam });
+    const laptop = await Laptop.create({ name, code, description, brand, price, imageCard, imageOverview, operatingSystem, screenSize, screenResolution, screenTechnology, processor, ram, storage, expandableStorage, gpu, refreshRate, touchScreen, batteryCapacity, batteryLife, chargingSpeed, connectivityPorts, wifiSupport, bluetoothVersion, weight, dimensions, colorOptions, fingerprintSensor, webcam });
     res.status(200).json(laptop);
   } catch (error) {
     res.status(400).json({ error: error.message });
