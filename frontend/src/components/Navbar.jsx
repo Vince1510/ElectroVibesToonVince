@@ -11,22 +11,53 @@ import {
   ListItemText,
   InputBase,
   useMediaQuery,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import logo from "/assets/images/ElectroVibe.png";
 import responsiveLogo from "/assets/images/EV.png";
 
 function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
+  const navigate = useNavigate();
   const theme = useTheme();
   const isTabletOrMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+
+    // List of recognized brands
+    const recognizedBrands = [
+      "Apple",
+      "Samsung",
+      "Logitech",
+      "Asus",
+      "Corsair",
+      "Dell",
+      "Google",
+      "Sony",
+      "OnePlus",
+      "Doogee",
+    ];
+
+    // Check if the search query matches any recognized brand
+    if (recognizedBrands.includes(searchQuery.trim())) {
+      navigate(`/Product?brand=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    } else {
+      setShowNotification(true); // Show notification for "not found"
+    }
   };
 
   const drawer = (
@@ -119,22 +150,26 @@ function Navbar() {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {/* Search Bar */}
             {!isTabletOrMobile && (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  borderRadius: "10px",
-                  padding: "2px 8px",
-                  marginRight: 2,
-                }}
-              >
-                <SearchIcon />
-                <InputBase
-                  placeholder="Search..."
-                  sx={{ color: "inherit", marginLeft: 1 }}
-                />
-              </Box>
+              <form onSubmit={handleSearch} style={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    borderRadius: "10px",
+                    padding: "2px 8px",
+                    marginRight: 2,
+                  }}
+                >
+                  <SearchIcon />
+                  <InputBase
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    sx={{ color: "inherit", marginLeft: 1 }}
+                  />
+                </Box>
+              </form>
             )}
 
             {/* Login Button */}
@@ -173,22 +208,25 @@ function Navbar() {
               justifyContent: "center",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-                borderRadius: "10px",
-                padding: "2px 8px",
-                width: "90%",
-              }}
-            >
-              <SearchIcon />
-              <InputBase
-                placeholder="Search..."
-                sx={{ color: "inherit", marginLeft: 1, width: "100%" }}
-              />
-            </Box>
+            <form onSubmit={handleSearch} style={{ width: "90%" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  borderRadius: "10px",
+                  padding: "2px 8px",
+                }}
+              >
+                <SearchIcon />
+                <InputBase
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  sx={{ color: "inherit", marginLeft: 1, width: "100%" }}
+                />
+              </Box>
+            </form>
           </Box>
         )}
       </AppBar>
@@ -198,10 +236,26 @@ function Navbar() {
         anchor="left"
         open={mobileOpen}
         onClose={handleDrawerToggle}
-        ModalProps={{ keepMounted: true }} // Better performance on mobile
+        ModalProps={{ keepMounted: true }}
       >
         {drawer}
       </Drawer>
+
+      {/* Notification Snackbar */}
+      <Snackbar
+        open={showNotification}
+        autoHideDuration={3000}
+        onClose={() => setShowNotification(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setShowNotification(false)}
+          severity="warning"
+          sx={{ width: "100%" }}
+        >
+          Brand not found!
+        </Alert>
+      </Snackbar>
     </>
   );
 }
