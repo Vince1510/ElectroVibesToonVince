@@ -10,7 +10,8 @@ const laptopSchema = new Schema(
     brand: { type: String, required: true },
     category: { type: String, default: 'Laptop' },
     price: { type: Number, required: true },
-    imageUrl: { type: String, required: true },
+    imageCard: { type: String, required: true },
+    imageOverview: { type: [String], required: true },
     
     // Laptop-specific details
     operatingSystem: { type: String, required: true },

@@ -10,7 +10,8 @@ const phoneSchema = new Schema(
     brand: { type: String, required: true },
     category: { type: String, default: 'Phone' },
     price: { type: Number, required: true },
-    imageUrl: { type: String, required: true },
+    imageCard: { type: String, required: true },
+    imageOverview: { type: [String], required: true },
     
     // Phone-specific details
     operatingSystem: { type: String, required: true },

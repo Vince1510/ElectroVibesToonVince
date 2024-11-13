@@ -10,7 +10,8 @@ const keyboardSchema = new Schema(
     brand: { type: String, required: true },
     category: { type: String, default: 'Keyboard' },
     price: { type: Number, required: true },
-    imageUrl: { type: String, required: true },
+    imageCard: { type: String, required: true },
+    imageOverview: { type: [String], required: true },
     
     // Keyboard-specific details
     layout: { type: String, required: true }, // e.g., QWERTY, AZERTY
