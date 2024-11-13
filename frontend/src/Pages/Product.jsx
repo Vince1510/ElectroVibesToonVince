@@ -1,35 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import {
   Typography,
   Card,
   CardContent,
   CardMedia,
   Grid,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Slider,
   Box,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
   Drawer,
   Button,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import Filter from '../components/Filter';
 
 function Product() {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const initialCategory = queryParams.get('category') || 'All';
-
   const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedSpecs, setSelectedSpecs] = useState([]);
+  const [sortOrder, setSortOrder] = useState('none');
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
   // Fetch products from backend
@@ -37,139 +26,75 @@ function Product() {
     const fetchProducts = async () => {
       try {
         const laptopResponse = await fetch('http://localhost:4000/api/laptop');
-        if (!laptopResponse.ok) {
-          throw new Error(`HTTP error! Status: ${laptopResponse.status}`);
-        }
         const laptops = await laptopResponse.json();
-  
+
         const keyboardResponse = await fetch('http://localhost:4000/api/keyboards');
-        if (!keyboardResponse.ok) {
-          throw new Error(`HTTP error! Status: ${keyboardResponse.status}`);
-        }
         const keyboards = await keyboardResponse.json();
-  
+
         const phoneResponse = await fetch('http://localhost:4000/api/phones');
-        if (!phoneResponse.ok) {
-          throw new Error(`HTTP error! Status: ${phoneResponse.status}`);
-        }
         const phones = await phoneResponse.json();
-  
-        // Combine both laptops and keyboards into a single array
+
         setProducts([...laptops, ...keyboards, ...phones]);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     };
-  
+
     fetchProducts();
   }, []);
-  
 
-  useEffect(() => {
-    setSelectedCategory(initialCategory);
-  }, [initialCategory]);
+  const filteredProducts = products
+    .filter((product) => {
+      const isWithinPriceRange = product.price >= priceRange[0] && product.price <= priceRange[1];
+      const isCategoryMatch = selectedCategory === 'All' || product.category === selectedCategory;
+      const isBrandMatch = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
+      const isSpecsMatch = selectedSpecs.length === 0 || selectedSpecs.every((spec) => Object.values(product.specs).includes(spec));
+      return isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch;
+    })
+    .sort((a, b) => {
+      if (sortOrder === 'lowToHigh') return a.price - b.price;
+      if (sortOrder === 'highToLow') return b.price - a.price;
+      return 0;
+    });
 
-  const categories = ['All', 'Laptop', 'Monitor', 'Games', 'Mouse', 'Phone', 'Keyboard', 'Headphones'];
-
-  const handlePriceChange = (event, newValue) => {
-    setPriceRange(newValue);
+  const handleSortChange = (order) => {
+    setSortOrder(order);
   };
-
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-    setSelectedSpecs([]);
-  };
-
-  const handleBrandChange = (event) => {
-    const value = event.target.value;
-    if (selectedBrands.includes(value)) {
-      setSelectedBrands(selectedBrands.filter((brand) => brand !== value));
-    } else {
-      setSelectedBrands([...selectedBrands, value]);
-    }
-  };
-
-  const handleSpecsChange = (event) => {
-    const value = event.target.value;
-    if (selectedSpecs.includes(value)) {
-      setSelectedSpecs(selectedSpecs.filter((spec) => spec !== value));
-    } else {
-      setSelectedSpecs([...selectedSpecs, value]);
-    }
-  };
-
-  const filteredProducts = products.filter((product) => {
-    const isWithinPriceRange = product.price >= priceRange[0] && product.price <= priceRange[1];
-    const isCategoryMatch = selectedCategory === 'All' || product.category === selectedCategory;
-    const isBrandMatch = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
-    const isSpecsMatch = selectedSpecs.length === 0 || selectedSpecs.every((spec) => Object.values(product.specs).includes(spec));
-    return isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch;
-  });
-
-  const renderFilters = () => (
-    <Box sx={{ width: 300, padding: 2, backgroundColor: '#191919', color: 'white' }}>
-      <Typography variant="h6">Filter</Typography>
-
-      <FormControl fullWidth variant="outlined" margin="normal" sx={{ color: 'white' }}>
-        <InputLabel sx={{ color: 'white' }}>Category</InputLabel>
-        <Select
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-          label="Category"
-          sx={{ color: 'white', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'white' } }}
-        >
-          {categories.map((category) => (
-            <MenuItem key={category} value={category}>
-              {category}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <Typography>Price</Typography>
-      <Slider
-        value={priceRange}
-        onChange={handlePriceChange}
-        valueLabelDisplay="auto"
-        min={0}
-        max={3000}
-        sx={{ color: 'white' }}
-      />
-      <Typography>{`€${priceRange[0]} - €${priceRange[1]}`}</Typography>
-
-      <Typography sx={{ paddingTop: '20px' }}>Brand</Typography>
-      <FormGroup>
-        {['Apple', 'Samsung', 'Logitech', 'Asus', 'Corsair', 'Dell', 'Google', 'Sony', 'OnePlus', 'Doogee'].map((brand) => (
-          <FormControlLabel
-            key={brand}
-            control={<Checkbox checked={selectedBrands.includes(brand)} onChange={handleBrandChange} value={brand} sx={{ color: 'white' }} />}
-            label={brand}
-          />
-        ))}
-      </FormGroup>
-    </Box>
-  );
 
   return (
     <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }}>
       <Box sx={{ display: { xs: 'block', sm: 'none' }, padding: 2 }}>
-        <Button
-          variant="contained"
-          startIcon={<MenuIcon />}
-          onClick={() => setIsFilterDrawerOpen(true)}
-        >
+        <Button variant="contained" startIcon={<MenuIcon />} onClick={() => setIsFilterDrawerOpen(true)}>
           Filters
         </Button>
-        <Drawer
-          anchor="left"
-          open={isFilterDrawerOpen}
-          onClose={() => setIsFilterDrawerOpen(false)}
-        >
-          {renderFilters()}
+        <Drawer anchor="left" open={isFilterDrawerOpen} onClose={() => setIsFilterDrawerOpen(false)}>
+          <Filter
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            selectedBrands={selectedBrands}
+            setSelectedBrands={setSelectedBrands}
+            selectedSpecs={selectedSpecs}
+            setSelectedSpecs={setSelectedSpecs}
+            handleSortChange={handleSortChange}
+          />
         </Drawer>
       </Box>
 
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>{renderFilters()}</Box>
+      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+        <Filter
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+          selectedBrands={selectedBrands}
+          setSelectedBrands={setSelectedBrands}
+          selectedSpecs={selectedSpecs}
+          setSelectedSpecs={setSelectedSpecs}
+          handleSortChange={handleSortChange}
+        />
+      </Box>
 
       <Box sx={{ flexGrow: 1, paddingLeft: { sm: 3 }, paddingTop: { xs: 2, sm: 0 } }}>
         <Typography variant="h4" gutterBottom sx={{ color: 'white' }}>
@@ -195,9 +120,7 @@ function Product() {
                   height="160"
                   image={product.imageCard}
                   alt={product.name}
-                  sx={{
-                    objectFit: 'contain',
-                  }}
+                  sx={{ objectFit: 'contain' }}
                 />
                 <CardContent
                   sx={{
@@ -230,20 +153,8 @@ function Product() {
                   >
                     {product.description}
                   </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      marginTop: 'auto',
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontWeight: 'bold',
-                        color: 'white',
-                        fontSize: '1rem',
-                      }}
-                    >
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto' }}>
+                    <Typography sx={{ fontWeight: 'bold', color: 'white', fontSize: '1rem' }}>
                       {`€${product.price}`}
                     </Typography>
                   </Box>
