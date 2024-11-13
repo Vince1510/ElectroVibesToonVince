@@ -1,9 +1,10 @@
-import 'dotenv/config';
-import express from 'express';
-import mongoose from 'mongoose';
-import phoneRoutes from './routes/phoneRoutes.js'; 
-import laptopRoutes from './routes/laptopRoutes.js'; 
-import keyboardRoutes from './routes/keyboardRoutes.js'; 
+import "dotenv/config";
+import express from "express";
+import mongoose from "mongoose";
+import phoneRoutes from "./routes/phoneRoutes.js";
+import laptopRoutes from "./routes/laptopRoutes.js";
+import keyboardRoutes from "./routes/keyboardRoutes.js";
+import gamesRoutes from "./routes/gamesRoutes.js";
 
 // Express app
 const app = express();
@@ -17,12 +18,14 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/api/phones', phoneRoutes);
-app.use('/api/laptop', laptopRoutes);
-app.use('/api/keyboards', keyboardRoutes);
+app.use("/api/phones", phoneRoutes);
+app.use("/api/laptop", laptopRoutes);
+app.use("/api/keyboards", keyboardRoutes);
+app.use("/api/games", gamesRoutes);
 
 // Connect to the database
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => {
     // Listen for requests
     app.listen(process.env.PORT, () => {
