@@ -30,25 +30,36 @@ function Product() {
           fetch("http://localhost:4000/api/laptops"),
           fetch("http://localhost:4000/api/keyboards"),
           fetch("http://localhost:4000/api/phones"),
+          fetch("http://localhost:4000/api/games"),
+          fetch("http://localhost:4000/api/mice"),
+          fetch("http://localhost:4000/api/monitors"),
         ]);
-    
+
         const data = await Promise.all(
           responses.map(async (response) => {
             if (!response.ok) {
-              console.error(`Error fetching: ${response.url} - Status: ${response.status}`);
+              console.error(
+                `Error fetching: ${response.url} - Status: ${response.status}`
+              );
               return []; // Return an empty array for failed requests
             }
             return await response.json();
           })
         );
-    
-        const [laptops, keyboards, phones] = data;
-        setProducts([...laptops, ...keyboards, ...phones]);
+
+        const [laptops, keyboards, phones, games, mice, monitors] = data;
+        setProducts([
+          ...laptops,
+          ...keyboards,
+          ...phones,
+          ...games,
+          ...monitors,
+          ...mice,
+        ]);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
-    
 
     fetchProductsAndGames();
   }, []);
@@ -67,7 +78,9 @@ function Product() {
         selectedSpecs.every((spec) =>
           Object.values(product.specs || {}).includes(spec)
         );
-      return isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch;
+      return (
+        isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch
+      );
     })
     .sort((a, b) => {
       if (sortOrder === "lowToHigh") return a.price - b.price;
@@ -127,7 +140,13 @@ function Product() {
       </Box>
 
       {/* Products List */}
-      <Box sx={{ flexGrow: 1, paddingLeft: { sm: 3 }, paddingTop: { xs: 2, sm: 0 } }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          paddingLeft: { sm: 3 },
+          paddingTop: { xs: 2, sm: 0 },
+        }}
+      >
         <Typography variant="h4" gutterBottom sx={{ color: "white" }}>
           Products Page
         </Typography>
@@ -189,9 +208,19 @@ function Product() {
                     >
                       {product.description}
                     </Typography>
-                    <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "auto" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginTop: "auto",
+                      }}
+                    >
                       <Typography
-                        sx={{ fontWeight: "bold", color: "white", fontSize: "1rem" }}
+                        sx={{
+                          fontWeight: "bold",
+                          color: "white",
+                          fontSize: "1rem",
+                        }}
                       >
                         {`€${product.price}`}
                       </Typography>
