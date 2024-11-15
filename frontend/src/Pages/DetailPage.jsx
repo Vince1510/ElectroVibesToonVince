@@ -11,7 +11,7 @@ function DetailPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/laptop/${productId}`);
+        const response = await fetch(`http://localhost:4000/api/laptops/${productId}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
