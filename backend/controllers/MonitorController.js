@@ -1,87 +1,83 @@
-// MonitorController.js
 import Monitor from "../models/Monitor.js";
-import mongoose from "mongoose";
 
-// Get all monitors
+// Fetch all monitors
 export const getAllMonitors = async (req, res) => {
-  const monitors = await Monitor.find({}).sort({ createdAt: -1 });
-  res.status(200).json(monitors);
+  try {
+    const monitors = await Monitor.find();
+    res.status(200).json(monitors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// Get a single monitor
-export const getMonitor = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "No such monitor" });
-  }
-
-  const monitor = await Monitor.findById(id);
-
-  if (!monitor) {
-    return res.status(404).json({ error: "No such monitor" });
-  }
-
-  res.status(200).json(monitor);
-};
-
-// Create a new monitor
-export const createMonitor = async (req, res) => {
+// Add a new monitor
+export const addMonitor = async (req, res) => {
   const {
     name,
     code,
     description,
     brand,
     price,
-    imageUrl,
-    screenSize,
-    screenResolution,
-    screenTechnology,
-    refreshRate,
-    responseTime,
-    panelType,
-    aspectRatio,
-    brightness,
-    contrastRatio,
-    colorSupport,
-    ports,
-    wireless,
-    adjustableStand,
-    vesaMount,
-    speakers,
-    weight,
-    dimensions,
+    imageCard,
+    imageOverview,
+    specs,
+  } = req.body;
+  const newMonitor = new Monitor({
+    name,
+    code,
+    description,
+    brand,
+    price,
+    imageCard,
+    imageOverview,
+    specs,
+  });
+
+  try {
+    await newMonitor.save();
+    res.status(201).json(newMonitor);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Update an existing monitor
+export const updateMonitor = async (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    code,
+    description,
+    brand,
+    price,
+    imageCard,
+    imageOverview,
+    specs,
   } = req.body;
 
   try {
-    const monitor = await Monitor.create({
-      name,
-      code,
-      description,
-      brand,
-      price,
-      imageUrl,
-      screenSize,
-      screenResolution,
-      screenTechnology,
-      refreshRate,
-      responseTime,
-      panelType,
-      aspectRatio,
-      brightness,
-      contrastRatio,
-      colorSupport,
-      ports,
-      wireless,
-      adjustableStand,
-      vesaMount,
-      speakers,
-      weight,
-      dimensions,
-    });
-    res.status(200).json(monitor);
+    const updatedMonitor = await Monitor.findByIdAndUpdate(
+      id,
+      {
+        name,
+        code,
+        description,
+        brand,
+        price,
+        imageCard,
+        imageOverview,
+        specs,
+      },
+      { new: true }
+    );
+
+    if (!updatedMonitor) {
+      return res.status(404).json({ message: "Monitor not found" });
+    }
+
+    res.status(200).json(updatedMonitor);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -89,36 +85,15 @@ export const createMonitor = async (req, res) => {
 export const deleteMonitor = async (req, res) => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "No such monitor" });
+  try {
+    const deletedMonitor = await Monitor.findByIdAndDelete(id);
+
+    if (!deletedMonitor) {
+      return res.status(404).json({ message: "Monitor not found" });
+    }
+
+    res.status(200).json({ message: "Monitor deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  const monitor = await Monitor.findOneAndDelete({ _id: id });
-
-  if (!monitor) {
-    return res.status(400).json({ error: "No such monitor" });
-  }
-
-  res.status(200).json(monitor);
-};
-
-// Update a monitor
-export const updateMonitor = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "No such monitor" });
-  }
-
-  const monitor = await Monitor.findOneAndUpdate(
-    { _id: id },
-    { ...req.body },
-    { new: true }
-  );
-
-  if (!monitor) {
-    return res.status(400).json({ error: "No such monitor" });
-  }
-
-  res.status(200).json(monitor);
 };

@@ -1,29 +1,23 @@
-// routes/mouseRoutes.js
-
 import express from "express";
 import {
   getAllMice,
-  getMouse,
-  createMouse,
-  deleteMouse,
+  addMouse,
   updateMouse,
+  deleteMouse,
 } from "../controllers/MouseController.js";
 
 const router = express.Router();
 
-// GET all mice
+// Get all mice
 router.get("/", getAllMice);
 
-// GET a single mouse
-router.get("/:id", getMouse);
+// Add a new mouse
+router.post("/", addMouse);
 
-// POST a new mouse
-router.post("/", createMouse);
+// Update an existing mouse by ID
+router.put("/:id", updateMouse);
 
-// DELETE a mouse
+// Delete a mouse by ID
 router.delete("/:id", deleteMouse);
-
-// PATCH a mouse
-router.patch("/:id", updateMouse);
 
 export default router;

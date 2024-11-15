@@ -1,19 +1,15 @@
 import express from "express";
 import {
-  getAllGames,
-  getGame,
+  getGames,
   createGame,
   deleteGame,
-  updateGame,
+  updateGame, // Import the updateGame function
 } from "../controllers/GameController.js";
 
 const router = express.Router();
 
 // GET all games
-router.get("/", getAllGames);
-
-// GET a single game
-router.get("/:id", getGame);
+router.get("/", getGames);
 
 // POST a new game
 router.post("/", createGame);
@@ -21,7 +17,7 @@ router.post("/", createGame);
 // DELETE a game
 router.delete("/:id", deleteGame);
 
-// PATCH a game
-router.patch("/:id", updateGame);
+// PUT (update) a game by ID
+router.put("/:id", updateGame); // Added PUT route
 
 export default router;
