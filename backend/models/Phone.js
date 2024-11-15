@@ -12,6 +12,7 @@ const phoneSchema = new Schema(
     price: { type: Number, required: true },
     imageCard: { type: String, required: true },
     imageOverview: { type: [String], required: true },
+    commercial: { type: String, required: true },
     
     // Phone-specific details
     operatingSystem: { type: String, required: true },
@@ -22,7 +23,7 @@ const phoneSchema = new Schema(
     processor: { type: String, required: true },
     ram: { type: String, required: true },
     storage: { type: String, required: true },
-    expandableStorage: { type: Boolean, default: false },
+    expandableStorage: { type: String, required: true },
     
     // Camera
     rearCamera: { type: String, required: true },
@@ -32,7 +33,7 @@ const phoneSchema = new Schema(
     // Battery
     batteryCapacity: { type: Number, required: true },
     chargingSpeed: { type: String },
-    wirelessCharging: { type: Boolean, default: false },
+    wirelessCharging: { type: String, required: true },
     
     // Connectivity
     simType: { type: String, default: 'Nano-SIM' },
@@ -40,9 +41,9 @@ const phoneSchema = new Schema(
     connectivityFeatures: { type: [String] },
     
     // Additional features
-    waterproof: { type: Boolean, default: false },
-    fingerprintSensor: { type: Boolean, default: true },
-    faceRecognition: { type: Boolean, default: false },
+    waterproof: { type: String, required: true },
+    fingerprintSensor: { type: String, required: true },
+    faceRecognition: { type: String, required: true },
     colorOptions: { type: [String] },
     weight: { type: String },
     dimensions: { type: String },

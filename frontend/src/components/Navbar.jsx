@@ -71,27 +71,28 @@ function Navbar() {
       onClick={handleDrawerToggle}
     >
       <List>
-        <ListItem button component={Link} to="./" sx={{ color: "white" }}>
+        <ListItem component={Link} to="./" sx={{ color: "white" }} button>
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem button component={Link} to="./Product" sx={{ color: "white" }}>
+        <ListItem component={Link} to="./Product" sx={{ color: "white" }} button>
           <ListItemText primary="Products" />
         </ListItem>
-        <ListItem button component={Link} to="./Deals" sx={{ color: "white" }}>
+        <ListItem component={Link} to="./Deals" sx={{ color: "white" }} button>
           <ListItemText primary="Deals" />
         </ListItem>
-        <ListItem button component={Link} to="./Compare" sx={{ color: "white" }}>
+        <ListItem component={Link} to="./Compare" sx={{ color: "white" }} button>
           <ListItemText primary="Compare" />
         </ListItem>
-        <ListItem button component={Link} to="./About" sx={{ color: "white" }}>
+        <ListItem component={Link} to="./About" sx={{ color: "white" }} button>
           <ListItemText primary="About" />
         </ListItem>
-        <ListItem button component={Link} to="./Admin" sx={{ color: "white" }}>
+        <ListItem component={Link} to="./Admin" sx={{ color: "white" }} button>
           <ListItemText primary="Admin" />
         </ListItem>
       </List>
     </Box>
   );
+  
 
   return (
     <>

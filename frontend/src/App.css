@@ -13,3 +13,26 @@ body {
 p {
   color: white;
 }
+
+.MuiTypography-root{
+  color: white!important;
+}
+
+.MuiListItemText-root {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0!important;
+}
+
+.MuiListItem-root:nth-of-type(odd) {
+  background-color: #2d2d2d !important;
+}
+
+.MuiListItem-root:nth-of-type(even) {
+  background-color: transparent !important;
+}

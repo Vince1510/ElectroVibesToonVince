@@ -7,11 +7,13 @@ const laptopSchema = new Schema(
     name: { type: String, required: true },
     code: { type: String, required: true },
     description: { type: String, required: true },
+    largeDescription: { type: String, required: true },
     brand: { type: String, required: true },
     category: { type: String, default: 'Laptop' },
     price: { type: Number, required: true },
     imageCard: { type: String, required: true },
     imageOverview: { type: [String], required: true },
+    commercial: { type: String, required: true },
     
     // Laptop-specific details
     operatingSystem: { type: String, required: true },
@@ -21,12 +23,12 @@ const laptopSchema = new Schema(
     processor: { type: String, required: true },
     ram: { type: String, required: true },
     storage: { type: String, required: true },
-    expandableStorage: { type: Boolean, default: false },
+    expandableStorage: { type: String, required: true },
     
     // Graphics and Display
     gpu: { type: String },
     refreshRate: { type: Number },
-    touchScreen: { type: Boolean, default: false },
+    touchScreen: { type: String, required: true },
     
     // Battery
     batteryCapacity: { type: Number },
@@ -35,15 +37,15 @@ const laptopSchema = new Schema(
     
     // Connectivity
     connectivityPorts: { type: [String] },
-    wifiSupport: { type: Boolean, default: true },
+    wifiSupport: { type: String, required: true },
     bluetoothVersion: { type: String },
     
     // Additional features
     weight: { type: String },
     dimensions: { type: String },
     colorOptions: { type: [String] },
-    fingerprintSensor: { type: Boolean, default: false },
-    webcam: { type: Boolean, default: true },
+    fingerprintSensor: { type: String, required: true },
+    webcam: { type: String, required: true },
   },
   { timestamps: true }
 );
