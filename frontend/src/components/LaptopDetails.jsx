@@ -3,7 +3,7 @@ import { Paper, Typography, Divider, List, ListItem, ListItemText } from "@mui/m
 
 const LaptopDetails = ({ product }) => {
   return (
-    <Paper elevation={3} sx={{ padding: 3, backgroundColor: "#121212", color: "#ffffff" }}>
+    <Paper elevation={3} sx={{ padding: 3, backgroundColor: "transparent", color: "#ffffff" }}>
       <Typography variant="h5" gutterBottom>
         Product Specs
       </Typography>

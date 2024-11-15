@@ -37,7 +37,7 @@ function DetailPage() {
         justifyContent="center"
         alignItems="center"
         height="100vh"
-        sx={{ backgroundColor: "black" }}
+        sx={{ backgroundColor: "transparent" }}
       >
         <CircularProgress sx={{ color: "white" }} />
       </Box>
@@ -53,7 +53,7 @@ function DetailPage() {
   }
 
   return (
-    <Box sx={{ padding: 4, backgroundColor: "#121212", color: "white", minHeight: "100vh" }}>
+    <Box sx={{ padding: 4, backgroundColor: "transparent", color: "white", minHeight: "100vh" }}>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           <Typography variant="h4" gutterBottom>
@@ -110,10 +110,9 @@ function DetailPage() {
           </Typography>
           <Card sx={{ marginTop: 4, marginBottom: 2 }}>
             <iframe
-              src={`${product.commercial}&controls=0&autoplay=1`}
+              src={`${product.commercial}&controls=0`}
               title="Commercial"
               style={{ width: "100%", height: 300, border: "none" }}
-              allow="autoplay"
               allowFullScreen
             />
           </Card>

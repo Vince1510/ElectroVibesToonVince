@@ -14,6 +14,16 @@ const laptopSchema = new Schema(
     imageCard: { type: String, required: true },
     imageOverview: { type: [String], required: true },
     commercial: { type: String, required: true },
+    amount: { type: String, required: true },
+    maxAmount: { type: String, required: true },
+    state: { type: String, required: true },
+    color: { type: [String], required: true },
+    model: { type: [String], required: true },
+    seller: { type: String, required: true },
+    sellerScore: { type: String, required: true },
+    deliveryTime: { type: String, required: true },
+    oftenBoughtWith: { type: [String], required: true },
+    othersAlsoLookAt: { type: [String], required: true },
     
     // Laptop-specific details
     operatingSystem: { type: String, required: true },
