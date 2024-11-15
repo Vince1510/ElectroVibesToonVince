@@ -1,3 +1,4 @@
+// Product.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -70,7 +71,7 @@ function Product() {
         product.price >= priceRange[0] && product.price <= priceRange[1];
       const isCategoryMatch =
         selectedCategory === "All" ||
-        product.category.toLowerCase() === selectedCategory.toLowerCase();
+        product.category?.toLowerCase() === selectedCategory.toLowerCase();
       const isBrandMatch =
         selectedBrands.length === 0 || selectedBrands.includes(product.brand);
       const isSpecsMatch =
@@ -85,6 +86,8 @@ function Product() {
     .sort((a, b) => {
       if (sortOrder === "lowToHigh") return a.price - b.price;
       if (sortOrder === "highToLow") return b.price - a.price;
+      if (sortOrder === "aToZ") return a.name.localeCompare(b.name);
+      if (sortOrder === "zToA") return b.name.localeCompare(a.name);
       return 0;
     });
 
