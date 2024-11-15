@@ -1,64 +1,84 @@
-// controllers/MouseController.js
-
 import Mouse from "../models/Mouse.js";
-import mongoose from "mongoose";
 
-// Get all mice
+// Fetch all mice
 export const getAllMice = async (req, res) => {
-  const mice = await Mouse.find({}).sort({ createdAt: -1 });
-  res.status(200).json(mice);
+  try {
+    const mice = await Mouse.find(); // Fetch all mice
+    res.status(200).json(mice); // Return all mice with all the fields
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// Get a single mouse
-export const getMouse = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "No such mouse" });
-  }
-
-  const mouse = await Mouse.findById(id);
-
-  if (!mouse) {
-    return res.status(404).json({ error: "No such mouse" });
-  }
-
-  res.status(200).json(mouse);
-};
-
-// Create a new mouse
-export const createMouse = async (req, res) => {
+// Add a new mouse
+export const addMouse = async (req, res) => {
   const {
     name,
+    category,
     brand,
     price,
-    imageUrl,
-    dpi,
-    connectionType,
-    batteryLife,
-    weight,
-    dimensions,
-    colorOptions,
-    features,
+    imageCard,
+    imageOverview,
+    description,
+    specs,
+  } = req.body;
+
+  const newMouse = new Mouse({
+    name,
+    category,
+    brand,
+    price,
+    imageCard, // Include imageCard
+    imageOverview, // Include imageOverview
+    description,
+    specs,
+  });
+
+  try {
+    await newMouse.save();
+    res.status(201).json(newMouse); // Return the newly added mouse object
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Update an existing mouse
+export const updateMouse = async (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    category,
+    brand,
+    price,
+    imageCard,
+    imageOverview,
+    description,
+    specs,
   } = req.body;
 
   try {
-    const mouse = await Mouse.create({
-      name,
-      brand,
-      price,
-      imageUrl,
-      dpi,
-      connectionType,
-      batteryLife,
-      weight,
-      dimensions,
-      colorOptions,
-      features,
-    });
-    res.status(200).json(mouse);
+    const updatedMouse = await Mouse.findByIdAndUpdate(
+      id,
+      {
+        name,
+        category,
+        brand,
+        price,
+        imageCard,
+        imageOverview,
+        description,
+        specs,
+      },
+      { new: true }
+    );
+
+    if (!updatedMouse) {
+      return res.status(404).json({ message: "Mouse not found" });
+    }
+
+    res.status(200).json(updatedMouse); // Return the updated mouse object
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -66,36 +86,15 @@ export const createMouse = async (req, res) => {
 export const deleteMouse = async (req, res) => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "No such mouse" });
+  try {
+    const deletedMouse = await Mouse.findByIdAndDelete(id);
+
+    if (!deletedMouse) {
+      return res.status(404).json({ message: "Mouse not found" });
+    }
+
+    res.status(200).json({ message: "Mouse deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  const mouse = await Mouse.findOneAndDelete({ _id: id });
-
-  if (!mouse) {
-    return res.status(400).json({ error: "No such mouse" });
-  }
-
-  res.status(200).json(mouse);
-};
-
-// Update a mouse
-export const updateMouse = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "No such mouse" });
-  }
-
-  const mouse = await Mouse.findOneAndUpdate(
-    { _id: id },
-    { ...req.body },
-    { new: true }
-  );
-
-  if (!mouse) {
-    return res.status(400).json({ error: "No such mouse" });
-  }
-
-  res.status(200).json(mouse);
 };

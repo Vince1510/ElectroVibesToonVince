@@ -1,29 +1,23 @@
-// monitorRoutes.js
-
 import express from "express";
 import {
   getAllMonitors,
-  getMonitor,
-  createMonitor,
-  deleteMonitor,
+  addMonitor,
   updateMonitor,
+  deleteMonitor,
 } from "../controllers/MonitorController.js";
 
 const router = express.Router();
 
-// GET all monitors
+// Get all monitors
 router.get("/", getAllMonitors);
 
-// GET a single monitor
-router.get("/:id", getMonitor);
+// Add a new monitor
+router.post("/", addMonitor);
 
-// POST a new monitor
-router.post("/", createMonitor);
+// Update an existing monitor
+router.put("/:id", updateMonitor);
 
-// DELETE a monitor
+// Delete a monitor
 router.delete("/:id", deleteMonitor);
 
-// PATCH a monitor
-router.patch("/:id", updateMonitor);
-
-export default router; // Ensure this is a default export
+export default router;

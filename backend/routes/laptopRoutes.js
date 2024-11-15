@@ -1,21 +1,27 @@
-import express from 'express';
-import { getAllLaptops, getLaptop, createLaptop, deleteLaptop, updateLaptop } from '../controllers/LaptopController.js';
+import express from "express";
+import {
+  getAllLaptops,
+  getLaptop,
+  createLaptop,
+  deleteLaptop,
+  updateLaptop,
+} from "../controllers/LaptopController.js";
 
 const router = express.Router();
 
 // GET all laptops
-router.get('/', getAllLaptops);
+router.get("/", getAllLaptops);
 
 // GET a single laptop
-router.get('/:id', getLaptop);
+router.get("/:id", getLaptop);
 
 // POST a new laptop
-router.post('/', createLaptop);
+router.post("/", createLaptop);
 
 // DELETE a laptop
-router.delete('/:id', deleteLaptop);
+router.delete("/:id", deleteLaptop);
 
-// PATCH a laptop
-router.patch('/:id', updateLaptop);
+// PUT (update) a laptop
+router.put("/:id", updateLaptop); // Change from PATCH to PUT here
 
 export default router;

@@ -1,21 +1,27 @@
-import express from 'express';
-import { getAllPhones, getPhone, createPhone, deletePhone, updatePhone } from '../controllers/PhoneController.js';
+import express from "express";
+import {
+  getAllPhones,
+  getPhone,
+  createPhone,
+  deletePhone,
+  updatePhone,
+} from "../controllers/PhoneController.js";
 
 const router = express.Router();
 
 // GET all phones
-router.get('/', getAllPhones);
+router.get("/", getAllPhones);
 
 // GET a single phone
-router.get('/:id', getPhone);
+router.get("/:id", getPhone);
 
 // POST a new phone
-router.post('/', createPhone);
+router.post("/", createPhone);
 
 // DELETE a phone
-router.delete('/:id', deletePhone);
+router.delete("/:id", deletePhone);
 
-// PATCH a phone
-router.patch('/:id', updatePhone);
+// PUT a phone
+router.put("/:id", updatePhone);
 
 export default router;
