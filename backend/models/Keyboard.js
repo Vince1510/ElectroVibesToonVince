@@ -12,17 +12,18 @@ const keyboardSchema = new Schema(
     price: { type: Number, required: true },
     imageCard: { type: String, required: true },
     imageOverview: { type: [String], required: true },
+    commercial: { type: String, required: true },
     
     // Keyboard-specific details
     layout: { type: String, required: true }, // e.g., QWERTY, AZERTY
     connectionType: { type: String, required: true }, // e.g., wired, wireless
     switchType: { type: String, required: true }, // e.g., mechanical, membrane
-    backlighting: { type: Boolean, default: false },
-    rgbLighting: { type: Boolean, default: false },
+    backlighting: { type: String, required: true },
+    rgbLighting: { type: String, required: true },
     keycapMaterial: { type: String }, // e.g., ABS, PBT
     size: { type: String }, // e.g., full-size, tenkeyless
-    macroKeys: { type: Boolean, default: false },
-    hotSwappable: { type: Boolean, default: false },
+    macroKeys: { type: String, required: true },
+    hotSwappable: { type: String, required: true },
     batteryLife: { type: String }, // Only if wireless
     
     // Additional features

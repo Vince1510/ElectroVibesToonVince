@@ -32,52 +32,10 @@ export const getKeyboard = async (req, res) => {
 
 // Create a new keyboard
 export const createKeyboard = async (req, res) => {
-  const {
-    name,
-    code,
-    description,
-    brand,
-    price,
-    imageCard,
-    imageOverview,
-    layout,
-    connectionType,
-    switchType,
-    backlighting,
-    rgbLighting,
-    keycapMaterial,
-    size,
-    macroKeys,
-    hotSwappable,
-    batteryLife,
-    colorOptions,
-    weight,
-    dimensions,
-  } = req.body;
+  const { name, code, description, brand, price, imageCard, imageOverview, commercial, layout, connectionType, switchType, backlighting, rgbLighting, keycapMaterial, size, macroKeys, hotSwappable, batteryLife, colorOptions, weight, dimensions } = req.body;
 
   try {
-    const keyboard = await Keyboard.create({
-      name,
-      code,
-      description,
-      brand,
-      price,
-      imageCard,
-      imageOverview,
-      layout,
-      connectionType,
-      switchType,
-      backlighting,
-      rgbLighting,
-      keycapMaterial,
-      size,
-      macroKeys,
-      hotSwappable,
-      batteryLife,
-      colorOptions,
-      weight,
-      dimensions,
-    });
+    const keyboard = await Keyboard.create({ name, code, description, brand, price, imageCard, imageOverview, commercial, layout, connectionType, switchType, backlighting, rgbLighting, keycapMaterial, size, macroKeys, hotSwappable, batteryLife, colorOptions, weight, dimensions });
     res.status(200).json(keyboard);
   } catch (error) {
     res.status(400).json({ error: error.message });
