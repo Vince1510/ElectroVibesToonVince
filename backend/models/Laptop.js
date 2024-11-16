@@ -7,7 +7,7 @@ const laptopSchema = new Schema(
     name: { type: String, required: true },
     code: { type: String, required: true },
     description: { type: String, required: true },
-    largeDescription: { type: String, required: true },
+    largeDescription: { type: [String], required: true },
     brand: { type: String, required: true },
     category: { type: String, default: 'Laptop' },
     price: { type: Number, required: true },

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Paper, Typography, Divider, List, ListItem, ListItemText, Button, Box } from "@mui/material";
 
-const LaptopDetails = ({ product }) => {
+const PhoneDetails = ({ product }) => {
   const [showAllDetails, setShowAllDetails] = useState(false);
 
   const toggleDetails = () => {
@@ -16,7 +16,7 @@ const LaptopDetails = ({ product }) => {
       <Divider sx={{ marginBottom: 2, backgroundColor: "#424242" }} />
 
       <Typography variant="h6" gutterBottom sx={{ color: "#bdbdbd" }}>
-        Laptop-specific details
+        Phone-specific details
       </Typography>
       <List>
         <ListItem>
@@ -30,6 +30,9 @@ const LaptopDetails = ({ product }) => {
         </ListItem>
         <ListItem>
           <ListItemText primary="Screen Technology" secondary={product.screenTechnology || "N/A"} />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="Refresh Rate" secondary={product.refreshRate || "N/A"} />
         </ListItem>
         <ListItem>
           <ListItemText primary="Processor" secondary={product.processor || "N/A"} />
@@ -46,19 +49,20 @@ const LaptopDetails = ({ product }) => {
         {showAllDetails && (
           <>
             <Typography variant="h6" gutterBottom sx={{ marginTop: 3, color: "#bdbdbd" }}>
-              Graphics and Display
+              Camera
             </Typography>
             <List>
               <ListItem>
-                <ListItemText primary="Graphics card" secondary={product.gpu || "N/A"} />
+                <ListItemText primary="Rear Camera" secondary={product.rearCamera || "N/A"} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Refresh Rate" secondary={product.refreshRate || "N/A"} />
+                <ListItemText primary="Front Camera" secondary={product.frontCamera || "N/A"} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Touch Screen" secondary={product.touchScreen || "N/A"} />
+                <ListItemText primary="Camera Features" secondary={product.cameraFeatures?.join(", ") || "N/A"} />
               </ListItem>
             </List>
+
             <Typography variant="h6" gutterBottom sx={{ marginTop: 3, color: "#bdbdbd" }}>
               Battery
             </Typography>
@@ -67,10 +71,10 @@ const LaptopDetails = ({ product }) => {
                 <ListItemText primary="Battery Capacity" secondary={product.batteryCapacity || "N/A"} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Battery Life" secondary={product.batteryLife || "N/A"} />
+                <ListItemText primary="Charging Speed" secondary={product.chargingSpeed || "N/A"} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Charging Speed" secondary={product.chargingSpeed || "N/A"} />
+                <ListItemText primary="Wireless Charging" secondary={product.wirelessCharging || "N/A"} />
               </ListItem>
             </List>
 
@@ -79,33 +83,37 @@ const LaptopDetails = ({ product }) => {
             </Typography>
             <List>
               <ListItem>
-                <ListItemText primary="Connectivity Ports" secondary={product.connectivityPorts || "N/A"} />
+                <ListItemText primary="SIM Type" secondary={product.simType || "N/A"} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Wifi Support" secondary={product.wifiSupport || "N/A"} />
+                <ListItemText primary="Network" secondary={product.network || "N/A"} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Bluetooth Version" secondary={product.bluetoothVersion || "N/A"} />
+                <ListItemText primary="Connectivity Features" secondary={product.connectivityFeatures?.join(", ") || "N/A"} />
               </ListItem>
             </List>
+
             <Typography variant="h6" gutterBottom sx={{ marginTop: 3, color: "#bdbdbd" }}>
               Additional features
             </Typography>
             <List>
               <ListItem>
-                <ListItemText primary="Weight" secondary={product.weight || "N/A"} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Dimensions" secondary={product.Dimensions || "N/A"} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Color Options" secondary={product.colorOptions || "N/A"} />
+                <ListItemText primary="Waterproof" secondary={product.waterproof || "N/A"} />
               </ListItem>
               <ListItem>
                 <ListItemText primary="Fingerprint Sensor" secondary={product.fingerprintSensor || "N/A"} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Webcam" secondary={product.webcam || "N/A"} />
+                <ListItemText primary="Face Recognition" secondary={product.faceRecognition || "N/A"} />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="Color Options" secondary={product.colorOptions?.join(", ") || "N/A"} />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="Weight" secondary={product.weight || "N/A"} />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="Dimensions" secondary={product.dimensions || "N/A"} />
               </ListItem>
             </List>
           </>
@@ -130,4 +138,4 @@ const LaptopDetails = ({ product }) => {
   );
 };
 
-export default LaptopDetails;
+export default PhoneDetails;
