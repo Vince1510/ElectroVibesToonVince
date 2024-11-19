@@ -1,119 +1,234 @@
-import React, { useState, useRef } from "react";
-import { Box, IconButton, Typography } from "@mui/material";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Box,
+  IconButton,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+} from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import "../App.css";
 
 const CardSlider = () => {
-  const sliderRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const cardWidth = 300; // Width of each card
-  const totalCards = 5; // Total number of unique cards
+  const [cards, setCards] = useState([]); // State for slider cards
+  const [bigCards, setBigCards] = useState([]); // State for big cards
+  const sliderRef = useRef(null); // Reference for scrolling
+  const intervalRef = useRef(null); // Reference for interval
+  const cardWidth = 300; // Card width with gap
+  const slideInterval = 3000; // Time interval for auto-slide (3 seconds)
 
-  const handleLeftClick = () => {
-    setCurrentIndex((prevIndex) => {
-      if (prevIndex > 0) {
-        return prevIndex - 1;
+  // Fetch data from multiple endpoints
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const endpoints = [
+          "http://localhost:4000/api/laptops",
+          "http://localhost:4000/api/keyboards",
+          "http://localhost:4000/api/phones",
+          "http://localhost:4000/api/games",
+          "http://localhost:4000/api/mice",
+          "http://localhost:4000/api/monitors",
+        ];
+
+        const responses = await Promise.all(
+          endpoints.map((endpoint) => fetch(endpoint))
+        );
+
+        const data = await Promise.all(
+          responses.map((response) => {
+            if (!response.ok) {
+              console.error("Error fetching data:", response.statusText);
+              return [];
+            }
+            return response.json();
+          })
+        );
+
+        const allProducts = data.flat();
+        setCards(allProducts.slice(0, 7));
+        setBigCards(allProducts.slice(7, 9));
+      } catch (error) {
+        console.error("Error fetching products:", error);
       }
-      return totalCards - 1; // Jump to last card
-    });
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleScroll = (direction) => {
+    if (sliderRef.current) {
+      const scrollAmount = cardWidth;
+      const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+
+      if (direction === "left") {
+        if (sliderRef.current.scrollLeft === 0) {
+          sliderRef.current.scrollTo({ left: maxScroll, behavior: "smooth" });
+        } else {
+          sliderRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+        }
+      } else if (direction === "right") {
+        if (sliderRef.current.scrollLeft >= maxScroll - 1) {
+          sliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          sliderRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+        }
+      }
+    }
   };
 
-  const handleRightClick = () => {
-    setCurrentIndex((prevIndex) => {
-      if (prevIndex < totalCards - 1) {
-        return prevIndex + 1;
-      }
-      return 0; // Jump to first card
-    });
-  };
+  useEffect(() => {
+    const startAutoSlide = () => {
+      intervalRef.current = setInterval(() => {
+        handleScroll("right");
+      }, slideInterval);
+    };
 
-  // Example data for the big cards
-  const bigCardsData = [
-    {
-      title: "Big Card 1",
-      description: "Description for Big Card 1",
-      price: "$99.99",
-      discountedPrice: "$79.99",
-    },
-    {
-      title: "Big Card 2",
-      description: "Description for Big Card 2",
-      price: "$89.99",
-      discountedPrice: "$69.99",
-    },
-    {
-      title: "Big Card 3",
-      description: "Description for Big Card 3",
-      price: "$79.99",
-      discountedPrice: "$59.99",
-    },
-    {
-      title: "Big Card 4",
-      description: "Description for Big Card 4",
-      price: "$69.99",
-      discountedPrice: "$49.99",
-    },
-  ];
+    startAutoSlide();
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, []);
 
   return (
     <Box>
+      {/* Slider Section */}
       <Box position="relative" width="100%" overflow="hidden" mb={4}>
         <IconButton
-          onClick={handleLeftClick}
+          onClick={() => handleScroll("left")}
           sx={{
             position: "absolute",
             top: "50%",
             left: "10px",
             zIndex: 2,
-            color: "white", // Black icon color
-            borderRadius: "50%", // Round buttons
-            padding: "10px", // Padding for better touch targets
+            color: "white",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            "&:hover": { backgroundColor: "rgba(0,0,0,0.7)" },
           }}
         >
           <ArrowBackIosIcon />
         </IconButton>
-        <IconButton
-          onClick={handleRightClick}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            right: "10px",
-            zIndex: 2,
-            color: "white", // Black icon color
-            borderRadius: "50%", // Round buttons
-            padding: "10px", // Padding for better touch targets
-          }}
-        >
-          <ArrowForwardIosIcon />
-        </IconButton>
-        {/* Card container */}
         <Box
           ref={sliderRef}
           display="flex"
           gap={2}
           sx={{
-            transform: `translateX(-${currentIndex * cardWidth}px)`, // Move based on the current index
-            transition: "transform 0.5s ease", // Smooth transition for the movement
+            overflowX: "auto",
+            scrollBehavior: "smooth",
+            "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar
           }}
         >
-          {[...Array(totalCards)].map((_, index) => (
-            <Box
-              key={index}
-              className="card" // Add className for styling
+          {cards.map((card, index) => (
+            <Card
+              key={card._id || index}
               sx={{
-                minWidth: `${cardWidth}px`,
-                height: "200px",
+                flex: "0 0 auto",
+                width: "300px",
+                height: "330px",
+                background:
+                  "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
+                boxShadow: "0px 4px 4px 0px #000",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
               }}
             >
-              Card {index + 1}
-            </Box>
+              <CardMedia
+                component="img"
+                height="160"
+                image={card.imageCard}
+                alt={card.name}
+                sx={{ objectFit: "contain" }}
+              />
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  flexGrow: 1,
+                  paddingBottom: "0px",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  color="white"
+                  sx={{ fontSize: "1rem", marginBottom: "5px" }}
+                >
+                  {card.name}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "0.8rem",
+                    color: "gray",
+                    flexGrow: 1,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    marginBottom: "5px",
+                  }}
+                >
+                  {card.description}
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: "auto",
+                  }}
+                >
+                  {card.dealPrice ? (
+                    <Box sx={{ textAlign: "right", display: "flex" }}>
+                      <Typography
+                        sx={{
+                          fontWeight: "bold",
+                          color: "#f50057",
+                          fontSize: "1rem",
+                          marginRight: 0.2,
+                        }}
+                      >
+                        €{card.dealPrice}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          textDecoration: "line-through",
+                          color: "gray",
+                          fontSize: "0.7rem",
+                        }}
+                      >
+                        €{card.price}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                        color: "white",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      €{card.price}
+                    </Typography>
+                  )}
+                </Box>
+              </CardContent>
+            </Card>
           ))}
         </Box>
-        {/* Right Arrow */}
         <IconButton
-          onClick={handleRightClick}
-          sx={{ position: "absolute", top: "50%", right: "10px", zIndex: 2 }}
+          onClick={() => handleScroll("right")}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            right: "10px",
+            zIndex: 2,
+            color: "white",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            "&:hover": { backgroundColor: "rgba(0,0,0,0.7)" },
+          }}
         >
           <ArrowForwardIosIcon />
         </IconButton>
@@ -121,36 +236,100 @@ const CardSlider = () => {
 
       {/* Big Cards Section */}
       <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2}>
-        {bigCardsData.map((card, index) => (
-          <Box
-            key={index}
-            className="card" // Add className for styling
+        {bigCards.map((card, index) => (
+          <Card
+            key={card._id || index}
             sx={{
-              height: "300px", // Set a height for big cards
+              height: "330px",
+              background:
+                "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
+              boxShadow: "0px 4px 4px 0px #000",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
           >
-            <img
-              src={card.image}
-              alt={card.title}
-              style={{ width: "100%", height: "auto" }}
+            <CardMedia
+              component="img"
+              height="160"
+              image={card.imageCard}
+              alt={card.name}
+              sx={{ objectFit: "contain" }}
             />
-            <Box p={2}>
-              <Typography variant="h6" className="title" fontWeight="bold">
-                {card.title}
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                flexGrow: 1,
+                paddingBottom: "0px",
+              }}
+            >
+              <Typography
+                variant="h6"
+                color="white"
+                sx={{ fontSize: "1rem", marginBottom: "5px" }}
+              >
+                {card.name}
               </Typography>
               <Typography
-                variant="body2"
-                className="description"
-                color="textSecondary"
+                sx={{
+                  fontSize: "0.8rem",
+                  color: "gray",
+                  flexGrow: 1,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitBoxOrient: "vertical",
+                  WebkitLineClamp: 2,
+                  marginBottom: "5px",
+                }}
               >
                 {card.description}
               </Typography>
-              <Typography variant="body1" className="price" fontWeight="bold">
-                {card.price}{" "}
-                <span className="discounted-price">{card.discountedPrice}</span>
-              </Typography>
-            </Box>
-          </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "auto",
+                }}
+              >
+                {card.dealPrice ? (
+                  <Box sx={{ textAlign: "right", display: "flex" }}>
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                        color: "#f50057",
+                        fontSize: "1rem",
+                        marginRight: 0.2,
+                      }}
+                    >
+                      €{card.dealPrice}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        textDecoration: "line-through",
+                        color: "gray",
+                        fontSize: "0.7rem",
+                      }}
+                    >
+                        €{card.price}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                        color: "white",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      €{card.price}
+                    </Typography>
+                  )}
+              </Box>
+            </CardContent>
+          </Card>
         ))}
       </Box>
     </Box>

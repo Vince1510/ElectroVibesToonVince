@@ -40,6 +40,7 @@ const Home = () => {
             alignItems: "center",
             textTransform: "none",
             color: "white",
+            marginBottom: 5,
           }}
         >
           Keyboard
