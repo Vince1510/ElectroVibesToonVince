@@ -31,13 +31,12 @@ function Navbar() {
   const isTabletOrMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    setMobileOpen((prev) => !prev);
   };
 
   const handleSearch = (event) => {
     event.preventDefault();
 
-    // List of recognized brands
     const recognizedBrands = [
       "Apple",
       "Samsung",
@@ -51,12 +50,11 @@ function Navbar() {
       "Doogee",
     ];
 
-    // Check if the search query matches any recognized brand
     if (recognizedBrands.includes(searchQuery.trim())) {
       navigate(`/Product?brand=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery("");
     } else {
-      setShowNotification(true); // Show notification for "not found"
+      setShowNotification(true);
     }
   };
 
@@ -68,31 +66,30 @@ function Navbar() {
         height: "100%",
         color: "white",
       }}
-      onClick={handleDrawerToggle}
+      onClick={() => setMobileOpen(false)}
     >
       <List>
-        <ListItem component={Link} to="./" sx={{ color: "white" }} button>
+        <ListItem component={Link} to="./" sx={{ color: "white" }}>
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem component={Link} to="./Product" sx={{ color: "white" }} button>
+        <ListItem component={Link} to="./Product" sx={{ color: "white" }}>
           <ListItemText primary="Products" />
         </ListItem>
-        <ListItem component={Link} to="./Deals" sx={{ color: "white" }} button>
+        <ListItem component={Link} to="./Deals" sx={{ color: "white" }}>
           <ListItemText primary="Deals" />
         </ListItem>
-        <ListItem component={Link} to="./Compare" sx={{ color: "white" }} button>
+        <ListItem component={Link} to="./Compare" sx={{ color: "white" }}>
           <ListItemText primary="Compare" />
         </ListItem>
-        <ListItem component={Link} to="./About" sx={{ color: "white" }} button>
+        <ListItem component={Link} to="./About" sx={{ color: "white" }}>
           <ListItemText primary="About" />
         </ListItem>
-        <ListItem component={Link} to="./Admin" sx={{ color: "white" }} button>
+        <ListItem component={Link} to="./Admin" sx={{ color: "white" }}>
           <ListItemText primary="Admin" />
         </ListItem>
       </List>
     </Box>
   );
-  
 
   return (
     <>
@@ -104,7 +101,6 @@ function Navbar() {
         }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          {/* Logo and Hamburger Menu */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
               color="inherit"
@@ -149,7 +145,6 @@ function Navbar() {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            {/* Search Bar */}
             {!isTabletOrMobile && (
               <form onSubmit={handleSearch} style={{ display: "flex", alignItems: "center" }}>
                 <Box
@@ -172,8 +167,6 @@ function Navbar() {
                 </Box>
               </form>
             )}
-
-            {/* Login Button */}
             <Button
               variant="contained"
               color="primary"
@@ -187,8 +180,6 @@ function Navbar() {
             >
               Login
             </Button>
-
-            {/* Shopping Cart Icon */}
             <IconButton
               color="inherit"
               component={Link}
@@ -232,17 +223,15 @@ function Navbar() {
         )}
       </AppBar>
 
-      {/* Drawer for Mobile View */}
       <Drawer
         anchor="left"
         open={mobileOpen}
-        onClose={handleDrawerToggle}
+        onClose={() => setMobileOpen(false)}
         ModalProps={{ keepMounted: true }}
       >
         {drawer}
       </Drawer>
 
-      {/* Notification Snackbar */}
       <Snackbar
         open={showNotification}
         autoHideDuration={3000}
