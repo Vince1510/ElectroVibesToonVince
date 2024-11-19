@@ -5,7 +5,6 @@ import { Container } from "@mui/material";
 import Navbar from "./components/Navbar";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
-import Contact from "./Pages/Contact";
 import Login from "./Pages/Login";
 import Admin from "./Pages/Admin/Admin";
 import BreadCrumb from "./components/BreadCrumbs";
@@ -23,7 +22,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/product" element={<Product />} />
           <Route path="/:category/:productId" element={<DetailPage />} />
           <Route path="/detail/:category/:productId" element={<DetailPage />} />

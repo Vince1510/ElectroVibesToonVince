@@ -1,48 +1,62 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Card, CardMedia, Box, Grid, Button, CircularProgress, Divider } from "@mui/material";
+import {
+  Typography,
+  Card,
+  CardMedia,
+  Box,
+  Grid,
+  Button,
+  CircularProgress,
+  Divider,
+  Tooltip,
+} from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Carousel from "react-material-ui-carousel";
+import ProductCard from "../components/ProductCard";
 import LaptopDetails from "../components/LaptopDetails";
 import PhoneDetails from "../components/PhoneDetails";
-import Tooltip from "@mui/material/Tooltip";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 function DetailPage() {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showAllDescription, setShowAllDescription] = useState(false);
-  const [currentImage, setCurrentImage] = useState(0);
-  const [deliveryDate, setDeliveryDate] = useState(null);
   const [oftenBoughtProducts, setOftenBoughtProducts] = useState([]);
   const [othersAlsoLookProducts, setOthersAlsoLookProducts] = useState([]);
-  
+  const [currentImage, setCurrentImage] = useState(0);
+  const [showAllDescription, setShowAllDescription] = useState(false);
+  const [deliveryDate, setDeliveryDate] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedModel, setSelectedModel] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        let response = await fetch(`http://localhost:4000/api/phones/${productId}`);
-        if (!response.ok) {
-          response = await fetch(`http://localhost:4000/api/laptops/${productId}`);
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setProduct(data);
+        const endpoints = [
+          `http://localhost:4000/api/phones/${productId}`,
+          `http://localhost:4000/api/laptops/${productId}`,
+        ];
 
-        if (typeof data.deliveryTime === "number") {
-          const currentDate = new Date();
-          console.log("Current Date:", currentDate);
-          currentDate.setDate(currentDate.getDate() + data.deliveryTime);
-          console.log("Delivery Date After Adding:", currentDate);
-          const formattedDate = currentDate.toLocaleDateString("en-GB", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          });
-          setDeliveryDate(formattedDate);
-        } else {
-          console.error("Invalid deliveryTime:", data.deliveryTime);
-        }        
+        for (const endpoint of endpoints) {
+          const response = await fetch(endpoint);
+          if (response.ok) {
+            const data = await response.json();
+            setProduct(data);
+            if (typeof data.deliveryTime === "number") {
+              const currentDate = new Date();
+              currentDate.setDate(currentDate.getDate() + data.deliveryTime);
+              const formattedDate = currentDate.toLocaleDateString("en-GB", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+              });
+              setDeliveryDate(formattedDate);
+            }
+            return;
+          }
+        }
+        throw new Error("Product not found.");
       } catch (error) {
         console.error("Error fetching product:", error);
       } finally {
@@ -55,62 +69,75 @@ function DetailPage() {
 
   useEffect(() => {
     const fetchRelatedProducts = async (codes) => {
+      const endpoints = [
+        "http://localhost:4000/api/laptops",
+        "http://localhost:4000/api/keyboards",
+        "http://localhost:4000/api/phones",
+        "http://localhost:4000/api/games",
+        "http://localhost:4000/api/mice",
+        "http://localhost:4000/api/monitors",
+      ];
+
       try {
         const products = await Promise.all(
-          codes.map((code) =>
-            fetch(`http://localhost:4000/api/laptop/${code}`).then((res) => res.json())
-          )
+          codes.map(async (code) => {
+            for (const endpoint of endpoints) {
+              try {
+                const response = await fetch(`${endpoint}/${code}`);
+                if (response.ok) {
+                  return await response.json();
+                }
+              } catch (error) {
+                console.warn(`Error fetching from ${endpoint}:`, error);
+              }
+            }
+            console.warn(`Product with code ${code} not found in any endpoint.`);
+            return null;
+          })
         );
-        return products;
+        return products.filter((product) => product !== null);
       } catch (error) {
         console.error("Error fetching related products:", error);
         return [];
       }
     };
-  
+
     const fetchAllRelatedProducts = async () => {
       if (product) {
-        const oftenBoughtProducts = await fetchRelatedProducts(product.oftenBoughtWith);
-        const othersAlsoLookProducts = await fetchRelatedProducts(product.othersAlsoLookAt);
-  
+        const oftenBoughtProducts = await fetchRelatedProducts(product.oftenBoughtWith || []);
+        const othersAlsoLookProducts = await fetchRelatedProducts(product.othersAlsoLookAt || []);
+
         setOftenBoughtProducts(oftenBoughtProducts);
         setOthersAlsoLookProducts(othersAlsoLookProducts);
       }
     };
-  
+
     fetchAllRelatedProducts();
   }, [product]);
 
+  const handleThumbnailClick = (index) => {
+    setCurrentImage(index);
+  };
+
   if (loading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-        sx={{ backgroundColor: "transparent" }}
-      >
-        <CircularProgress sx={{ color: "white" }} />
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
       </Box>
     );
   }
 
   if (!product) {
-    return (
-      <Typography
-        variant="h5"
-        sx={{ color: "white", textAlign: "center", marginTop: 4 }}
-      >
-        Product not found.
-      </Typography>
-    );
+    return <Typography variant="h5">Product not found.</Typography>;
   }
 
-  const handleThumbnailClick = (index) => {
-    setCurrentImage(index);
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
   };
-  
-  console.log(deliveryDate)
+
+  const handleModelSelect = (model) => {
+    setSelectedModel(model);
+  };
 
   return (
     <Box
@@ -232,6 +259,50 @@ function DetailPage() {
         </Grid>
 
         <Grid item xs={12} md={6} sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography variant="h6" sx={{ marginTop: 4 }}>
+            Choose your color
+          </Typography>
+          <Box sx={{ display: "flex", gap: 2, marginTop: 2, flexWrap: "wrap" }}>
+            {product.color.map((color, index) => (
+              <Box
+                key={index}
+                onClick={() => handleColorSelect(color)}
+                sx={{
+                  width: 25,
+                  height: 25,
+                  backgroundColor: color,
+                  borderRadius: "50%",
+                  border: selectedColor === color ? "2px solid white" : "2px solid gray",
+                  cursor: "pointer",
+                  transition: "0.3s",
+                }}
+              />
+            ))}
+          </Box>
+          
+          <Typography variant="h6" sx={{ marginTop: 2 }}>
+            Choose your model
+          </Typography>
+          <Box sx={{ display: "flex", gap: 2, marginTop: 2, marginBottom: 2, flexWrap: "wrap" }}>
+            {product.model.map((model, index) => (
+              <Box
+                key={index}
+                onClick={() => handleModelSelect(model)}
+                sx={{
+                  padding: "8px 16px",
+                  borderRadius: 2,
+                  border: selectedModel === model ? "2px solid white" : "2px solid gray",
+                  cursor: "pointer",
+                  backgroundColor: "transparent",
+                  color: "white",
+                  transition: "0.3s",
+                  textAlign: "center",
+                }}
+              >
+                {model}
+              </Box>
+            ))}
+          </Box>
           <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
             <Box>
               {product.dealPrice ? (
@@ -293,51 +364,51 @@ function DetailPage() {
               variant="contained"
               size="large"
               sx={{
-                textTransform: "uppercase",
                 fontWeight: "bold",
                 background: "transparent",
                 border: "1px solid white",
+                justifyContent: 'space-between',
                 alignSelf: "end",
                 marginTop: 4,
                 borderRadius: 2,
-                width: 170,
+                width: 140,
                 height: 45,
               }}
             >
-              Add to Cart
+              <ShoppingCartIcon /> In Cart
             </Button>
           </Box>
           <Divider sx={{ marginY: 4, backgroundColor: "#424242" }} /><Grid item xs={12} md={6}>
-  <Typography variant="h5">Often bought with</Typography>
-  <Box
-    sx={{
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 2,
-      marginTop: 2,
-    }}
-  >
-    {oftenBoughtProducts.map((relatedProduct) => (
-      <ProductCard key={relatedProduct.id} product={relatedProduct} />
-    ))}
-  </Box>
-
-  <Typography variant="h5" sx={{ marginTop: 4 }}>
-    Others also look at
-  </Typography>
-  <Box
-    sx={{
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 2,
-      marginTop: 2,
-    }}
-  >
-    {othersAlsoLookProducts.map((relatedProduct) => (
-      <ProductCard key={relatedProduct.id} product={relatedProduct} />
-    ))}
-  </Box>
-</Grid>
+          <Typography variant="h5">Often bought with</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 2,
+              marginTop: 2,
+            }}
+          >
+            {oftenBoughtProducts.map((relatedProduct) => (
+              <ProductCard key={relatedProduct.id || relatedProduct.code} product={relatedProduct} />
+            ))}
+          </Box>
+          
+          <Typography variant="h5" sx={{ marginTop: 4 }}>
+            Others also look at
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 2,
+              marginTop: 2,
+            }}
+          >
+            {othersAlsoLookProducts.map((relatedProduct) => (
+              <ProductCard key={relatedProduct.id || relatedProduct.code} product={relatedProduct} />
+            ))}
+          </Box>
+          </Grid>
         </Grid>
       </Grid>
     </Box>
