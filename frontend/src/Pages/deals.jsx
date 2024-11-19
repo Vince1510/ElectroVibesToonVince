@@ -13,18 +13,17 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import Filter from "../components/Filter";
 
-function Product() {
+function Deals() {
   const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedSpecs, setSelectedSpecs] = useState([]);
   const [sortOrder, setSortOrder] = useState("none");
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
-  // Fetch products and games from backend
+  // Fetch products from backend
   useEffect(() => {
-    const fetchProductsAndGames = async () => {
+    const fetchProducts = async () => {
       try {
         const responses = await Promise.all([
           fetch("http://localhost:4000/api/laptops"),
@@ -41,7 +40,7 @@ function Product() {
               console.error(
                 `Error fetching: ${response.url} - Status: ${response.status}`
               );
-              return []; // Return an empty array for failed requests
+              return [];
             }
             return await response.json();
           })
@@ -61,16 +60,15 @@ function Product() {
       }
     };
 
-    fetchProductsAndGames();
+    fetchProducts();
   }, []);
 
+  // Filter for products with dealPrice
   const filteredProducts = products
+    .filter((product) => product.dealPrice) // Show only products with a deal price
     .filter((product) => {
       const isWithinPriceRange =
-        product.price >= priceRange[0] && product.price <= priceRange[1];
-      const isCategoryMatch =
-        selectedCategory === "All" ||
-        product.category?.toLowerCase() === selectedCategory.toLowerCase();
+        product.dealPrice >= priceRange[0] && product.dealPrice <= priceRange[1];
       const isBrandMatch =
         selectedBrands.length === 0 || selectedBrands.includes(product.brand);
       const isSpecsMatch =
@@ -78,13 +76,11 @@ function Product() {
         selectedSpecs.every((spec) =>
           Object.values(product.specs || {}).includes(spec)
         );
-      return (
-        isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch
-      );
+      return isWithinPriceRange && isBrandMatch && isSpecsMatch;
     })
     .sort((a, b) => {
-      if (sortOrder === "lowToHigh") return a.price - b.price;
-      if (sortOrder === "highToLow") return b.price - a.price;
+      if (sortOrder === "lowToHigh") return a.dealPrice - b.dealPrice;
+      if (sortOrder === "highToLow") return b.dealPrice - a.dealPrice;
       if (sortOrder === "aToZ") return a.name.localeCompare(b.name);
       if (sortOrder === "zToA") return b.name.localeCompare(a.name);
       return 0;
@@ -112,8 +108,6 @@ function Product() {
         >
           <Box role="presentation">
             <Filter
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
               priceRange={priceRange}
               setPriceRange={setPriceRange}
               selectedBrands={selectedBrands}
@@ -129,8 +123,6 @@ function Product() {
       {/* Filter Panel for Larger Screens */}
       <Box sx={{ display: { xs: "none", sm: "block" } }}>
         <Filter
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
           selectedBrands={selectedBrands}
@@ -141,7 +133,7 @@ function Product() {
         />
       </Box>
 
-      {/* Products List */}
+      {/* Deals List */}
       <Box
         sx={{
           flexGrow: 1,
@@ -150,7 +142,7 @@ function Product() {
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ color: "white" }}>
-          Products Page
+          Deals Page
         </Typography>
 
         <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -217,39 +209,27 @@ function Product() {
                         marginTop: "auto",
                       }}
                     >
-                      {product.dealPrice ? (
-                        <Box sx={{ textAlign: "right", display: 'flex' }}>
-                          <Typography
-                            sx={{
-                              fontWeight: "bold",
-                              color: "#f50057",
-                              fontSize: "1rem",
-                              marginRight: 0.2,
-                            }}
-                          >
-                            €{product.dealPrice}
-                          </Typography>
-                          <Typography
-                            sx={{
-                              textDecoration: "line-through",
-                              color: "gray",
-                              fontSize: "0.7rem",
-                            }}
-                          >
-                            €{product.price}
-                          </Typography>
-                        </Box>
-                      ) : (
+                      <Box sx={{ textAlign: "right", display: "flex" }}>
                         <Typography
                           sx={{
                             fontWeight: "bold",
-                            color: "white",
+                            color: "#f50057",
                             fontSize: "1rem",
+                            marginRight: 0.2,
+                          }}
+                        >
+                          €{product.dealPrice}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            textDecoration: "line-through",
+                            color: "gray",
+                            fontSize: "0.7rem",
                           }}
                         >
                           €{product.price}
                         </Typography>
-                      )}
+                      </Box>
                     </Box>
                   </CardContent>
                 </Card>
@@ -262,4 +242,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default Deals;

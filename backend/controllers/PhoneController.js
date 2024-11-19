@@ -32,10 +32,10 @@ export const getPhone = async (req, res) => {
 
 // Create a new phone
 export const createPhone = async (req, res) => {
-  const { name, code, description, largeDescription, brand, price, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, operatingSystem, screenSize, screenResolution, screenTechnology, refreshRate, processor, ram, storage, expandableStorage, rearCamera, frontCamera, cameraFeatures, batteryCapacity, chargingSpeed, wirelessCharging, simType, network, connectivityFeatures, waterproof, fingerprintSensor, faceRecognition, colorOptions, weight, dimensions } = req.body;
+  const { name, code, description, largeDescription, brand, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, operatingSystem, screenSize, screenResolution, screenTechnology, refreshRate, processor, ram, storage, expandableStorage, rearCamera, frontCamera, cameraFeatures, batteryCapacity, chargingSpeed, wirelessCharging, simType, network, connectivityFeatures, waterproof, fingerprintSensor, faceRecognition, colorOptions, weight, dimensions } = req.body;
 
   try {
-    const phone = await Phone.create({ name, code, description, largeDescription, brand, price, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, operatingSystem, screenSize, screenResolution, screenTechnology, refreshRate, processor, ram, storage, expandableStorage, rearCamera, frontCamera, cameraFeatures, batteryCapacity, chargingSpeed, wirelessCharging, simType, network, connectivityFeatures, waterproof, fingerprintSensor, faceRecognition, colorOptions, weight, dimensions });
+    const phone = await Phone.create({ name, code, description, largeDescription, brand, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, operatingSystem, screenSize, screenResolution, screenTechnology, refreshRate, processor, ram, storage, expandableStorage, rearCamera, frontCamera, cameraFeatures, batteryCapacity, chargingSpeed, wirelessCharging, simType, network, connectivityFeatures, waterproof, fingerprintSensor, faceRecognition, colorOptions, weight, dimensions });
     res.status(200).json(phone);
   } catch (error) {
     res.status(400).json({ error: error.message });

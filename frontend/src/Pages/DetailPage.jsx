@@ -13,6 +13,10 @@ function DetailPage() {
   const [loading, setLoading] = useState(true);
   const [showAllDescription, setShowAllDescription] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
+  const [deliveryDate, setDeliveryDate] = useState(null);
+  const [oftenBoughtProducts, setOftenBoughtProducts] = useState([]);
+  const [othersAlsoLookProducts, setOthersAlsoLookProducts] = useState([]);
+  
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -24,15 +28,58 @@ function DetailPage() {
         }
         const data = await response.json();
         setProduct(data);
+
+        if (typeof data.deliveryTime === "number") {
+          const currentDate = new Date();
+          console.log("Current Date:", currentDate);
+          currentDate.setDate(currentDate.getDate() + data.deliveryTime);
+          console.log("Delivery Date After Adding:", currentDate);
+          const formattedDate = currentDate.toLocaleDateString("en-GB", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+          });
+          setDeliveryDate(formattedDate);
+        } else {
+          console.error("Invalid deliveryTime:", data.deliveryTime);
+        }        
       } catch (error) {
         console.error("Error fetching product:", error);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchProduct();
-  }, [productId]);  
+  }, [productId]);
+
+  useEffect(() => {
+    const fetchRelatedProducts = async (codes) => {
+      try {
+        const products = await Promise.all(
+          codes.map((code) =>
+            fetch(`http://localhost:4000/api/laptop/${code}`).then((res) => res.json())
+          )
+        );
+        return products;
+      } catch (error) {
+        console.error("Error fetching related products:", error);
+        return [];
+      }
+    };
+  
+    const fetchAllRelatedProducts = async () => {
+      if (product) {
+        const oftenBoughtProducts = await fetchRelatedProducts(product.oftenBoughtWith);
+        const othersAlsoLookProducts = await fetchRelatedProducts(product.othersAlsoLookAt);
+  
+        setOftenBoughtProducts(oftenBoughtProducts);
+        setOthersAlsoLookProducts(othersAlsoLookProducts);
+      }
+    };
+  
+    fetchAllRelatedProducts();
+  }, [product]);
 
   if (loading) {
     return (
@@ -62,6 +109,8 @@ function DetailPage() {
   const handleThumbnailClick = (index) => {
     setCurrentImage(index);
   };
+  
+  console.log(deliveryDate)
 
   return (
     <Box
@@ -185,12 +234,43 @@ function DetailPage() {
         <Grid item xs={12} md={6} sx={{ display: "flex", flexDirection: "column" }}>
           <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
             <Box>
-              <Typography variant="h5" sx={{ fontWeight: "bold", color: "#f50057" }}>
-                <span className="custom">€{product.price}</span>
-              </Typography>
+              {product.dealPrice ? (
+                <Box>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: "bold",
+                      color: "#f50057",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
+                    <span className="custom">€{product.dealPrice}</span>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        textDecoration: "line-through",
+                        color: "#b0b0b0",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      €{product.price}
+                    </Typography>
+                  </Typography>
+                </Box>
+              ) : (
+                <Typography variant="h5" sx={{ fontWeight: "bold", color: "#f50057" }}>
+                  <span className="custom">€{product.price}</span>
+                </Typography>
+              )}
               <Typography variant="body1" gutterBottom>
-                Delivered no later than 21 November{" "}
-                <Tooltip title="This delivery date may vary during holidays or special circumstances." arrow>
+                Delivered no later than{" "}
+                <span>{deliveryDate || "N/A"}</span>
+                <Tooltip
+                  title="This delivery date may vary during holidays or special circumstances."
+                  arrow
+                >
                   <InfoOutlinedIcon
                     style={{
                       marginLeft: "2px",
@@ -203,9 +283,9 @@ function DetailPage() {
               </Typography>
               <Typography variant="body1">
                 Sold by{" "}
-                <span className="custom">ElectroVibe.com</span>{" "}
+                <span className="custom">{product.seller}</span>{" "}
                 <span className="custom-score-cover">
-                  <span className="custom-score">9,5</span>
+                  <span className="custom-score">{product.sellerScore}</span>
                 </span>
               </Typography>
             </Box>
@@ -227,11 +307,37 @@ function DetailPage() {
               Add to Cart
             </Button>
           </Box>
-          <Divider sx={{ marginY: 4, backgroundColor: "#424242" }} />
-          <Typography variant="h5">Often bought with</Typography>
-          <Typography variant="h5" sx={{ marginTop: 4 }}>
-            Others also look at
-          </Typography>
+          <Divider sx={{ marginY: 4, backgroundColor: "#424242" }} /><Grid item xs={12} md={6}>
+  <Typography variant="h5">Often bought with</Typography>
+  <Box
+    sx={{
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 2,
+      marginTop: 2,
+    }}
+  >
+    {oftenBoughtProducts.map((relatedProduct) => (
+      <ProductCard key={relatedProduct.id} product={relatedProduct} />
+    ))}
+  </Box>
+
+  <Typography variant="h5" sx={{ marginTop: 4 }}>
+    Others also look at
+  </Typography>
+  <Box
+    sx={{
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 2,
+      marginTop: 2,
+    }}
+  >
+    {othersAlsoLookProducts.map((relatedProduct) => (
+      <ProductCard key={relatedProduct.id} product={relatedProduct} />
+    ))}
+  </Box>
+</Grid>
         </Grid>
       </Grid>
     </Box>

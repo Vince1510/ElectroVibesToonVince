@@ -11,6 +11,7 @@ import Admin from "./Pages/Admin/Admin";
 import BreadCrumb from "./components/BreadCrumbs";
 import Product from "./Pages/Product";
 import DetailPage from "./Pages/DetailPage";
+import Deals from './Pages/deals'
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/product" element={<Product />} />
           <Route path="/:category/:productId" element={<DetailPage />} />
           <Route path="/detail/:category/:productId" element={<DetailPage />} />
+          <Route path="/deals" element={<Deals />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
