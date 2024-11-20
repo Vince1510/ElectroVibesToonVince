@@ -1,4 +1,5 @@
 import Monitor from "../models/Monitor.js";
+import mongoose from "mongoose";
 
 // Fetch all monitors
 export const getAllMonitors = async (req, res) => {
@@ -7,6 +8,25 @@ export const getAllMonitors = async (req, res) => {
     res.status(200).json(monitors);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Get a single keyboard
+export const getMonitor = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such Monitor" });
+  }
+
+  try {
+    const monitor = await Monitor.findById(id);
+    if (!monitor) {
+      return res.status(404).json({ error: "No such Monitor" });
+    }
+    res.status(200).json(monitor);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 

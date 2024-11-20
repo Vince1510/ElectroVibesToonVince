@@ -17,6 +17,10 @@ import Carousel from "react-material-ui-carousel";
 import ProductCard from "../components/ProductCard";
 import LaptopDetails from "../components/LaptopDetails";
 import PhoneDetails from "../components/PhoneDetails";
+import GameDetails from "../components/GameDetails";
+import MouseDetails from "../components/MouseDetails";
+import MonitorDetails from "../components/MonitorDetails";
+import KeyboardDetails from "../components/KeyboardDetails";
 
 function DetailPage() {
   const { productId } = useParams();
@@ -36,6 +40,10 @@ function DetailPage() {
         const endpoints = [
           `http://localhost:4000/api/phones/${productId}`,
           `http://localhost:4000/api/laptops/${productId}`,
+          `http://localhost:4000/api/keyboards/${productId}`,
+          `http://localhost:4000/api/games/${productId}`,
+          `http://localhost:4000/api/mice/${productId}`,
+          `http://localhost:4000/api/monitors/${productId}`,
         ];
 
         for (const endpoint of endpoints) {
@@ -251,11 +259,24 @@ function DetailPage() {
               allowFullScreen
             />
           </Card>
-          {product.category === "Phone" ? (
-            <PhoneDetails product={product} />
-          ) : (
-            <LaptopDetails product={product} />
-          )}
+          {
+            product.category === "Phone" ? (
+              <PhoneDetails product={product} />
+            ) : product.category === "Laptop" ? (
+              <LaptopDetails product={product} />
+            ) : product.category === "Game" ? (
+              <GameDetails product={product} />
+            ) : product.category === "Mouse" ? (
+              <MouseDetails product={product} />
+            ) : product.category === "Monitor" ? (
+              <MonitorDetails product={product} />
+            ) : product.category === "Keyboard" ? (
+              <KeyboardDetails product={product} />
+            ) : (
+              <div>Category not found!</div>
+            )
+          }
+
         </Grid>
 
         <Grid item xs={12} md={6} sx={{ display: "flex", flexDirection: "column" }}>

@@ -1,6 +1,7 @@
 import express from "express";
 import {
-  getGames,
+  getGame,
+  getAllGames,
   createGame,
   deleteGame,
   updateGame, // Import the updateGame function
@@ -9,7 +10,10 @@ import {
 const router = express.Router();
 
 // GET all games
-router.get("/", getGames);
+router.get("/", getAllGames);
+
+// GET single game
+router.get("/:id", getGame);
 
 // POST a new game
 router.post("/", createGame);

@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
-const gameSchema = new mongoose.Schema({
+const gameSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
     largeDescription: { type: [String], required: true },
     brand: { type: String, required: true },
-    category: { type: String, default: 'Game' },
+    category: { type: String, default: 'games' },
     price: { type: Number, required: true },
     dealPrice: { type: Number, required: false },
     imageCard: { type: String, required: true },
@@ -50,7 +50,7 @@ const gameSchema = new mongoose.Schema({
     exclusiveContent: { type: [String] },
   },
   { timestamps: true }
-});
+);
 
 const Game = mongoose.model("Game", gameSchema);
 

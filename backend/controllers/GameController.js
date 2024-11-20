@@ -1,12 +1,32 @@
 import Game from "../models/Game.js";
+import mongoose from "mongoose";
 
-// Fetch all games
-export const getGames = async (req, res) => {
+// Get all games
+export const getAllGames = async (req, res) => {
   try {
     const games = await Game.find();
     res.status(200).json(games);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Get a single keyboard
+export const getGame = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such Game" });
+  }
+
+  try {
+    const game = await Game.findById(id);
+    if (!game) {
+      return res.status(404).json({ error: "No such Game" });
+    }
+    res.status(200).json(game);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 

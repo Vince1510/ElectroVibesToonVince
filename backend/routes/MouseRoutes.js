@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getMouse,
   getAllMice,
   addMouse,
   updateMouse,
@@ -10,6 +11,9 @@ const router = express.Router();
 
 // Get all mice
 router.get("/", getAllMice);
+
+// GET single mouse
+router.get("/:id", getMouse);
 
 // Add a new mouse
 router.post("/", addMouse);

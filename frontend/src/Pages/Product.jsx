@@ -22,7 +22,7 @@ function Product() {
   const [sortOrder, setSortOrder] = useState("none");
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
-  // Fetch products and games from backend
+  // Fetch products from backend
   useEffect(() => {
     const fetchProductsAndGames = async () => {
       try {

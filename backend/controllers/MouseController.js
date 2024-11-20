@@ -1,4 +1,5 @@
 import Mouse from "../models/Mouse.js";
+import mongoose from "mongoose";
 
 // Fetch all mice
 export const getAllMice = async (req, res) => {
@@ -7,6 +8,25 @@ export const getAllMice = async (req, res) => {
     res.status(200).json(mice); // Return all mice with all the fields
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Get a single mouse
+export const getMouse = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such mouse" });
+  }
+
+  try {
+    const mouse = await Mouse.findById(id);
+    if (!mouse) {
+      return res.status(404).json({ error: "No such mouse" });
+    }
+    res.status(200).json(mouse);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
