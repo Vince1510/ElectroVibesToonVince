@@ -32,10 +32,10 @@ export const getKeyboard = async (req, res) => {
 
 // Create a new keyboard
 export const createKeyboard = async (req, res) => {
-  const { name, code, description, brand, price, imageCard, imageOverview, commercial, layout, connectionType, switchType, backlighting, rgbLighting, keycapMaterial, size, macroKeys, hotSwappable, batteryLife, colorOptions, weight, dimensions } = req.body;
+  const { name, description, largeDescription, brand, category, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, layout, connectionType, switchType, backlighting, rgbLighting, keycapMaterial, size, macroKeys, hotSwappable, batteryLife, numPad, adjustableFeet, pollingRate, onboardMemory, compatibility, waterproof, wirelessRange, weight, dimensions } = req.body;
 
   try {
-    const keyboard = await Keyboard.create({ name, code, description, brand, price, imageCard, imageOverview, commercial, layout, connectionType, switchType, backlighting, rgbLighting, keycapMaterial, size, macroKeys, hotSwappable, batteryLife, colorOptions, weight, dimensions });
+    const keyboard = await Keyboard.create({ name, description, largeDescription, brand, category, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, layout, connectionType, switchType, backlighting, rgbLighting, keycapMaterial, size, macroKeys, hotSwappable, batteryLife, numPad, adjustableFeet, pollingRate, onboardMemory, compatibility, waterproof, wirelessRange, weight, dimensions });
     res.status(200).json(keyboard);
   } catch (error) {
     res.status(400).json({ error: error.message });

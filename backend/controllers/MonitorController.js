@@ -13,24 +13,11 @@ export const getAllMonitors = async (req, res) => {
 // Add a new monitor
 export const addMonitor = async (req, res) => {
   const {
-    name,
-    code,
-    description,
-    brand,
-    price,
-    imageCard,
-    imageOverview,
-    specs,
+    name, description, largeDescription, brand, category, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, resolution, size, refreshRate, panelType, aspectRatio, brightness, contrastRatio, curved, responseTime, colorGamut, hdrSupport, hdrStandard, viewingAngle, connectivityPorts, usbPorts, hdmiVersion, displayPortVersion, audioOutput, builtInSpeakers, heightAdjustable, swivel, tilt, pivot, vesaMount, blueLightFilter, flickerFree, energyRating, weight, dimensions
   } = req.body;
+
   const newMonitor = new Monitor({
-    name,
-    code,
-    description,
-    brand,
-    price,
-    imageCard,
-    imageOverview,
-    specs,
+    name, description, largeDescription, brand, category, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, resolution, size, refreshRate, panelType, aspectRatio, brightness, contrastRatio, curved, responseTime, colorGamut, hdrSupport, hdrStandard, viewingAngle, connectivityPorts, usbPorts, hdmiVersion, displayPortVersion, audioOutput, builtInSpeakers, heightAdjustable, swivel, tilt, pivot, vesaMount, blueLightFilter, flickerFree, energyRating, weight, dimensions
   });
 
   try {

@@ -12,53 +12,19 @@ export const getGames = async (req, res) => {
 
 // Create a new game
 export const createGame = async (req, res) => {
-  const {
-    name, // Changed from 'title' to 'name'
-    description,
-    price,
-    releaseDate,
-    genre,
-    imageCard,
-    imageOverview, // Added imageOverview
-    brand, // Added brand
-    code, // Added code
-    category,
-  } = req.body;
+  const { name, description, largeDescription, brand, category, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, releaseDate, genre, platform, multiplayerSupport, multiplayerModes, ageRating, languages, dlcAvailable, specialEditions, achievements, inAppPurchases, fileSize, systemRequirements, physicalEdition, vrSupport, publisher, developer, releaseRegion, exclusiveContent } = req.body;
 
-  // Check if all required fields are provided
-  if (
-    !name ||
-    !description ||
-    !price ||
-    !releaseDate ||
-    !genre ||
-    !imageCard ||
-    !imageOverview ||
-    !brand ||
-    !code ||
-    !category
-  ) {
+  if (!name || !description || !price || !releaseDate || !genre || !imageCard || !imageOverview || !brand || !category) {
     return res.status(400).json({
-      message:
-        "All fields are required: name, description, price, releaseDate, genre, imageCard, imageOverview, brand, code, category",
+      message: "All fields are required: name, description, price, releaseDate, genre, imageCard, imageOverview, brand, category",
     });
   }
 
   try {
     const newGame = new Game({
-      name, // Changed from 'title' to 'name'
-      description,
-      price,
-      releaseDate,
-      genre,
-      imageCard,
-      imageOverview, // Added imageOverview
-      brand, // Added brand
-      code, // Added code
-      category,
+      name, description, largeDescription, brand, category, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, releaseDate, genre, platform, multiplayerSupport, multiplayerModes, ageRating, languages, dlcAvailable, specialEditions, achievements, inAppPurchases, fileSize, systemRequirements, physicalEdition, vrSupport, publisher, developer, releaseRegion, exclusiveContent
     });
 
-    // Save the game to the database
     await newGame.save();
     res.status(201).json(newGame);
   } catch (error) {
