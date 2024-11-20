@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Link as RouterLink } from "react-router-dom";
 import "../App.css";
 
 const CardSlider = () => {
@@ -117,105 +118,45 @@ const CardSlider = () => {
           sx={{
             overflowX: "auto",
             scrollBehavior: "smooth",
-            "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar
+            "&::-webkit-scrollbar": { display: "none" },
           }}
         >
           {cards.map((card, index) => (
-            <Card
+            <RouterLink
+              to={`/detail/${card.category}/${card._id}`}
+              style={{ textDecoration: "none" }}
               key={card._id || index}
-              sx={{
-                flex: "0 0 auto",
-                width: "300px",
-                height: "330px",
-                background:
-                  "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
-                boxShadow: "0px 4px 4px 0px #000",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
             >
-              <CardMedia
-                component="img"
-                height="160"
-                image={card.imageCard}
-                alt={card.name}
-                sx={{ objectFit: "contain" }}
-              />
-              <CardContent
+              <Card
                 sx={{
+                  flex: "0 0 auto",
+                  width: "300px",
+                  height: "330px",
+                  background:
+                    "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
+                  boxShadow: "0px 4px 4px 0px #000",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
-                  flexGrow: 1,
-                  paddingBottom: "0px",
                 }}
               >
-                <Typography
-                  variant="h6"
-                  color="white"
-                  sx={{ fontSize: "1rem", marginBottom: "5px" }}
-                >
-                  {card.name}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "0.8rem",
-                    color: "gray",
-                    flexGrow: 1,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitBoxOrient: "vertical",
-                    WebkitLineClamp: 2,
-                    marginBottom: "5px",
-                  }}
-                >
-                  {card.description}
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "auto",
-                  }}
-                >
-                  {card.dealPrice ? (
-                    <Box sx={{ textAlign: "right", display: "flex" }}>
-                      <Typography
-                        sx={{
-                          fontWeight: "bold",
-                          color: "#f50057",
-                          fontSize: "1rem",
-                          marginRight: 0.2,
-                        }}
-                      >
-                        €{card.dealPrice}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          textDecoration: "line-through",
-                          color: "gray",
-                          fontSize: "0.7rem",
-                        }}
-                      >
-                        €{card.price}
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Typography
-                      sx={{
-                        fontWeight: "bold",
-                        color: "white",
-                        fontSize: "1rem",
-                      }}
-                    >
-                      €{card.price}
-                    </Typography>
-                  )}
-                </Box>
-              </CardContent>
-            </Card>
+                <CardMedia
+                  component="img"
+                  height="160"
+                  image={card.imageCard}
+                  alt={card.name}
+                  sx={{ objectFit: "contain" }}
+                />
+                <CardContent>
+                  <Typography variant="h6" color="white">
+                    {card.name}
+                  </Typography>
+                  <Typography variant="body2" color="gray">
+                    {card.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </RouterLink>
           ))}
         </Box>
         <IconButton
@@ -237,99 +178,39 @@ const CardSlider = () => {
       {/* Big Cards Section */}
       <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2}>
         {bigCards.map((card, index) => (
-          <Card
+          <RouterLink
+            to={`/detail/${card.category}/${card._id}`}
+            style={{ textDecoration: "none" }}
             key={card._id || index}
-            sx={{
-              height: "330px",
-              background:
-                "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
-              boxShadow: "0px 4px 4px 0px #000",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
           >
-            <CardMedia
-              component="img"
-              height="160"
-              image={card.imageCard}
-              alt={card.name}
-              sx={{ objectFit: "contain" }}
-            />
-            <CardContent
+            <Card
               sx={{
+                height: "330px",
+                background:
+                  "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
+                boxShadow: "0px 4px 4px 0px #000",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                flexGrow: 1,
-                paddingBottom: "0px",
               }}
             >
-              <Typography
-                variant="h6"
-                color="white"
-                sx={{ fontSize: "1rem", marginBottom: "5px" }}
-              >
-                {card.name}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "0.8rem",
-                  color: "gray",
-                  flexGrow: 1,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "-webkit-box",
-                  WebkitBoxOrient: "vertical",
-                  WebkitLineClamp: 2,
-                  marginBottom: "5px",
-                }}
-              >
-                {card.description}
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginTop: "auto",
-                }}
-              >
-                {card.dealPrice ? (
-                  <Box sx={{ textAlign: "right", display: "flex" }}>
-                    <Typography
-                      sx={{
-                        fontWeight: "bold",
-                        color: "#f50057",
-                        fontSize: "1rem",
-                        marginRight: 0.2,
-                      }}
-                    >
-                      €{card.dealPrice}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        textDecoration: "line-through",
-                        color: "gray",
-                        fontSize: "0.7rem",
-                      }}
-                    >
-                        €{card.price}
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Typography
-                      sx={{
-                        fontWeight: "bold",
-                        color: "white",
-                        fontSize: "1rem",
-                      }}
-                    >
-                      €{card.price}
-                    </Typography>
-                  )}
-              </Box>
-            </CardContent>
-          </Card>
+              <CardMedia
+                component="img"
+                height="160"
+                image={card.imageCard}
+                alt={card.name}
+                sx={{ objectFit: "contain" }}
+              />
+              <CardContent>
+                <Typography variant="h6" color="white">
+                  {card.name}
+                </Typography>
+                <Typography variant="body2" color="gray">
+                  {card.description}
+                </Typography>
+              </CardContent>
+            </Card>
+          </RouterLink>
         ))}
       </Box>
     </Box>
