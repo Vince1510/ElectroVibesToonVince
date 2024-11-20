@@ -95,7 +95,7 @@ function Product() {
   };
 
   return (
-    <Box display="flex" flexDirection={{ xs: "column", sm: "row" }}>
+    <Box display="flex" flexDirection={{ xs: "column", sm: "row"}}>
       {/* Filter Drawer for Small Screens */}
       <Box sx={{ display: { xs: "block", sm: "none" }, padding: 2 }}>
         <Button
@@ -147,6 +147,7 @@ function Product() {
           flexGrow: 1,
           paddingLeft: { sm: 3 },
           paddingTop: { xs: 2, sm: 0 },
+          paddingBottom: 10,
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ color: "white" }}>
