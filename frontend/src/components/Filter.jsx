@@ -24,7 +24,7 @@ const Filter = ({
   setSelectedSpecs,
   handleSortChange,
 }) => {
-  const categories = ["All", "Laptop", "Monitor", "Games", "Mouse", "Phone", "Keyboard", "Headphones"];
+  const categories = ["All", "Laptop", "Monitor", "Games", "Mouse", "Phone", "Keyboard"];
   const brands = ["Apple", "Samsung", "Logitech", "Asus", "Corsair", "Dell", "Google", "Sony", "OnePlus", "Doogee"];
 
   const handlePriceChange = (event, newValue) => {
