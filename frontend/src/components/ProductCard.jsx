@@ -1,24 +1,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, CardMedia, CardContent, Typography, Box, Grid } from "@mui/material";
+import { Card, CardMedia, CardContent, Typography, Box, Grid, Button } from "@mui/material";
 
-function ProductCard({ product }) {
+function ProductCard({ product, onCompare }) {
   return (
     <Grid item xs={4} sm={4} md={4} key={product._id}>
-      <Link
-        to={`/detail/${product.category}/${product._id}`}
-        style={{ textDecoration: "none" }}
+      <Card
+        sx={{
+          width: 270,
+          height: 360,
+          background:
+            "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
+          boxShadow: "0px 4px 4px 0px #000",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
       >
-        <Card
-          sx={{
-            width: 200,
-            height: 330,
-            background:
-              "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
-            boxShadow: "0px 4px 4px 0px #000",
+        <Link
+          to={`/detail/${product.category}/${product._id}`}
+          style={{
+            textDecoration: "none",
+            flexGrow: 1,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
           }}
         >
           <CardMedia
@@ -30,10 +35,10 @@ function ProductCard({ product }) {
           />
           <CardContent
             sx={{
+              flexGrow: 1,
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              flexGrow: 1,
               paddingBottom: "0px",
             }}
           >
@@ -59,50 +64,71 @@ function ProductCard({ product }) {
             >
               {product.description}
             </Typography>
-            <Box
+          </CardContent>
+        </Link>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "10px",
+            marginTop: "auto",
+          }}
+        >
+          {product.dealPrice ? (
+            <Box sx={{ textAlign: "right", display: "flex" }}>
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                  color: "#f50057",
+                  fontSize: "1rem",
+                  marginRight: 0.2,
+                }}
+              >
+                €{product.dealPrice}
+              </Typography>
+              <Typography
+                sx={{
+                  textDecoration: "line-through",
+                  color: "gray",
+                  fontSize: "0.7rem",
+                }}
+              >
+                €{product.price}
+              </Typography>
+            </Box>
+          ) : (
+            <Typography
               sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: "auto",
+                fontWeight: "bold",
+                color: "white",
+                fontSize: "1rem",
               }}
             >
-              {product.dealPrice ? (
-                <Box sx={{ textAlign: "right", display: 'flex' }}>
-                  <Typography
-                    sx={{
-                      fontWeight: "bold",
-                      color: "#f50057",
-                      fontSize: "1rem",
-                      marginRight: 0.2,
-                    }}
-                  >
-                    €{product.dealPrice}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      textDecoration: "line-through",
-                      color: "gray",
-                      fontSize: "0.7rem",
-                    }}
-                  >
-                    €{product.price}
-                  </Typography>
-                </Box>
-              ) : (
-                <Typography
-                  sx={{
-                    fontWeight: "bold",
-                    color: "white",
-                    fontSize: "1rem",
-                  }}
-                >
-                  €{product.price}
-                </Typography>
-              )}
-            </Box>
-          </CardContent>
-        </Card>
-      </Link>
+              €{product.price}
+            </Typography>
+          )}<Button
+          variant="contained"
+          size="small"
+          sx={{
+            borderColor: 'white',
+            background: 'transparent',
+            color: 'white',
+            border: '1px solid white',
+            '&:hover': {
+              background: 'rgba(255, 255, 255, 0.1)',
+            },
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onCompare(product);
+          }}
+        >
+          Compare
+        </Button>
+        
+        </Box>
+      </Card>
     </Grid>
   );
 }

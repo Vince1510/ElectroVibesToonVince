@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import {
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  Grid,
-  Box,
-  Drawer,
-  Button,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import Filter from "../components/Filter";
+import { useNavigate } from "react-router-dom";
+import { Typography, Grid, Box } from "@mui/material";
+import ProductCard from "../components/ProductCard";
+import CompareList from "../components/CompareList";
+import FilterPanel from "../components/FilterPanel";
 
 function Deals() {
   const [products, setProducts] = useState([]);
@@ -19,7 +11,10 @@ function Deals() {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedSpecs, setSelectedSpecs] = useState([]);
   const [sortOrder, setSortOrder] = useState("none");
-  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+
+  // Comparison functionality
+  const [compareList, setCompareList] = useState([]);
+  const navigate = useNavigate();
 
   // Fetch products from backend
   useEffect(() => {
@@ -63,9 +58,9 @@ function Deals() {
     fetchProducts();
   }, []);
 
-  // Filter for products with dealPrice
+  // Filter products with dealPrice
   const filteredProducts = products
-    .filter((product) => product.dealPrice) // Show only products with a deal price
+    .filter((product) => product.dealPrice) // Show only products with dealPrice
     .filter((product) => {
       const isWithinPriceRange =
         product.dealPrice >= priceRange[0] && product.dealPrice <= priceRange[1];
@@ -90,39 +85,35 @@ function Deals() {
     setSortOrder(order);
   };
 
+  const handleCompare = (product) => {
+    if (compareList.some((item) => item._id === product._id)) {
+      return; // Prevent adding duplicate products
+    }
+
+    const updatedCompareList = [...compareList, product];
+    setCompareList(updatedCompareList);
+
+    // Redirect after the state is updated and if two products are selected
+    if (updatedCompareList.length === 2) {
+      setTimeout(() => {
+        navigate("/compare", { state: { products: updatedCompareList } });
+      }, 300); // Delay navigation slightly to allow event propagation
+    }
+  };
+
+  const handleRemoveFromCompare = (productId) => {
+    setCompareList((prev) => prev.filter((product) => product._id !== productId));
+  };
+
+  const clearCompareList = () => {
+    setCompareList([]);
+  };
+
   return (
     <Box display="flex" flexDirection={{ xs: "column", sm: "row" }}>
-      {/* Filter Drawer for Small Screens */}
-      <Box sx={{ display: { xs: "block", sm: "none" }, padding: 2 }}>
-        <Button
-          variant="contained"
-          startIcon={<MenuIcon />}
-          onClick={() => setIsFilterDrawerOpen(true)}
-        >
-          Filters
-        </Button>
-        <Drawer
-          anchor="left"
-          open={isFilterDrawerOpen}
-          onClose={() => setIsFilterDrawerOpen(false)}
-        >
-          <Box role="presentation">
-            <Filter
-              priceRange={priceRange}
-              setPriceRange={setPriceRange}
-              selectedBrands={selectedBrands}
-              setSelectedBrands={setSelectedBrands}
-              selectedSpecs={selectedSpecs}
-              setSelectedSpecs={setSelectedSpecs}
-              handleSortChange={handleSortChange}
-            />
-          </Box>
-        </Drawer>
-      </Box>
-
-      {/* Filter Panel for Larger Screens */}
-      <Box sx={{ display: { xs: "none", sm: "block" } }}>
-        <Filter
+      {/* Filter Panel */}
+      <Box sx={{ display: { xs: "block", sm: "block" } }}>
+        <FilterPanel
           priceRange={priceRange}
           setPriceRange={setPriceRange}
           selectedBrands={selectedBrands}
@@ -139,6 +130,7 @@ function Deals() {
           flexGrow: 1,
           paddingLeft: { sm: 3 },
           paddingTop: { xs: 2, sm: 0 },
+          paddingBottom: 10,
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ color: "white" }}>
@@ -147,97 +139,23 @@ function Deals() {
 
         <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
           {filteredProducts.map((product) => (
-            <Grid item xs={4} sm={4} md={4} key={product._id}>
-              <Link
-                to={`/detail/${product.category}/${product._id}`}
-                style={{ textDecoration: "none" }}
-              >
-                <Card
-                  sx={{
-                    width: "100%",
-                    height: 330,
-                    background:
-                      "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
-                    boxShadow: "0px 4px 4px 0px #000",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="160"
-                    image={product.imageCard}
-                    alt={product.name}
-                    sx={{ objectFit: "contain" }}
-                  />
-                  <CardContent
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      flexGrow: 1,
-                      paddingBottom: "0px",
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      color="white"
-                      sx={{ fontSize: "1rem", marginBottom: "5px" }}
-                    >
-                      {product.name}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "0.8rem",
-                        color: "gray",
-                        flexGrow: 1,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 2,
-                        marginBottom: "5px",
-                      }}
-                    >
-                      {product.description}
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginTop: "auto",
-                      }}
-                    >
-                      <Box sx={{ textAlign: "right", display: "flex" }}>
-                        <Typography
-                          sx={{
-                            fontWeight: "bold",
-                            color: "#f50057",
-                            fontSize: "1rem",
-                            marginRight: 0.2,
-                          }}
-                        >
-                          €{product.dealPrice}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            textDecoration: "line-through",
-                            color: "gray",
-                            fontSize: "0.7rem",
-                          }}
-                        >
-                          €{product.price}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Link>
-            </Grid>
+            <ProductCard
+              key={product._id}
+              product={product}
+              onCompare={handleCompare} // Pass compare handler to ProductCard
+            />
           ))}
         </Grid>
       </Box>
+
+      {/* Compare List */}
+      {compareList.length > 0 && (
+        <CompareList
+          compareList={compareList}
+          onRemove={handleRemoveFromCompare}
+          onClear={clearCompareList}
+        />
+      )}
     </Box>
   );
 }
