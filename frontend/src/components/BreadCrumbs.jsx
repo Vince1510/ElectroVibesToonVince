@@ -16,7 +16,7 @@ const BreadCrumb = ({ productName }) => {
       separator={<Typography sx={{ color: 'white', fontSize: 'small' }}> / </Typography>}
     >
       <Link to="/" style={{ color: 'white', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-        <HomeIcon fontSize="small" sx={{ marginRight: '5px' }} />
+        <HomeIcon fontSize="small" sx={{ marginRight: '5px' }} /> Home
       </Link>
 
       {pathnames.map((value, index) => {
