@@ -30,10 +30,10 @@ app.use((req, res, next) => {
 app.use("/api/phones", phoneRoutes);
 app.use("/api/laptops", laptopRoutes);
 app.use("/api/keyboards", keyboardRoutes);
-app.use("/api/games", gameRoutes); // Consistent naming
+app.use("/api/games", gameRoutes);
 app.use("/api/monitors", monitorRoutes);
 app.use("/api/mice", mouseRoutes);
-app.use("/api/games/category", gameRoutes); // Added Game category route (if needed)
+app.use("/api/games/category", gameRoutes);
 
 // Database connection and server start
 const PORT = process.env.PORT || 4000;

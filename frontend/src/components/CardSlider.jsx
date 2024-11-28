@@ -3,24 +3,20 @@ import {
   Box,
   IconButton,
   Typography,
-  Card,
-  CardContent,
-  CardMedia,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Link as RouterLink } from "react-router-dom";
+import ProductCard from "./ProductCard";
 import "../App.css";
 
 const CardSlider = () => {
-  const [cards, setCards] = useState([]); // State for slider cards
-  const [bigCards, setBigCards] = useState([]); // State for big cards
-  const sliderRef = useRef(null); // Reference for scrolling
-  const intervalRef = useRef(null); // Reference for interval
-  const cardWidth = 300; // Card width with gap
-  const slideInterval = 3000; // Time interval for auto-slide (3 seconds)
+  const [cards, setCards] = useState([]);
+  const [bigCards, setBigCards] = useState([]);
+  const sliderRef = useRef(null);
+  const intervalRef = useRef(null);
+  const cardWidth = 300;
+  const slideInterval = 3000;
 
-  // Fetch data from multiple endpoints
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -122,41 +118,11 @@ const CardSlider = () => {
           }}
         >
           {cards.map((card, index) => (
-            <RouterLink
-              to={`/detail/${card.category}/${card._id}`}
-              style={{ textDecoration: "none" }}
+            <ProductCard
               key={card._id || index}
-            >
-              <Card
-                sx={{
-                  flex: "0 0 auto",
-                  width: "300px",
-                  height: "330px",
-                  background:
-                    "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
-                  boxShadow: "0px 4px 4px 0px #000",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="160"
-                  image={card.imageCard}
-                  alt={card.name}
-                  sx={{ objectFit: "contain" }}
-                />
-                <CardContent>
-                  <Typography variant="h6" color="white">
-                    {card.name}
-                  </Typography>
-                  <Typography variant="body2" color="gray">
-                    {card.description}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </RouterLink>
+              product={card}
+              onCompare={(product) => console.log("Compare product:", product)}
+            />
           ))}
         </Box>
         <IconButton
@@ -178,39 +144,12 @@ const CardSlider = () => {
       {/* Big Cards Section */}
       <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2}>
         {bigCards.map((card, index) => (
-          <RouterLink
-            to={`/detail/${card.category}/${card._id}`}
-            style={{ textDecoration: "none" }}
+          <ProductCard
             key={card._id || index}
-          >
-            <Card
-              sx={{
-                height: "330px",
-                background:
-                  "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
-                boxShadow: "0px 4px 4px 0px #000",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
-              <CardMedia
-                component="img"
-                height="160"
-                image={card.imageCard}
-                alt={card.name}
-                sx={{ objectFit: "contain" }}
-              />
-              <CardContent>
-                <Typography variant="h6" color="white">
-                  {card.name}
-                </Typography>
-                <Typography variant="body2" color="gray">
-                  {card.description}
-                </Typography>
-              </CardContent>
-            </Card>
-          </RouterLink>
+            product={card}
+            onCompare={(product) => console.log("Compare product:", product)}
+            cardStyle={{ width: "400px", height: "360px" }} // Custom style for big cards
+          />
         ))}
       </Box>
     </Box>

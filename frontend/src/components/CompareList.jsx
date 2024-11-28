@@ -20,62 +20,62 @@ const CompareList = ({ compareList, onRemove, onClear }) => {
         Compare List
       </Typography>
       <ul>
-      {compareList.map((product) => (
-  <li
-    key={product._id}
-    style={{
-      listStyle: 'none', // Correctly apply list-style removal
-      padding: '8px 0', // Add spacing between items
-    }}
-  >
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center", // Center-align image and text vertically
-        gap: 2, // Add consistent spacing between image and text
-        backgroundColor: "rgba(0, 0, 0, 0.1)", // Optional: light background for contrast
-        borderRadius: "4px", // Rounded corners
-        padding: "8px", // Add padding for better appearance
-      }}
-    >
-      <CardMedia
-        component="img"
-        height="40"
-        image={product.imageCard}
-        alt={product.name}
-        sx={{
-          objectFit: "contain",
-          width: "40px", // Ensure consistent image size
-          borderRadius: "4px", // Match with parent border-radius
-        }}
-      />
-      <Typography
-        variant="body2"
-        sx={{
-          color: "black", // Adjust text color if needed
-          flexGrow: 1, // Allow the text to expand within available space
-        }}
-      >
-        {product.name}
-      </Typography>
-      <Button
-        variant="contained"
-        size="small"
-        sx={{
-          backgroundColor: "#f50057", // Customize button color
-          color: "white",
-          "&:hover": {
-            backgroundColor: "#c51162", // Darker shade on hover
-          },
-        }}
-        onClick={() => onRemove(product._id)}
-      >
-        Remove
-      </Button>
-    </Box>
-  </li>
-))}
+        {compareList.map((product) => (
+          <li
+            key={product._id}
+            style={{
+              listStyle: "none",
+              padding: "8px 0",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 2,
+                backgroundColor: "rgba(0, 0, 0, 0.1)",
+                borderRadius: "4px",
+                padding: "8px",
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="40"
+                image={product.imageCard}
+                alt={product.name}
+                sx={{
+                  objectFit: "contain",
+                  width: "40px",
+                  borderRadius: "4px",
+                }}
+              />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "black",
+                  flexGrow: 1,
+                }}
+              >
+                {product.name}
+              </Typography>
+              <Button
+                variant="contained"
+                size="small"
+                sx={{
+                  backgroundColor: "#f50057",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "#c51162",
+                  },
+                }}
+                onClick={() => onRemove(product._id)}
+              >
+                Remove
+              </Button>
+            </Box>
+          </li>
+        ))}
       </ul>
       <Button
         variant="contained"

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardMedia, CardContent, Typography, Box, Grid, Button } from "@mui/material";
 
-function ProductCard({ product, onCompare }) {
+function ProductCard({ product, onCompare, cardStyle = {} }) {
   return (
     <Grid item xs={4} sm={4} md={4} key={product._id}>
       <Card
@@ -15,6 +15,7 @@ function ProductCard({ product, onCompare }) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          ...cardStyle,
         }}
       >
         <Link
@@ -107,26 +108,26 @@ function ProductCard({ product, onCompare }) {
             >
               €{product.price}
             </Typography>
-          )}<Button
-          variant="contained"
-          size="small"
-          sx={{
-            borderColor: 'white',
-            background: 'transparent',
-            color: 'white',
-            border: '1px solid white',
-            '&:hover': {
-              background: 'rgba(255, 255, 255, 0.1)',
-            },
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            onCompare(product);
-          }}
-        >
-          Compare
-        </Button>
-        
+          )}
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              borderColor: "white",
+              background: "transparent",
+              color: "white",
+              border: "1px solid white",
+              "&:hover": {
+                background: "rgba(255, 255, 255, 0.1)",
+              },
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onCompare(product);
+            }}
+          >
+            Compare
+          </Button>
         </Box>
       </Card>
     </Grid>
