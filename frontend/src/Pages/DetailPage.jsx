@@ -390,4 +390,4 @@ function DetailPage() {
   );
 };
 
-export default ComparePage;
+export default DetailPage;
