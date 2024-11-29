@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@mui/material";
 import axios from "axios";
+import AddMonitorForm from "./AddMonitorForm";
 
 const MonitorsPanel = () => {
   const [monitors, setMonitors] = useState([]);
@@ -53,6 +54,7 @@ const MonitorsPanel = () => {
   return (
     <div>
       <Typography variant="h6">Manage Monitors</Typography>
+      <AddMonitorForm /> {/* Add the form to the panel */}
       {monitors.length > 0 ? (
         renderTable(monitors)
       ) : (

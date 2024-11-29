@@ -1,3 +1,4 @@
+// MicePanel.jsx
 import React, { useState, useEffect } from "react";
 import {
   Typography,
@@ -6,8 +7,11 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Grid,
+  Button,
 } from "@mui/material";
 import axios from "axios";
+import AddMiceForm from "./AddMiceForm"; // Import the form component
 
 const MicePanel = () => {
   const [mice, setMice] = useState([]);
@@ -24,6 +28,10 @@ const MicePanel = () => {
 
     fetchMice();
   }, []);
+
+  const handleAddMouse = (newMouse) => {
+    setMice((prevMice) => [...prevMice, newMouse]);
+  };
 
   const renderTable = (data) => (
     <Table sx={{ mt: 2 }}>
@@ -53,6 +61,7 @@ const MicePanel = () => {
   return (
     <div>
       <Typography variant="h6">Manage Mice</Typography>
+      <AddMiceForm onAddMouse={handleAddMouse} />
       {mice.length > 0 ? (
         renderTable(mice)
       ) : (

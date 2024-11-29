@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@mui/material";
 import axios from "axios";
+import AddMiceForm from "./AddMiceForm"; // Import the AddMiceForm
 
 const PhonesPanel = () => {
   const [phones, setPhones] = useState([]);
@@ -53,6 +54,7 @@ const PhonesPanel = () => {
   return (
     <div>
       <Typography variant="h6">Manage Phones</Typography>
+      <AddMiceForm /> {/* Render the AddMiceForm */}
       {phones.length > 0 ? (
         renderTable(phones)
       ) : (
