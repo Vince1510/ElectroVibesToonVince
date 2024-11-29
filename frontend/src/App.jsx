@@ -24,7 +24,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/product" element={<Product />} />
-          <Route path="/:category/:productId" element={<DetailPage />} />
           <Route path="/detail/:category/:productId" element={<DetailPage />} />
           <Route path="/deals" element={<Deals />} />
           <Route path="/compare" element={<Compare />} />

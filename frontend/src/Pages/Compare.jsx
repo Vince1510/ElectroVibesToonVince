@@ -24,17 +24,17 @@ const ComparePage = () => {
 
   const renderDetailsComponent = (product) => {
     switch (product.category) {
-      case "Phone":
+      case "Phones":
         return <PhoneDetails product={product} />;
-      case "Mouse":
+      case "Mice":
         return <MouseDetails product={product} />;
-      case "Laptop":
+      case "Laptops":
         return <LaptopDetails product={product} />;
-      case "Monitor":
+      case "Monitors":
         return <MonitorDetails product={product} />;
-      case "Keyboard":
+      case "Keyboards":
         return <KeyboardDetails product={product} />;
-      case "Game":
+      case "Games":
         return <GameDetails product={product} />;
       default:
         return (

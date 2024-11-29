@@ -106,8 +106,6 @@ const Home = () => {
           Phone
         </Button>
       </Box>
-
-      {/* Card Slider */}
       <CardSlider />
     </Box>
   );

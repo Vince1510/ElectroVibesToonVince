@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Grid, Box, Button } from "@mui/material";
+import { Typography, Grid, Box } from "@mui/material";
 import ProductCard from "../components/ProductCard";
 import CompareList from "../components/CompareList";
 import FilterPanel from "../components/FilterPanel";
