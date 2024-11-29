@@ -6,14 +6,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Button,
 } from "@mui/material";
 import axios from "axios";
 import AddLaptopForm from "./AddLaptopForm";
 
 const LaptopsPanel = () => {
   const [laptops, setLaptops] = useState([]);
-  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     const fetchLaptops = async () => {
@@ -54,26 +52,20 @@ const LaptopsPanel = () => {
   );
 
   const handleLaptopAdded = () => {
-    setShowForm(false); // Hide form after adding
     axios.get("http://localhost:4000/api/laptops/").then((response) => {
-      setLaptops(response.data); // Refresh the laptop list
+      setLaptops(response.data); // Refresh the laptop list after adding
     });
   };
 
   return (
     <div>
       <Typography variant="h6">Manage Laptops</Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setShowForm((prev) => !prev)}
-        sx={{ mb: 2 }}
-      >
-        {showForm ? "Close Form" : "Add New Laptop"}
-      </Button>
-      {showForm ? (
-        <AddLaptopForm onLaptopAdded={handleLaptopAdded} />
-      ) : laptops.length > 0 ? (
+
+      {/* Directly show the AddLaptopForm */}
+      <AddLaptopForm onLaptopAdded={handleLaptopAdded} />
+
+      {/* Display laptops in a table */}
+      {laptops.length > 0 ? (
         renderTable(laptops)
       ) : (
         <Typography>No laptops available or loading...</Typography>

@@ -7,7 +7,11 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  Modal,
+  IconButton,
+  Container,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 const AddGameForm = () => {
   const [formData, setFormData] = useState({
@@ -54,6 +58,8 @@ const AddGameForm = () => {
     releaseRegion: "",
     exclusiveContent: "",
   });
+
+  const [open, setOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -124,350 +130,196 @@ const AddGameForm = () => {
         releaseRegion: "",
         exclusiveContent: "",
       });
+      setOpen(false); // Close the modal after submission
     } catch (error) {
       console.error("Error adding game:", error);
     }
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        Add New Game
-      </Typography>
+    <Container>
+      {/* Plus Icon Button */}
+      <IconButton
+        color="primary"
+        aria-label="add game"
+        onClick={() => setOpen(true)}
+        sx={{ position: "fixed", bottom: 16, right: 16 }}
+      >
+        <AddIcon />
+      </IconButton>
 
-      <TextField
-        label="Name"
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        fullWidth
-        required
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Description"
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        fullWidth
-        required
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Large Description"
-        name="largeDescription"
-        value={formData.largeDescription}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Brand"
-        name="brand"
-        value={formData.brand}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Price"
-        name="price"
-        value={formData.price}
-        onChange={handleChange}
-        fullWidth
-        required
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Deal Price"
-        name="dealPrice"
-        value={formData.dealPrice}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Image Card"
-        name="imageCard"
-        value={formData.imageCard}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Image Overview"
-        name="imageOverview"
-        value={formData.imageOverview}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Commercial"
-        name="commercial"
-        value={formData.commercial}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Amount"
-        name="amount"
-        value={formData.amount}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Max Amount"
-        name="maxAmount"
-        value={formData.maxAmount}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="State"
-        name="state"
-        value={formData.state}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Color"
-        name="color"
-        value={formData.color}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Model"
-        name="model"
-        value={formData.model}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Seller"
-        name="seller"
-        value={formData.seller}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Seller Score"
-        name="sellerScore"
-        value={formData.sellerScore}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Delivery Time"
-        name="deliveryTime"
-        value={formData.deliveryTime}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Often Bought With"
-        name="oftenBoughtWith"
-        value={formData.oftenBoughtWith}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Others Also Look At"
-        name="othersAlsoLookAt"
-        value={formData.othersAlsoLookAt}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Release Date"
-        name="releaseDate"
-        value={formData.releaseDate}
-        onChange={handleChange}
-        fullWidth
-        type="date"
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Genre"
-        name="genre"
-        value={formData.genre}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Platform"
-        name="platform"
-        value={formData.platform}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={formData.multiplayerSupport}
-            onChange={handleChange}
-            name="multiplayerSupport"
-          />
-        }
-        label="Multiplayer Support"
-      />
-      <TextField
-        label="Multiplayer Modes"
-        name="multiplayerModes"
-        value={formData.multiplayerModes}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Age Rating"
-        name="ageRating"
-        value={formData.ageRating}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Languages"
-        name="languages"
-        value={formData.languages}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={formData.dlcAvailable}
-            onChange={handleChange}
-            name="dlcAvailable"
-          />
-        }
-        label="DLC Available"
-      />
-      <TextField
-        label="Special Editions"
-        name="specialEditions"
-        value={formData.specialEditions}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={formData.achievements}
-            onChange={handleChange}
-            name="achievements"
-          />
-        }
-        label="Achievements"
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={formData.inAppPurchases}
-            onChange={handleChange}
-            name="inAppPurchases"
-          />
-        }
-        label="In-App Purchases"
-      />
-      <TextField
-        label="File Size"
-        name="fileSize"
-        value={formData.fileSize}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Minimum System Requirements"
-        name="systemRequirements.minimum"
-        value={formData.systemRequirements.minimum}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Recommended System Requirements"
-        name="systemRequirements.recommended"
-        value={formData.systemRequirements.recommended}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={formData.physicalEdition}
-            onChange={handleChange}
-            name="physicalEdition"
-          />
-        }
-        label="Physical Edition"
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={formData.vrSupport}
-            onChange={handleChange}
-            name="vrSupport"
-          />
-        }
-        label="VR Support"
-      />
-      <TextField
-        label="Publisher"
-        name="publisher"
-        value={formData.publisher}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Developer"
-        name="developer"
-        value={formData.developer}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Release Region"
-        name="releaseRegion"
-        value={formData.releaseRegion}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
-      <TextField
-        label="Exclusive Content"
-        name="exclusiveContent"
-        value={formData.exclusiveContent}
-        onChange={handleChange}
-        fullWidth
-        sx={{ mb: 2 }}
-      />
+      {/* Modal */}
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="add-game-modal-title"
+        aria-describedby="add-game-modal-description"
+      >
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            bgcolor: "black",
+            boxShadow: 24,
+            p: 3,
+            borderRadius: 2,
+            overflowY: "auto",
+            maxHeight: "90vh",
+            scrollBehavior: "smooth",
+            color: "white", // Ensure text color is white
+          }}
+        >
+          <Typography
+            variant="h6"
+            id="add-game-modal-title"
+            sx={{ mb: 2, color: "white" }}
+          >
+            Add New Game
+          </Typography>
 
-      <Button type="submit" variant="contained" color="primary" fullWidth>
-        Add Game
-      </Button>
-    </Box>
+          {/* Fields */}
+          {[
+            "name",
+            "description",
+            "largeDescription",
+            "brand",
+            "price",
+            "dealPrice",
+            "imageCard",
+            "imageOverview",
+            "commercial",
+            "amount",
+            "maxAmount",
+            "state",
+            "color",
+            "model",
+            "seller",
+            "sellerScore",
+            "deliveryTime",
+            "oftenBoughtWith",
+            "othersAlsoLookAt",
+            "releaseDate",
+            "genre",
+            "platform",
+            "multiplayerModes",
+            "ageRating",
+            "languages",
+            "specialEditions",
+            "fileSize",
+            "publisher",
+            "developer",
+            "releaseRegion",
+            "exclusiveContent",
+          ].map((field) => (
+            <TextField
+              key={field}
+              label={field
+                .replace(/([A-Z])/g, " $1")
+                .replace(/^./, (str) => str.toUpperCase())}
+              name={field}
+              value={formData[field]}
+              onChange={handleChange}
+              fullWidth
+              required={["name", "description", "price"].includes(field)}
+              sx={{
+                mb: 2,
+                "& .MuiInputBase-input": {
+                  color: "white", // Set text color to white
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "white", // Set border color to white
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "white", // Set hover border color to white
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "white", // Set focus border color to white
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "white", // Set label color to white
+                },
+              }}
+            />
+          ))}
+
+          {/* Checkboxes */}
+          {[
+            { name: "multiplayerSupport", label: "Multiplayer Support" },
+            { name: "dlcAvailable", label: "DLC Available" },
+            { name: "achievements", label: "Achievements" },
+            { name: "inAppPurchases", label: "In-App Purchases" },
+            { name: "physicalEdition", label: "Physical Edition" },
+            { name: "vrSupport", label: "VR Support" },
+          ].map((checkbox) => (
+            <FormControlLabel
+              key={checkbox.name}
+              control={
+                <Checkbox
+                  checked={formData[checkbox.name]}
+                  onChange={handleChange}
+                  name={checkbox.name}
+                  color="primary"
+                  sx={{ color: "white" }}
+                />
+              }
+              label={checkbox.label}
+              sx={{ color: "white" }}
+            />
+          ))}
+
+          {/* System Requirements */}
+          {["minimum", "recommended"].map((type) => (
+            <TextField
+              key={type}
+              label={`${type.replace(/^./, (str) =>
+                str.toUpperCase()
+              )} System Requirements`}
+              name={`systemRequirements.${type}`}
+              value={formData.systemRequirements?.[type]}
+              onChange={handleChange}
+              fullWidth
+              sx={{
+                mb: 2,
+                "& .MuiInputBase-input": {
+                  color: "white", // Set text color to white
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "white", // Set border color to white
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "white", // Set hover border color to white
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "white", // Set focus border color to white
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "white", // Set label color to white
+                },
+              }}
+            />
+          ))}
+
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2, backgroundColor: "white", color: "black" }}
+          >
+            Add Game
+          </Button>
+        </Box>
+      </Modal>
+    </Container>
   );
 };
 

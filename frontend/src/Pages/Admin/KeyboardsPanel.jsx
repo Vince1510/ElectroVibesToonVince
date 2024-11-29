@@ -6,14 +6,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Button,
 } from "@mui/material";
 import axios from "axios";
 import AddKeyboardForm from "./AddKeyboardForm";
 
 const KeyboardsPanel = () => {
   const [keyboards, setKeyboards] = useState([]);
-  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     const fetchKeyboards = async () => {
@@ -62,15 +60,11 @@ const KeyboardsPanel = () => {
   return (
     <div>
       <Typography variant="h6">Manage Keyboards</Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setShowForm(!showForm)}
-        sx={{ mt: 2 }}
-      >
-        {showForm ? "Cancel" : "Add New Keyboard"}
-      </Button>
-      {showForm && <AddKeyboardForm onKeyboardAdded={handleAddKeyboard} />}
+
+      {/* Directly show the AddKeyboardForm */}
+      <AddKeyboardForm onKeyboardAdded={handleAddKeyboard} />
+
+      {/* Displaying keyboards in a table */}
       {keyboards.length > 0 ? (
         renderTable(keyboards)
       ) : (

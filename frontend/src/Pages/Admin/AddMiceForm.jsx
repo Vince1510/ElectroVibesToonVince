@@ -75,9 +75,6 @@ const AddMiceForm = () => {
 
   return (
     <Box sx={{ padding: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Add New Phone
-      </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           {Object.keys(formData).map((key) => (

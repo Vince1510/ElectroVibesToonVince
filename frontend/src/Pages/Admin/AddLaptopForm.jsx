@@ -86,14 +86,12 @@ const AddLaptopForm = ({ onLaptopAdded }) => {
       onLaptopAdded(); // Refresh the laptop list after adding
     } catch (error) {
       setLoading(false);
-      alert("Error adding laptop.");
       console.error(error);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
-      <Typography variant="h6">Add a New Laptop</Typography>
       <Grid container spacing={3}>
         {/* Name */}
         <Grid item xs={12} sm={6}>

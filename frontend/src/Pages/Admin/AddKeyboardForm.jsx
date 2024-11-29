@@ -106,9 +106,6 @@ const AddKeyboardForm = ({ onKeyboardAdded }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Typography variant="h6" gutterBottom>
-        Add a New Keyboard
-      </Typography>
       <Grid container spacing={2}>
         {Object.keys(formData).map((key) => {
           if (key === "numPad" || key === "adjustableFeet") {
