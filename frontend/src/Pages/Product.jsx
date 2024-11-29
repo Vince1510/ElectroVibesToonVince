@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+<<<<<<< Updated upstream
 import { Link } from "react-router-dom";
 import {
   Typography,
@@ -12,6 +13,13 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Filter from "../components/Filter";
+=======
+import { useNavigate } from "react-router-dom";
+import { Typography, Grid, Box } from "@mui/material";
+import ProductCard from "../components/ProductCard";
+import CompareList from "../components/CompareList";
+import FilterPanel from "../components/FilterPanel";
+>>>>>>> Stashed changes
 
 function Product() {
   const [products, setProducts] = useState([]);
@@ -20,7 +28,6 @@ function Product() {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedSpecs, setSelectedSpecs] = useState([]);
   const [sortOrder, setSortOrder] = useState("none");
-  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
   // Fetch products and games from backend
   useEffect(() => {
