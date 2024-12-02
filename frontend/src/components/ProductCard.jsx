@@ -1,6 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, CardMedia, CardContent, Typography, Box, Grid, Button } from "@mui/material";
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  Box,
+  Grid,
+  Button,
+} from "@mui/material";
 
 function ProductCard({ product, onCompare, cardStyle = {} }) {
   return (
@@ -86,7 +94,7 @@ function ProductCard({ product, onCompare, cardStyle = {} }) {
                   marginRight: 0.2,
                 }}
               >
-                €{product.dealPrice}
+                {product.dealPrice}
               </Typography>
               <Typography
                 sx={{
@@ -95,7 +103,7 @@ function ProductCard({ product, onCompare, cardStyle = {} }) {
                   fontSize: "0.7rem",
                 }}
               >
-                €{product.price}
+                {product.price}
               </Typography>
             </Box>
           ) : (
@@ -106,7 +114,7 @@ function ProductCard({ product, onCompare, cardStyle = {} }) {
                 fontSize: "1rem",
               }}
             >
-              €{product.price}
+              {product.price}
             </Typography>
           )}
           <Button

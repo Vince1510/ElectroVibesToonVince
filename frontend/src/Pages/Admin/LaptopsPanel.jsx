@@ -7,13 +7,17 @@ import {
   TableHead,
   TableRow,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import axios from "axios";
 import AddLaptopForm from "./AddLaptopForm";
 
 const LaptopsPanel = () => {
   const [laptops, setLaptops] = useState([]);
-  const [showForm, setShowForm] = useState(false);
+  const [open, setOpen] = useState(false); // State to control modal visibility
 
   useEffect(() => {
     const fetchLaptops = async () => {
@@ -54,26 +58,61 @@ const LaptopsPanel = () => {
   );
 
   const handleLaptopAdded = () => {
-    setShowForm(false); // Hide form after adding
     axios.get("http://localhost:4000/api/laptops/").then((response) => {
-      setLaptops(response.data); // Refresh the laptop list
+      setLaptops(response.data); // Refresh the laptop list after adding
     });
+  };
+
+  // Functions to handle opening and closing the modal
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
     <div>
       <Typography variant="h6">Manage Laptops</Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setShowForm((prev) => !prev)}
-        sx={{ mb: 2 }}
-      >
-        {showForm ? "Close Form" : "Add New Laptop"}
+
+      {/* Button to open modal for adding a laptop */}
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        Add New Laptop
       </Button>
-      {showForm ? (
-        <AddLaptopForm onLaptopAdded={handleLaptopAdded} />
-      ) : laptops.length > 0 ? (
+
+      {/* Modal for adding a new laptop */}
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
+          Add a New Laptop
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            backgroundColor: "#000",
+          }}
+        >
+          <AddLaptopForm onLaptopAdded={handleLaptopAdded} />
+        </DialogContent>
+        <DialogActions
+          sx={{
+            backgroundColor: "#000",
+          }}
+        >
+          <Button
+            onClick={handleClose}
+            color="secondary"
+            sx={{
+              backgroundColor: "#000",
+              color: "#fff",
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Display laptops in a table */}
+      {laptops.length > 0 ? (
         renderTable(laptops)
       ) : (
         <Typography>No laptops available or loading...</Typography>

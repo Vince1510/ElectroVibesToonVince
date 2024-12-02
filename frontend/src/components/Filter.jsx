@@ -24,8 +24,27 @@ const Filter = ({
   setSelectedSpecs,
   handleSortChange,
 }) => {
-  const categories = ["All", "Laptop", "Monitor", "Games", "Mouse", "Phone", "Keyboard"];
-  const brands = ["Apple", "Samsung", "Logitech", "Asus", "Corsair", "Dell", "Google", "Sony", "OnePlus", "Doogee"];
+  const categories = [
+    "All",
+    "Laptop",
+    "Monitor",
+    "Games",
+    "Mouse",
+    "Phone",
+    "Keyboard",
+  ];
+  const brands = [
+    "Apple",
+    "Samsung",
+    "Logitech",
+    "Asus",
+    "Corsair",
+    "Dell",
+    "Google",
+    "Sony",
+    "OnePlus",
+    "Doogee",
+  ];
 
   const handlePriceChange = (event, newValue) => {
     setPriceRange(newValue);
@@ -46,16 +65,31 @@ const Filter = ({
   };
 
   return (
-    <Box sx={{ width: 300, padding: 2, backgroundColor: "#191919", color: "white" }}>
+    <Box
+      sx={{
+        width: 300,
+        padding: 2,
+        backgroundColor: "#191919",
+        color: "white",
+      }}
+    >
       <Typography variant="h6">Filter</Typography>
 
-      <FormControl fullWidth variant="outlined" margin="normal" sx={{ color: "white" }}>
+      <FormControl
+        fullWidth
+        variant="outlined"
+        margin="normal"
+        sx={{ color: "white" }}
+      >
         <InputLabel sx={{ color: "white" }}>Category</InputLabel>
         <Select
           value={selectedCategory}
           onChange={handleCategoryChange}
           label="Category"
-          sx={{ color: "white", '& .MuiOutlinedInput-notchedOutline': { borderColor: 'white' } }}
+          sx={{
+            color: "white",
+            "& .MuiOutlinedInput-notchedOutline": { borderColor: "white" },
+          }}
         >
           {categories.map((category) => (
             <MenuItem key={category} value={category}>
@@ -70,11 +104,31 @@ const Filter = ({
         onChange={(e) => handleSortChange(e.target.value)}
         sx={{ color: "white" }}
       >
-        <FormControlLabel value="none" control={<Radio sx={{ color: "white" }} />} label="None" />
-        <FormControlLabel value="lowToHigh" control={<Radio sx={{ color: "white" }} />} label="Price: Low to High" />
-        <FormControlLabel value="highToLow" control={<Radio sx={{ color: "white" }} />} label="Price: High to Low" />
-        <FormControlLabel value="aToZ" control={<Radio sx={{ color: "white" }} />} label="Name: A to Z" />
-        <FormControlLabel value="zToA" control={<Radio sx={{ color: "white" }} />} label="Name: Z to A" />
+        <FormControlLabel
+          value="none"
+          control={<Radio sx={{ color: "white" }} />}
+          label="None"
+        />
+        <FormControlLabel
+          value="lowToHigh"
+          control={<Radio sx={{ color: "white" }} />}
+          label="Price: Low to High"
+        />
+        <FormControlLabel
+          value="highToLow"
+          control={<Radio sx={{ color: "white" }} />}
+          label="Price: High to Low"
+        />
+        <FormControlLabel
+          value="aToZ"
+          control={<Radio sx={{ color: "white" }} />}
+          label="Name: A to Z"
+        />
+        <FormControlLabel
+          value="zToA"
+          control={<Radio sx={{ color: "white" }} />}
+          label="Name: Z to A"
+        />
       </RadioGroup>
 
       <Typography sx={{ paddingTop: "20px" }}>Price</Typography>
@@ -86,7 +140,7 @@ const Filter = ({
         max={3000}
         sx={{ color: "white" }}
       />
-      <Typography>{`€${priceRange[0]} - €${priceRange[1]}`}</Typography>
+      <Typography>{`${priceRange[0]} - ${priceRange[1]}`}</Typography>
 
       <Typography sx={{ paddingTop: "20px" }}>Brand</Typography>
       <FormGroup>
