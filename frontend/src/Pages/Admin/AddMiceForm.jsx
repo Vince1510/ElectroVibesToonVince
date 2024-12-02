@@ -7,24 +7,24 @@ const AddMiceForm = () => {
     name: "",
     code: "",
     description: "",
-    largeDescription: [],
+    largeDescription: [""],
     brand: "",
     category: "Phone",
     price: "",
     dealPrice: "",
     imageCard: "",
-    imageOverview: [],
+    imageOverview: [""],
     commercial: "",
     amount: "",
     maxAmount: "",
     state: "",
-    color: [],
-    model: [],
+    color: [""],
+    model: [""],
     seller: "",
     sellerScore: "",
     deliveryTime: "",
-    oftenBoughtWith: [],
-    othersAlsoLookAt: [],
+    oftenBoughtWith: [""],
+    othersAlsoLookAt: [""],
     operatingSystem: "",
     screenSize: "",
     screenResolution: "",
@@ -36,17 +36,17 @@ const AddMiceForm = () => {
     expandableStorage: "",
     rearCamera: "",
     frontCamera: "",
-    cameraFeatures: [],
+    cameraFeatures: [""],
     batteryCapacity: "",
     chargingSpeed: "",
     wirelessCharging: "",
     simType: "Nano-SIM",
     network: "",
-    connectivityFeatures: [],
+    connectivityFeatures: [""],
     waterproof: "",
     fingerprintSensor: "",
     faceRecognition: "",
-    colorOptions: [],
+    colorOptions: [""],
     weight: "",
     dimensions: "",
   });
@@ -56,6 +56,22 @@ const AddMiceForm = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleArrayChange = (e, index, key) => {
+    const { value } = e.target;
+    setFormData((prev) => {
+      const updatedArray = [...prev[key]];
+      updatedArray[index] = value;
+      return { ...prev, [key]: updatedArray };
+    });
+  };
+
+  const addArrayField = (key) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: [...prev[key], ""],
     }));
   };
 
@@ -77,20 +93,81 @@ const AddMiceForm = () => {
     <Box sx={{ padding: 3 }}>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
-          {Object.keys(formData).map((key) => (
-            <Grid item xs={12} sm={6} key={key}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                label={key}
-                name={key}
-                value={formData[key]}
-                onChange={handleChange}
-                required
-                multiline={Array.isArray(formData[key])}
-              />
-            </Grid>
-          ))}
+          {Object.keys(formData).map((key) => {
+            if (Array.isArray(formData[key])) {
+              return (
+                <Grid item xs={12} key={key}>
+                  <Typography>{key}</Typography>
+                  {formData[key].map((item, index) => (
+                    <Grid item xs={12} key={`${key}-${index}`}>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label={`${key} ${index + 1}`}
+                        name={key}
+                        value={item}
+                        onChange={(e) => handleArrayChange(e, index, key)}
+                        required
+                        sx={{
+                          // Root class for the input field
+                          "& .MuiOutlinedInput-root": {
+                            color: "#fff",
+                            fontFamily: "Arial",
+                            fontWeight: "bold",
+                            // Class for the border around the input field
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#fff",
+                              borderWidth: "2px",
+                            },
+                          },
+                          // Class for the label of the input field
+                          "& .MuiInputLabel-outlined": {
+                            color: "#fff",
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                    </Grid>
+                  ))}
+                  <Button variant="outlined" onClick={() => addArrayField(key)}>
+                    Add another {key}
+                  </Button>
+                </Grid>
+              );
+            } else {
+              return (
+                <Grid item xs={12} sm={6} key={key}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label={key}
+                    name={key}
+                    value={formData[key]}
+                    onChange={handleChange}
+                    required
+                    sx={{
+                      // Root class for the input field
+                      "& .MuiOutlinedInput-root": {
+                        color: "#fff",
+                        fontFamily: "Arial",
+                        fontWeight: "bold",
+                        // Class for the border around the input field
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "#fff",
+                          borderWidth: "2px",
+                        },
+                      },
+                      // Class for the label of the input field
+                      "& .MuiInputLabel-outlined": {
+                        color: "#fff",
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+                </Grid>
+              );
+            }
+          })}
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
               Add Phone

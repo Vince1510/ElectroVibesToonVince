@@ -1,4 +1,3 @@
-// MicePanel.jsx
 import React, { useState, useEffect } from "react";
 import {
   Typography,
@@ -7,15 +6,20 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Grid,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import axios from "axios";
 import AddMiceForm from "./AddMiceForm"; // Import the form component
 
 const MicePanel = () => {
   const [mice, setMice] = useState([]);
+  const [open, setOpen] = useState(false); // State to control modal visibility
 
+  // Fetch mice from the backend API
   useEffect(() => {
     const fetchMice = async () => {
       try {
@@ -58,10 +62,55 @@ const MicePanel = () => {
     </Table>
   );
 
+  // Functions to handle opening and closing the modal
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div>
       <Typography variant="h6">Manage Mice</Typography>
-      <AddMiceForm onAddMouse={handleAddMouse} />
+
+      {/* Button to open modal for adding a mouse */}
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        Add New Mouse
+      </Button>
+
+      {/* Modal for adding a new mouse */}
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
+          Add a New Mouse
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            backgroundColor: "#000",
+          }}
+        >
+          <AddMiceForm onAddMouse={handleAddMouse} />
+        </DialogContent>
+        <DialogActions
+          sx={{
+            backgroundColor: "#000",
+          }}
+        >
+          <Button
+            onClick={handleClose}
+            color="secondary"
+            sx={{
+              backgroundColor: "#000",
+              color: "#fff",
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Displaying mice in a table */}
       {mice.length > 0 ? (
         renderTable(mice)
       ) : (

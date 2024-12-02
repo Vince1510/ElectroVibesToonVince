@@ -3,90 +3,76 @@ import {
   TextField,
   Button,
   Grid,
-  Typography,
-  Checkbox,
-  FormControlLabel,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import axios from "axios";
 
 const AddKeyboardForm = ({ onKeyboardAdded }) => {
-  const [formData, setFormData] = useState({
+  const initialState = {
     name: "",
+    code: "",
     description: "",
-    largeDescription: [],
+    largeDescription: "",
     brand: "",
-    category: "Keyboard",
-    price: 0,
-    dealPrice: 0,
+    category: "",
+    price: "",
+    dealPrice: "",
     imageCard: "",
-    imageOverview: [],
+    imageOverview: "",
     commercial: "",
-    amount: 0,
-    maxAmount: 0,
+    amount: "",
+    maxAmount: "",
     state: "",
-    color: [],
-    model: [],
+    color: "",
+    model: "",
     seller: "",
-    sellerScore: 0,
-    deliveryTime: 0,
-    oftenBoughtWith: [],
-    othersAlsoLookAt: [],
+    sellerScore: "",
+    deliveryTime: "",
+    oftenBoughtWith: "",
+    othersAlsoLookAt: "",
+    operatingSystem: "",
+    screenSize: "",
+    screenResolution: "",
+    screenTechnology: "",
+    refreshRate: "",
+    processor: "",
+    ram: "",
+    storage: "",
+    expandableStorage: "",
+    rearCamera: "",
+    frontCamera: "",
+    cameraFeatures: "",
+    batteryCapacity: "",
+    chargingSpeed: "",
+    wirelessCharging: "",
+    simType: "",
+    network: "",
+    connectivityFeatures: "",
+    waterproof: true, // Set to true as per your example
+    fingerprintSensor: "",
+    faceRecognition: "",
+    colorOptions: "",
+    weight: "",
+    dimensions: "",
     layout: "",
     connectionType: "",
     switchType: "",
     backlighting: "",
-    rgbLighting: "",
-    keycapMaterial: "",
-    size: "",
-    macroKeys: "",
-    hotSwappable: "",
-    batteryLife: "",
-    numPad: false,
-    adjustableFeet: false,
-    pollingRate: "",
-    onboardMemory: false,
-    compatibility: [],
-    waterproof: false,
-    wirelessRange: "",
-    weight: "",
-    dimensions: "",
-  });
-
-  // Handle input change
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: checked,
-      }));
-    } else if (
-      name.includes("Description") ||
-      name === "imageOverview" ||
-      name === "color" ||
-      name === "model" ||
-      name === "oftenBoughtWith" ||
-      name === "othersAlsoLookAt" ||
-      name === "compatibility"
-    ) {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value.split("\n"), // Convert multiline input to array
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+    rgbLighting: true, // Set to true as per your example
+    macroKeys: true, // Set to true as per your example
+    hotSwappable: false, // Set to false as per your example
+    numPad: true, // Set to true as per your example
+    adjustableFeet: true, // Set to true as per your example
   };
 
-  // Handle adding items to arrays
-  const handleAddItem = (name) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: [...prevData[name], ""],
-    }));
+  const [formData, setFormData] = useState(initialState);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -97,8 +83,8 @@ const AddKeyboardForm = ({ onKeyboardAdded }) => {
         "http://localhost:4000/api/keyboards/",
         formData
       );
-      console.log("Keyboard added successfully:", response.data);
-      onKeyboardAdded(response.data); // Call the parent function to update the list
+      onKeyboardAdded(response.data);
+      setFormData(initialState); // Clear form after submission
     } catch (error) {
       console.error("Error adding keyboard:", error);
     }
@@ -107,83 +93,38 @@ const AddKeyboardForm = ({ onKeyboardAdded }) => {
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
-        {Object.keys(formData).map((key) => {
-          if (key === "numPad" || key === "adjustableFeet") {
-            // Handle boolean inputs with checkboxes
-            return (
-              <Grid item xs={12} sm={6} key={key}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={formData[key]}
-                      onChange={handleChange}
-                      name={key}
-                    />
-                  }
-                  label={key.charAt(0).toUpperCase() + key.slice(1)}
-                />
-              </Grid>
-            );
-          }
-
-          // Handle array inputs (e.g., color, model)
-          if (Array.isArray(formData[key])) {
-            return (
-              <Grid item xs={12} sm={6} key={key}>
-                <TextField
-                  fullWidth
-                  label={key.charAt(0).toUpperCase() + key.slice(1)}
-                  name={key}
-                  value={formData[key].join("\n")} // Join array for multi-line display
-                  onChange={handleChange}
-                  multiline
-                />
-                <Button onClick={() => handleAddItem(key)}>Add {key}</Button>
-              </Grid>
-            );
-          }
-
-          // Handle normal inputs (strings, numbers, etc.)
-          return (
-            <Grid item xs={12} sm={6} key={key}>
-              <TextField
-                fullWidth
-                label={key.charAt(0).toUpperCase() + key.slice(1)}
-                name={key}
-                value={formData[key]}
-                onChange={handleChange}
-                required={
-                  key !== "dealPrice" &&
-                  key !== "keycapMaterial" &&
-                  key !== "batteryLife" &&
-                  key !== "pollingRate" &&
-                  key !== "weight" &&
-                  key !== "dimensions" &&
-                  key !== "wirelessRange"
-                }
-                type={
-                  key === "price" ||
-                  key === "dealPrice" ||
-                  key === "sellerScore" ||
-                  key === "deliveryTime" ||
-                  key === "amount" ||
-                  key === "maxAmount"
-                    ? "number"
-                    : "text"
-                }
-                multiline={
-                  key === "largeDescription" ||
-                  key === "imageOverview" ||
-                  key === "oftenBoughtWith" ||
-                  key === "othersAlsoLookAt" ||
-                  key === "compatibility"
-                }
-              />
-            </Grid>
-          );
-        })}
+        {Object.keys(formData).map((field, index) => (
+          <Grid item xs={12} sm={6} key={index}>
+            <TextField
+              fullWidth
+              label={field}
+              name={field}
+              value={formData[field]}
+              onChange={handleInputChange}
+              required
+              sx={{
+                // Root class for the input field
+                "& .MuiOutlinedInput-root": {
+                  color: "#fff",
+                  fontFamily: "Arial",
+                  fontWeight: "bold",
+                  // Class for the border around the input field
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#fff",
+                    borderWidth: "2px",
+                  },
+                },
+                // Class for the label of the input field
+                "& .MuiInputLabel-outlined": {
+                  color: "#fff",
+                  fontWeight: "bold",
+                },
+              }}
+            />
+          </Grid>
+        ))}
       </Grid>
-      <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+      <Button type="submit" variant="contained" sx={{ mt: 2 }}>
         Add Keyboard
       </Button>
     </form>

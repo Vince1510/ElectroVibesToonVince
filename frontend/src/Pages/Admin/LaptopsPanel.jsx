@@ -6,12 +6,18 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import axios from "axios";
 import AddLaptopForm from "./AddLaptopForm";
 
 const LaptopsPanel = () => {
   const [laptops, setLaptops] = useState([]);
+  const [open, setOpen] = useState(false); // State to control modal visibility
 
   useEffect(() => {
     const fetchLaptops = async () => {
@@ -57,12 +63,53 @@ const LaptopsPanel = () => {
     });
   };
 
+  // Functions to handle opening and closing the modal
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div>
       <Typography variant="h6">Manage Laptops</Typography>
 
-      {/* Directly show the AddLaptopForm */}
-      <AddLaptopForm onLaptopAdded={handleLaptopAdded} />
+      {/* Button to open modal for adding a laptop */}
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        Add New Laptop
+      </Button>
+
+      {/* Modal for adding a new laptop */}
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
+          Add a New Laptop
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            backgroundColor: "#000",
+          }}
+        >
+          <AddLaptopForm onLaptopAdded={handleLaptopAdded} />
+        </DialogContent>
+        <DialogActions
+          sx={{
+            backgroundColor: "#000",
+          }}
+        >
+          <Button
+            onClick={handleClose}
+            color="secondary"
+            sx={{
+              backgroundColor: "#000",
+              color: "#fff",
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Display laptops in a table */}
       {laptops.length > 0 ? (

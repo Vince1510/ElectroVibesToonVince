@@ -4,14 +4,11 @@ import {
   TextField,
   Button,
   Box,
-  Typography,
   FormControlLabel,
   Checkbox,
-  Modal,
-  IconButton,
   Container,
+  Grid,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 
 const AddGameForm = () => {
   const [formData, setFormData] = useState({
@@ -58,8 +55,6 @@ const AddGameForm = () => {
     releaseRegion: "",
     exclusiveContent: "",
   });
-
-  const [open, setOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -114,211 +109,166 @@ const AddGameForm = () => {
         multiplayerModes: "",
         ageRating: "",
         languages: "",
-        dlcAvailable: false,
         specialEditions: "",
-        achievements: false,
-        inAppPurchases: false,
         fileSize: "",
-        systemRequirements: {
-          minimum: "",
-          recommended: "",
-        },
-        physicalEdition: false,
-        vrSupport: false,
         publisher: "",
         developer: "",
         releaseRegion: "",
         exclusiveContent: "",
       });
-      setOpen(false); // Close the modal after submission
     } catch (error) {
       console.error("Error adding game:", error);
     }
   };
 
+  const textFields = [
+    "name",
+    "description",
+    "largeDescription",
+    "brand",
+    "price",
+    "dealPrice",
+    "imageCard",
+    "imageOverview",
+    "commercial",
+    "amount",
+    "maxAmount",
+    "state",
+    "color",
+    "model",
+    "seller",
+    "sellerScore",
+    "deliveryTime",
+    "oftenBoughtWith",
+    "othersAlsoLookAt",
+    "releaseDate",
+    "genre",
+    "platform",
+    "multiplayerModes",
+    "ageRating",
+    "languages",
+    "specialEditions",
+    "fileSize",
+    "publisher",
+    "developer",
+    "releaseRegion",
+    "exclusiveContent",
+  ];
+
+  const checkboxes = [
+    { name: "multiplayerSupport", label: "Multiplayer Support" },
+    { name: "dlcAvailable", label: "DLC Available" },
+    { name: "achievements", label: "Achievements" },
+    { name: "inAppPurchases", label: "In-App Purchases" },
+    { name: "physicalEdition", label: "Physical Edition" },
+    { name: "vrSupport", label: "VR Support" },
+  ];
+
+  const systemReqFields = ["minimum", "recommended"];
+
   return (
     <Container>
-      {/* Plus Icon Button */}
-      <IconButton
-        color="primary"
-        aria-label="add game"
-        onClick={() => setOpen(true)}
-        sx={{ position: "fixed", bottom: 16, right: 16 }}
-      >
-        <AddIcon />
-      </IconButton>
-
-      {/* Modal */}
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="add-game-modal-title"
-        aria-describedby="add-game-modal-description"
-      >
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 600,
-            bgcolor: "black",
-            boxShadow: 24,
-            p: 3,
-            borderRadius: 2,
-            overflowY: "auto",
-            maxHeight: "90vh",
-            scrollBehavior: "smooth",
-            color: "white", // Ensure text color is white
-          }}
-        >
-          <Typography
-            variant="h6"
-            id="add-game-modal-title"
-            sx={{ mb: 2, color: "white" }}
-          >
-            Add New Game
-          </Typography>
-
-          {/* Fields */}
-          {[
-            "name",
-            "description",
-            "largeDescription",
-            "brand",
-            "price",
-            "dealPrice",
-            "imageCard",
-            "imageOverview",
-            "commercial",
-            "amount",
-            "maxAmount",
-            "state",
-            "color",
-            "model",
-            "seller",
-            "sellerScore",
-            "deliveryTime",
-            "oftenBoughtWith",
-            "othersAlsoLookAt",
-            "releaseDate",
-            "genre",
-            "platform",
-            "multiplayerModes",
-            "ageRating",
-            "languages",
-            "specialEditions",
-            "fileSize",
-            "publisher",
-            "developer",
-            "releaseRegion",
-            "exclusiveContent",
-          ].map((field) => (
-            <TextField
-              key={field}
-              label={field
-                .replace(/([A-Z])/g, " $1")
-                .replace(/^./, (str) => str.toUpperCase())}
-              name={field}
-              value={formData[field]}
-              onChange={handleChange}
-              fullWidth
-              required={["name", "description", "price"].includes(field)}
-              sx={{
-                mb: 2,
-                "& .MuiInputBase-input": {
-                  color: "white", // Set text color to white
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "white", // Set border color to white
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "white", // Set hover border color to white
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "white", // Set focus border color to white
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: "white", // Set label color to white
-                },
-              }}
-            />
-          ))}
-
-          {/* Checkboxes */}
-          {[
-            { name: "multiplayerSupport", label: "Multiplayer Support" },
-            { name: "dlcAvailable", label: "DLC Available" },
-            { name: "achievements", label: "Achievements" },
-            { name: "inAppPurchases", label: "In-App Purchases" },
-            { name: "physicalEdition", label: "Physical Edition" },
-            { name: "vrSupport", label: "VR Support" },
-          ].map((checkbox) => (
-            <FormControlLabel
-              key={checkbox.name}
-              control={
-                <Checkbox
-                  checked={formData[checkbox.name]}
+      <Box component="form" onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          {/* First Column */}
+          <Grid item xs={12} sm={6}>
+            {textFields.map((field) => (
+              <Grid key={field} item xs={12}>
+                <TextField
+                  label={field
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase())}
+                  name={field}
+                  value={formData[field]}
                   onChange={handleChange}
-                  name={checkbox.name}
-                  color="primary"
-                  sx={{ color: "white" }}
+                  fullWidth
+                  required={["name", "description", "price"].includes(field)}
+                  sx={{
+                    // Root class for the input field
+                    "& .MuiOutlinedInput-root": {
+                      color: "#fff",
+                      fontFamily: "Arial",
+                      fontWeight: "bold",
+                      // Class for the border around the input field
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#fff",
+                        borderWidth: "2px",
+                      },
+                    },
+                    // Class for the label of the input field
+                    "& .MuiInputLabel-outlined": {
+                      color: "#fff",
+                      fontWeight: "bold",
+                    },
+                  }}
                 />
-              }
-              label={checkbox.label}
-              sx={{ color: "white" }}
-            />
-          ))}
+              </Grid>
+            ))}
+          </Grid>
 
-          {/* System Requirements */}
-          {["minimum", "recommended"].map((type) => (
-            <TextField
-              key={type}
-              label={`${type.replace(/^./, (str) =>
-                str.toUpperCase()
-              )} System Requirements`}
-              name={`systemRequirements.${type}`}
-              value={formData.systemRequirements?.[type]}
-              onChange={handleChange}
-              fullWidth
-              sx={{
-                mb: 2,
-                "& .MuiInputBase-input": {
-                  color: "white", // Set text color to white
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "white", // Set border color to white
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "white", // Set hover border color to white
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "white", // Set focus border color to white
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: "white", // Set label color to white
-                },
-              }}
-            />
-          ))}
+          {/* Second Column (Checkboxes and System Requirements) */}
+          <Grid item xs={12} sm={6}>
+            {checkboxes.map(({ name, label }) => (
+              <Grid key={name} item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={formData[name]}
+                      onChange={handleChange}
+                      name={name}
+                      color="primary"
+                    />
+                  }
+                  label={label}
+                />
+              </Grid>
+            ))}
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2, backgroundColor: "white", color: "black" }}
-          >
-            Add Game
-          </Button>
-        </Box>
-      </Modal>
+            {/* System Requirements */}
+            {systemReqFields.map((type) => (
+              <Grid key={type} item xs={12}>
+                <TextField
+                  label={`${type.replace(/^./, (str) =>
+                    str.toUpperCase()
+                  )} System Requirements`}
+                  name={`systemRequirements.${type}`}
+                  value={formData.systemRequirements?.[type]}
+                  onChange={handleChange}
+                  fullWidth
+                  sx={{
+                    // Root class for the input field
+                    "& .MuiOutlinedInput-root": {
+                      color: "#fff",
+                      fontFamily: "Arial",
+                      fontWeight: "bold",
+                      // Class for the border around the input field
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#fff",
+                        borderWidth: "2px",
+                      },
+                    },
+                    // Class for the label of the input field
+                    "& .MuiInputLabel-outlined": {
+                      color: "#fff",
+                      fontWeight: "bold",
+                    },
+                  }}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          sx={{ marginTop: 2 }}
+        >
+          Add Game
+        </Button>
+      </Box>
     </Container>
   );
 };

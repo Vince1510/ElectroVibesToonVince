@@ -8,14 +8,20 @@ import {
   TableHead,
   TableRow,
   IconButton,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
-import AddGameForm from "./AddGameForm"; // Import the AddGameForm component
+import AddGameForm from "./AddGameForm";
 import axios from "axios";
-import EditIcon from "@mui/icons-material/Edit"; // Edit icon
-import DeleteIcon from "@mui/icons-material/Delete"; // Delete icon
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const GamesPanel = () => {
   const [games, setGames] = useState([]);
+  const [open, setOpen] = useState(false); // State to control modal visibility
 
   // Fetch games from the backend API
   useEffect(() => {
@@ -83,19 +89,55 @@ const GamesPanel = () => {
     </Table>
   );
 
-  return (
-    <Box sx={{ padding: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        Games Panel
-      </Typography>
+  // Functions to handle opening and closing the modal
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-      {/* Directly show the AddGameForm */}
-      <AddGameForm />
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Box>
+      <Typography variant="h6">Games Panel</Typography>
+
+      {/* Button to open modal for adding a game */}
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        Add New Game
+      </Button>
+
+      {/* Modal for adding a new game */}
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
+          Add a New Game
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            backgroundColor: "#000",
+          }}
+        >
+          <AddGameForm />
+        </DialogContent>
+        <DialogActions
+          sx={{
+            backgroundColor: "#000",
+          }}
+        >
+          <Button
+            onClick={handleClose}
+            color="secondary"
+            sx={{
+              backgroundColor: "#000",
+              color: "#fff",
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Displaying games in a table */}
-      <Typography variant="h6" sx={{ marginTop: 2 }}>
-        Manage Games
-      </Typography>
       {games.length > 0 ? (
         renderTable(games)
       ) : (

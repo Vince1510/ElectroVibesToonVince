@@ -155,7 +155,25 @@ const AddMonitorForm = () => {
                 field !== "energyRating" &&
                 field !== "weight" &&
                 field !== "dimensions"
-              } // Optional fields are not required
+              }
+              sx={{
+                // Root class for the input field
+                "& .MuiOutlinedInput-root": {
+                  color: "#fff",
+                  fontFamily: "Arial",
+                  fontWeight: "bold",
+                  // Class for the border around the input field
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#fff",
+                    borderWidth: "2px",
+                  },
+                },
+                // Class for the label of the input field
+                "& .MuiInputLabel-outlined": {
+                  color: "#fff",
+                  fontWeight: "bold",
+                },
+              }}
             />
           </Grid>
         ))}
@@ -208,7 +226,24 @@ const AddMonitorForm = () => {
                 onChange={(e) => handleArrayChange(e, arrayField.name, idx)}
                 fullWidth
                 required
-                sx={{ mb: 2 }}
+                sx={{
+                  // Root class for the input field
+                  "& .MuiOutlinedInput-root": {
+                    color: "#fff",
+                    fontFamily: "Arial",
+                    fontWeight: "bold",
+                    // Class for the border around the input field
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#fff",
+                      borderWidth: "2px",
+                    },
+                  },
+                  // Class for the label of the input field
+                  "& .MuiInputLabel-outlined": {
+                    color: "#fff",
+                    fontWeight: "bold",
+                  },
+                }}
               />
             ))}
             <Button
