@@ -21,6 +21,7 @@ import MouseDetails from "../components/MouseDetails";
 import LaptopDetails from "../components/LaptopDetails";
 import MonitorDetails from "../components/MonitorDetails";
 import KeyboardDetails from "../components/KeyboardDetails";
+import { useCart } from '../components/CartContext.jsx';
 
 function DetailPage() {
   const { category, productId } = useParams();
@@ -136,6 +137,20 @@ function DetailPage() {
 
   const handleModelSelect = (model) => {
     setSelectedModel(model);
+  };
+
+  const { cartItems, addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    const productToAdd = {
+      id: product.id,
+      name: product.name,
+      price: product.dealPrice || product.price,
+      color: selectedColor,
+      model: selectedModel,
+      image: product.imageOverview[0], // Main image
+    };
+    addToCart(productToAdd);
   };
 
   if (loading) {
@@ -355,6 +370,7 @@ function DetailPage() {
             <Button
               variant="contained"
               size="large"
+              onClick={handleAddToCart}
               sx={{
                 fontWeight: "bold",
                 background: "transparent",
