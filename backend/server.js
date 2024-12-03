@@ -7,9 +7,9 @@ import cors from "cors";
 import phoneRoutes from "./routes/phoneRoutes.js";
 import laptopRoutes from "./routes/laptopRoutes.js";
 import keyboardRoutes from "./routes/keyboardRoutes.js";
-import gameRoutes from "./routes/gameRoutes.js"; // Fixed route name consistency
+import gameRoutes from "./routes/gameRoutes.js";
 import monitorRoutes from "./routes/monitorRoutes.js";
-import mouseRoutes from "./routes/mouseRoutes.js"; // Corrected to lowercase 'm' for consistency
+import mouseRoutes from "./routes/mouseRoutes.js";
 
 // Express app initialization
 const app = express();
@@ -33,16 +33,13 @@ app.use("/api/keyboards", keyboardRoutes);
 app.use("/api/games", gameRoutes);
 app.use("/api/monitors", monitorRoutes);
 app.use("/api/mice", mouseRoutes);
-app.use("/api/games/category", gameRoutes);
+app.use("/api/games/category", gameRoutes); // Ensure gameRoutes supports category filtering
 
 // Database connection and server start
 const PORT = process.env.PORT || 4000;
 
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB successfully");
 
