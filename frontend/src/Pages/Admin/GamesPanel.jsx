@@ -8,20 +8,24 @@ import {
   TableHead,
   TableRow,
   IconButton,
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  Button,
 } from "@mui/material";
+
 import AddGameForm from "./AddGameForm";
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditGameModal from "./EditGameModal"; // Import the EditGameModal
 
 const GamesPanel = () => {
   const [games, setGames] = useState([]);
-  const [open, setOpen] = useState(false); // State to control modal visibility
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false); // State to control edit modal
+  const [selectedGame, setSelectedGame] = useState(null); // Store selected game for editing
 
   // Fetch games from the backend API
   useEffect(() => {
@@ -38,18 +42,26 @@ const GamesPanel = () => {
   }, []);
 
   const handleEdit = (gameId) => {
-    console.log("Editing game with ID:", gameId);
-    // Handle editing logic here (e.g., open a form with the game's details)
+    const gameToEdit = games.find((game) => game._id === gameId);
+    setSelectedGame(gameToEdit); // Set the game to be edited
+    setOpenEditDialog(true); // Open the edit modal
   };
 
   const handleDelete = async (gameId) => {
     try {
       await axios.delete(`http://localhost:4000/api/games/${gameId}`);
       setGames(games.filter((game) => game._id !== gameId)); // Remove deleted game from the state
-      console.log("Deleted game with ID:", gameId);
     } catch (error) {
       console.error("Error deleting game:", error);
     }
+  };
+
+  const handleGameUpdate = (updatedGame) => {
+    setGames((prevGames) =>
+      prevGames.map((game) =>
+        game._id === updatedGame._id ? updatedGame : game
+      )
+    );
   };
 
   const renderTable = (data) => (
@@ -92,13 +104,12 @@ const GamesPanel = () => {
     </Table>
   );
 
-  // Functions to handle opening and closing the modal
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenAdd = () => {
+    setOpenAddDialog(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseAdd = () => {
+    setOpenAddDialog(false);
   };
 
   return (
@@ -106,34 +117,28 @@ const GamesPanel = () => {
       <Typography variant="h6">Games Panel</Typography>
 
       {/* Button to open modal for adding a game */}
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+      <Button variant="contained" color="primary" onClick={handleClickOpenAdd}>
         Add New Game
       </Button>
 
       {/* Modal for adding a new game */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+      <Dialog
+        open={openAddDialog}
+        onClose={handleCloseAdd}
+        fullWidth
+        maxWidth="md"
+      >
         <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
           Add a New Game
         </DialogTitle>
-        <DialogContent
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
+        <DialogContent sx={{ backgroundColor: "#000" }}>
           <AddGameForm />
         </DialogContent>
-        <DialogActions
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
+        <DialogActions sx={{ backgroundColor: "#000" }}>
           <Button
-            onClick={handleClose}
+            onClick={handleCloseAdd}
             color="secondary"
-            sx={{
-              backgroundColor: "#000",
-              color: "#fff",
-            }}
+            sx={{ backgroundColor: "#000", color: "#fff" }}
           >
             Close
           </Button>
@@ -145,6 +150,16 @@ const GamesPanel = () => {
         renderTable(games)
       ) : (
         <Typography>No games available or loading...</Typography>
+      )}
+
+      {/* Edit Game Modal */}
+      {selectedGame && (
+        <EditGameModal
+          open={openEditDialog}
+          onClose={() => setOpenEditDialog(false)}
+          gameData={selectedGame}
+          onUpdate={handleGameUpdate}
+        />
       )}
     </Box>
   );
