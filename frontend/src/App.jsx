@@ -9,7 +9,7 @@ import Login from "./Pages/Login";
 import Admin from "./Pages/Admin/Admin";
 import BreadCrumb from "./components/BreadCrumbs";
 import Product from "./Pages/Product";
-import Cart from "./pages/Cart";
+import Cart from "./Pages/Cart";
 import DetailPage from "./Pages/DetailPage";
 import Deals from './Pages/deals'
 import Compare from "./Pages/Compare";
