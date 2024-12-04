@@ -73,12 +73,15 @@ const GamesPanel = () => {
             ))}
             <TableCell sx={{ color: "white" }}>
               {/* Edit and Delete buttons */}
-              <IconButton onClick={() => handleEdit(game._id)} color="primary">
+              <IconButton
+                onClick={() => handleEdit(game._id)}
+                sx={{ color: "#fff" }}
+              >
                 <EditIcon />
               </IconButton>
               <IconButton
                 onClick={() => handleDelete(game._id)}
-                color="secondary"
+                sx={{ color: "#fff" }}
               >
                 <DeleteIcon />
               </IconButton>

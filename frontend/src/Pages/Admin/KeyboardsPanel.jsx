@@ -11,7 +11,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import AddKeyboardForm from "./AddKeyboardForm";
 
@@ -38,19 +40,21 @@ const KeyboardsPanel = () => {
     setKeyboards((prevKeyboards) => [...prevKeyboards, newKeyboard]);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true); // Open the modal
-  };
-
-  const handleClose = () => {
-    setOpen(false); // Close the modal
+  // Function to handle deleting a keyboard
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/keyboards/${id}`);
+      setKeyboards(keyboards.filter((keyboard) => keyboard._id !== id)); // Remove the deleted keyboard from the list
+    } catch (error) {
+      console.error("Error deleting keyboard:", error);
+    }
   };
 
   const renderTable = (data) => (
     <Table sx={{ mt: 2 }}>
       <TableHead>
         <TableRow>
-          {["_id", "Name", "Brand", "Price"].map((column) => (
+          {["_id", "Name", "Brand", "Price", "Actions"].map((column) => (
             <TableCell key={column} sx={{ color: "white" }}>
               {column}
             </TableCell>
@@ -65,11 +69,28 @@ const KeyboardsPanel = () => {
                 {keyboard[column.toLowerCase()] || keyboard._id}
               </TableCell>
             ))}
+            <TableCell>
+              {/* Delete Icon Button */}
+              <IconButton
+                onClick={() => handleDelete(keyboard._id)}
+                color="secondary"
+              >
+                <DeleteIcon sx={{ color: "white" }} />
+              </IconButton>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
   );
+
+  const handleClickOpen = () => {
+    setOpen(true); // Open the modal
+  };
+
+  const handleClose = () => {
+    setOpen(false); // Close the modal
+  };
 
   return (
     <div>
