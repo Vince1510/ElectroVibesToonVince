@@ -11,7 +11,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete"; // Import Delete icon
 import axios from "axios";
 import AddMiceForm from "./AddMiceForm"; // Import the form component
 
@@ -33,6 +35,16 @@ const MicePanel = () => {
     fetchMice();
   }, []);
 
+  // Function to handle deleting a mouse
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/mice/${id}`);
+      setMice(mice.filter((mouse) => mouse._id !== id)); // Remove the deleted mouse from the list
+    } catch (error) {
+      console.error("Error deleting mouse:", error);
+    }
+  };
+
   const handleAddMouse = (newMouse) => {
     setMice((prevMice) => [...prevMice, newMouse]);
   };
@@ -41,7 +53,7 @@ const MicePanel = () => {
     <Table sx={{ mt: 2 }}>
       <TableHead>
         <TableRow>
-          {["_id", "Name", "Brand", "Price"].map((column) => (
+          {["_id", "Name", "Brand", "Price", "Actions"].map((column) => (
             <TableCell key={column} sx={{ color: "white" }}>
               {column}
             </TableCell>
@@ -56,6 +68,15 @@ const MicePanel = () => {
                 {mouse[column.toLowerCase()] || mouse._id}
               </TableCell>
             ))}
+            <TableCell>
+              {/* Delete Icon Button */}
+              <IconButton
+                onClick={() => handleDelete(mouse._id)}
+                color="secondary"
+              >
+                <DeleteIcon sx={{ color: "white" }} />
+              </IconButton>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

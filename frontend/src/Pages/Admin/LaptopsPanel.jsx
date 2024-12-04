@@ -11,7 +11,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import AddLaptopForm from "./AddLaptopForm";
 
@@ -32,11 +34,21 @@ const LaptopsPanel = () => {
     fetchLaptops();
   }, []);
 
+  // Function to handle deleting a laptop
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/laptops/${id}`);
+      setLaptops(laptops.filter((laptop) => laptop._id !== id)); // Remove the deleted laptop from the list
+    } catch (error) {
+      console.error("Error deleting laptop:", error);
+    }
+  };
+
   const renderTable = (data) => (
     <Table sx={{ mt: 2 }}>
       <TableHead>
         <TableRow>
-          {["_id", "Name", "Brand", "Price"].map((column) => (
+          {["_id", "Name", "Brand", "Price", "Actions"].map((column) => (
             <TableCell key={column} sx={{ color: "white" }}>
               {column}
             </TableCell>
@@ -51,6 +63,15 @@ const LaptopsPanel = () => {
                 {laptop[column.toLowerCase()] || laptop._id}
               </TableCell>
             ))}
+            <TableCell>
+              {/* Delete Icon Button */}
+              <IconButton
+                onClick={() => handleDelete(laptop._id)}
+                color="secondary"
+              >
+                <DeleteIcon sx={{ color: "white" }} />
+              </IconButton>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

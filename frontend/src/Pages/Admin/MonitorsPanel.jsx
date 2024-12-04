@@ -11,7 +11,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import AddMonitorForm from "./AddMonitorForm";
 
@@ -32,11 +34,21 @@ const MonitorsPanel = () => {
     fetchMonitors();
   }, []);
 
+  // Function to handle deleting a monitor
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/monitors/${id}`);
+      setMonitors(monitors.filter((monitor) => monitor._id !== id)); // Remove the deleted monitor from the list
+    } catch (error) {
+      console.error("Error deleting monitor:", error);
+    }
+  };
+
   const renderTable = (data) => (
     <Table sx={{ mt: 2 }}>
       <TableHead>
         <TableRow>
-          {["_id", "Name", "Brand", "Price"].map((column) => (
+          {["_id", "Name", "Brand", "Price", "Actions"].map((column) => (
             <TableCell key={column} sx={{ color: "white" }}>
               {column}
             </TableCell>
@@ -51,6 +63,15 @@ const MonitorsPanel = () => {
                 {monitor[column.toLowerCase()] || monitor._id}
               </TableCell>
             ))}
+            <TableCell>
+              {/* Delete Icon Button */}
+              <IconButton
+                onClick={() => handleDelete(monitor._id)}
+                color="secondary"
+              >
+                <DeleteIcon sx={{ color: "white" }} />
+              </IconButton>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

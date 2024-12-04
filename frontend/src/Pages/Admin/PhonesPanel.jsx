@@ -11,7 +11,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import AddPhoneForm from "./AddPhoneForm"; // Import the form component
 
@@ -32,6 +34,16 @@ const PhonesPanel = () => {
     fetchPhones();
   }, []);
 
+  // Function to handle deleting a phone
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/phones/${id}`);
+      setPhones(phones.filter((phone) => phone._id !== id)); // Remove the deleted phone from the list
+    } catch (error) {
+      console.error("Error deleting phone:", error);
+    }
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -44,7 +56,7 @@ const PhonesPanel = () => {
     <Table sx={{ mt: 2 }}>
       <TableHead>
         <TableRow>
-          {["_id", "Name", "Brand", "Price"].map((column) => (
+          {["_id", "Name", "Brand", "Price", "Actions"].map((column) => (
             <TableCell key={column} sx={{ color: "white" }}>
               {column}
             </TableCell>
@@ -59,6 +71,15 @@ const PhonesPanel = () => {
                 {phone[column.toLowerCase()] || phone._id}
               </TableCell>
             ))}
+            <TableCell>
+              {/* Delete Icon Button */}
+              <IconButton
+                onClick={() => handleDelete(phone._id)}
+                color="secondary"
+              >
+                <DeleteIcon sx={{ color: "white" }} />
+              </IconButton>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -84,8 +105,7 @@ const PhonesPanel = () => {
             backgroundColor: "#000",
           }}
         >
-          <AddPhoneForm onPhoneAdded={fetchPhones} />{" "}
-          {/* Add the form inside the modal */}
+          <AddPhoneForm onPhoneAdded={fetchPhones} />
         </DialogContent>
         <DialogActions
           sx={{

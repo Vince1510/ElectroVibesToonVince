@@ -216,7 +216,7 @@ const AddGameForm = () => {
                       checked={formData[name]}
                       onChange={handleChange}
                       name={name}
-                      color="primary"
+                      sx={{ color: "#fff" }}
                     />
                   }
                   label={label}

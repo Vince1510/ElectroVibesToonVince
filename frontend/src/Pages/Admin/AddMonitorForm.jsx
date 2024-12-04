@@ -198,6 +198,9 @@ const AddMonitorForm = () => {
                   name={checkboxField.name}
                   checked={formData[checkboxField.name]}
                   onChange={handleChange}
+                  sx={{
+                    color: "#fff",
+                  }}
                 />
               }
               label={checkboxField.label}
