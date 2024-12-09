@@ -51,7 +51,7 @@ const AddKeyboardForm = ({ onKeyboardAdded }) => {
     simType: "",
     network: "",
     connectivityFeatures: "",
-    waterproof: true, // Set to true as per your example
+    waterproof: true,
     fingerprintSensor: "",
     faceRecognition: "",
     colorOptions: "",
@@ -61,11 +61,11 @@ const AddKeyboardForm = ({ onKeyboardAdded }) => {
     connectionType: "",
     switchType: "",
     backlighting: "",
-    rgbLighting: true, // Set to true as per your example
-    macroKeys: true, // Set to true as per your example
-    hotSwappable: false, // Set to false as per your example
-    numPad: true, // Set to true as per your example
-    adjustableFeet: true, // Set to true as per your example
+    rgbLighting: true,
+    macroKeys: true,
+    hotSwappable: false,
+    numPad: true,
+    adjustableFeet: true,
   };
 
   const [formData, setFormData] = useState(initialState);
