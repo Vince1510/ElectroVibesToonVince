@@ -7,19 +7,18 @@ import {
   TableHead,
   TableRow,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   IconButton,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-import AddLaptopForm from "./AddLaptopForm";
+import EditLaptopModal from "./EditLaptopModal";
 
 const LaptopsPanel = () => {
   const [laptops, setLaptops] = useState([]);
-  const [open, setOpen] = useState(false); // State to control modal visibility
+  const [openEditModal, setOpenEditModal] = useState(false); // State to control edit modal visibility
+  const [selectedLaptopId, setSelectedLaptopId] = useState(null); // Store the laptop ID to edit
+  const [isAdding, setIsAdding] = useState(false); // State to distinguish between edit and add new laptop
 
   useEffect(() => {
     const fetchLaptops = async () => {
@@ -44,6 +43,27 @@ const LaptopsPanel = () => {
     }
   };
 
+  // Open the edit modal for a specific laptop
+  const handleEditClick = (id) => {
+    setSelectedLaptopId(id);
+    setIsAdding(false); // Set to false for editing
+    setOpenEditModal(true);
+  };
+
+  // Open the modal for adding a new laptop
+  const handleAddNewClick = () => {
+    setSelectedLaptopId(null); // No laptop selected for adding
+    setIsAdding(true); // Set to true for adding
+    setOpenEditModal(true);
+  };
+
+  // Function to refresh laptop list after update
+  const handleLaptopUpdated = () => {
+    axios.get("http://localhost:4000/api/laptops/").then((response) => {
+      setLaptops(response.data); // Refresh the laptop list after editing
+    });
+  };
+
   const renderTable = (data) => (
     <Table sx={{ mt: 2 }}>
       <TableHead>
@@ -64,7 +84,12 @@ const LaptopsPanel = () => {
               </TableCell>
             ))}
             <TableCell>
-              {/* Delete Icon Button */}
+              <IconButton
+                onClick={() => handleEditClick(laptop._id)}
+                color="primary"
+              >
+                <EditIcon sx={{ color: "white" }} />
+              </IconButton>
               <IconButton
                 onClick={() => handleDelete(laptop._id)}
                 color="secondary"
@@ -78,66 +103,31 @@ const LaptopsPanel = () => {
     </Table>
   );
 
-  const handleLaptopAdded = () => {
-    axios.get("http://localhost:4000/api/laptops/").then((response) => {
-      setLaptops(response.data); // Refresh the laptop list after adding
-    });
-  };
-
-  // Functions to handle opening and closing the modal
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <div>
       <Typography variant="h6">Manage Laptops</Typography>
-
-      {/* Button to open modal for adding a laptop */}
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleAddNewClick}
+        sx={{ mb: 2 }}
+      >
         Add New Laptop
       </Button>
-
-      {/* Modal for adding a new laptop */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
-          Add a New Laptop
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
-          <AddLaptopForm onLaptopAdded={handleLaptopAdded} />
-        </DialogContent>
-        <DialogActions
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
-          <Button
-            onClick={handleClose}
-            color="secondary"
-            sx={{
-              backgroundColor: "#000",
-              color: "#fff",
-            }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Display laptops in a table */}
       {laptops.length > 0 ? (
         renderTable(laptops)
       ) : (
         <Typography>No laptops available or loading...</Typography>
       )}
+
+      {/* Edit Laptop Modal */}
+      <EditLaptopModal
+        laptopId={selectedLaptopId}
+        open={openEditModal}
+        handleClose={() => setOpenEditModal(false)}
+        onLaptopUpdated={handleLaptopUpdated}
+        isAdding={isAdding}
+      />
     </div>
   );
 };
