@@ -14,12 +14,16 @@ import {
   IconButton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit"; // Make sure this import is added
 import axios from "axios";
 import AddMonitorForm from "./AddMonitorForm";
+import EditMonitorModal from "./EditMonitorModal"; // Assuming you have this modal
 
 const MonitorsPanel = () => {
   const [monitors, setMonitors] = useState([]);
-  const [open, setOpen] = useState(false); // State to control modal visibility
+  const [openAddModal, setOpenAddModal] = useState(false); // State for Add Monitor Modal
+  const [openEditModal, setOpenEditModal] = useState(false); // State for Edit Monitor Modal
+  const [selectedMonitorId, setSelectedMonitorId] = useState(null); // To hold selected monitor for editing
 
   useEffect(() => {
     const fetchMonitors = async () => {
@@ -34,14 +38,26 @@ const MonitorsPanel = () => {
     fetchMonitors();
   }, []);
 
-  // Function to handle deleting a monitor
+  // Handle delete monitor
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:4000/api/monitors/${id}`);
-      setMonitors(monitors.filter((monitor) => monitor._id !== id)); // Remove the deleted monitor from the list
+      setMonitors(monitors.filter((monitor) => monitor._id !== id));
     } catch (error) {
       console.error("Error deleting monitor:", error);
     }
+  };
+
+  // Open Edit Modal
+  const handleEditClick = (id) => {
+    setSelectedMonitorId(id); // Set the monitor id to edit
+    setOpenEditModal(true);
+  };
+
+  // Close all modals
+  const handleCloseModal = () => {
+    setOpenAddModal(false);
+    setOpenEditModal(false);
   };
 
   const renderTable = (data) => (
@@ -64,6 +80,14 @@ const MonitorsPanel = () => {
               </TableCell>
             ))}
             <TableCell>
+              {/* Edit Icon Button */}
+              <IconButton
+                onClick={() => handleEditClick(monitor._id)}
+                color="primary"
+              >
+                <EditIcon sx={{ color: "white" }} />
+              </IconButton>
+
               {/* Delete Icon Button */}
               <IconButton
                 onClick={() => handleDelete(monitor._id)}
@@ -78,53 +102,49 @@ const MonitorsPanel = () => {
     </Table>
   );
 
-  // Functions to handle opening and closing the modal
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <div>
       <Typography variant="h6">Manage Monitors</Typography>
 
       {/* Button to open modal for adding a monitor */}
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setOpenAddModal(true)}
+      >
         Add New Monitor
       </Button>
 
-      {/* Modal for adding a new monitor */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+      {/* Add Monitor Modal */}
+      <Dialog
+        open={openAddModal}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="md"
+      >
         <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
           Add a New Monitor
         </DialogTitle>
-        <DialogContent
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
+        <DialogContent sx={{ backgroundColor: "#000" }}>
           <AddMonitorForm />
         </DialogContent>
-        <DialogActions
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
+        <DialogActions sx={{ backgroundColor: "#000" }}>
           <Button
-            onClick={handleClose}
+            onClick={handleCloseModal}
             color="secondary"
-            sx={{
-              backgroundColor: "#000",
-              color: "#fff",
-            }}
+            sx={{ backgroundColor: "#000", color: "#fff" }}
           >
             Close
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Edit Monitor Modal */}
+      <EditMonitorModal
+        open={openEditModal}
+        onClose={handleCloseModal}
+        monitorId={selectedMonitorId}
+      />
 
       {/* Displaying monitors in a table */}
       {monitors.length > 0 ? (

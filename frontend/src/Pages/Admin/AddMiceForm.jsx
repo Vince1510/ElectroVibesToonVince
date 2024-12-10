@@ -1,181 +1,116 @@
 import React, { useState } from "react";
-import { TextField, Button, Grid, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Grid,
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import axios from "axios";
 
-const AddMiceForm = () => {
-  const [formData, setFormData] = useState({
+const AddMiceForm = ({ onAddMouse }) => {
+  const initialState = {
     name: "",
-    code: "",
     description: "",
-    largeDescription: [""],
+    largeDescription: "",
     brand: "",
-    category: "Phone",
+    category: "",
     price: "",
     dealPrice: "",
     imageCard: "",
-    imageOverview: [""],
+    imageOverview: "",
     commercial: "",
     amount: "",
     maxAmount: "",
     state: "",
-    color: [""],
-    model: [""],
+    color: "",
+    model: "",
     seller: "",
     sellerScore: "",
     deliveryTime: "",
-    oftenBoughtWith: [""],
-    othersAlsoLookAt: [""],
-    operatingSystem: "",
-    screenSize: "",
-    screenResolution: "",
-    screenTechnology: "",
-    refreshRate: "",
-    processor: "",
-    ram: "",
-    storage: "",
-    expandableStorage: "",
-    rearCamera: "",
-    frontCamera: "",
-    cameraFeatures: [""],
-    batteryCapacity: "",
-    chargingSpeed: "",
-    wirelessCharging: "",
-    simType: "Nano-SIM",
-    network: "",
-    connectivityFeatures: [""],
-    waterproof: "",
-    fingerprintSensor: "",
-    faceRecognition: "",
-    colorOptions: [""],
-    weight: "",
+    oftenBoughtWith: "",
+    othersAlsoLookAt: "",
+    dpi: "",
+    wireless: false,
+    rgb: false,
+    ergonomicDesign: "",
+    programmableButtons: "",
+    weightAdjustment: false,
+    sensorType: "",
+    pollingRate: "",
+    batteryLife: "",
+    wirelessRange: "",
+    dragCoefficient: "",
+    compatibility: "",
     dimensions: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    weight: "",
+    waterproof: false,
   };
 
-  const handleArrayChange = (e, index, key) => {
-    const { value } = e.target;
-    setFormData((prev) => {
-      const updatedArray = [...prev[key]];
-      updatedArray[index] = value;
-      return { ...prev, [key]: updatedArray };
-    });
-  };
+  const [formData, setFormData] = useState(initialState);
 
-  const addArrayField = (key) => {
-    setFormData((prev) => ({
-      ...prev,
-      [key]: [...prev[key], ""],
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/phones/",
+        "http://localhost:4000/api/mice/",
         formData
       );
-      console.log(response.data);
+      onAddMouse(response.data); // Add the new mouse to the list
+      setFormData(initialState); // Reset the form
     } catch (error) {
-      console.error("Error adding phone:", error);
+      console.error("Error adding mouse:", error);
     }
   };
 
+  const fieldNames = Object.keys(initialState); // Get all field names
+
   return (
-    <Box sx={{ padding: 3 }}>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          {Object.keys(formData).map((key) => {
-            if (Array.isArray(formData[key])) {
-              return (
-                <Grid item xs={12} key={key}>
-                  <Typography>{key}</Typography>
-                  {formData[key].map((item, index) => (
-                    <Grid item xs={12} key={`${key}-${index}`}>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label={`${key} ${index + 1}`}
-                        name={key}
-                        value={item}
-                        onChange={(e) => handleArrayChange(e, index, key)}
-                        required
-                        sx={{
-                          // Root class for the input field
-                          "& .MuiOutlinedInput-root": {
-                            color: "#fff",
-                            fontFamily: "Arial",
-                            fontWeight: "bold",
-                            // Class for the border around the input field
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "#fff",
-                              borderWidth: "2px",
-                            },
-                          },
-                          // Class for the label of the input field
-                          "& .MuiInputLabel-outlined": {
-                            color: "#fff",
-                            fontWeight: "bold",
-                          },
-                        }}
-                      />
-                    </Grid>
-                  ))}
-                  <Button variant="outlined" onClick={() => addArrayField(key)}>
-                    Add another {key}
-                  </Button>
-                </Grid>
-              );
-            } else {
-              return (
-                <Grid item xs={12} sm={6} key={key}>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label={key}
-                    name={key}
-                    value={formData[key]}
-                    onChange={handleChange}
-                    required
-                    sx={{
-                      // Root class for the input field
-                      "& .MuiOutlinedInput-root": {
-                        color: "#fff",
-                        fontFamily: "Arial",
-                        fontWeight: "bold",
-                        // Class for the border around the input field
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#fff",
-                          borderWidth: "2px",
-                        },
-                      },
-                      // Class for the label of the input field
-                      "& .MuiInputLabel-outlined": {
-                        color: "#fff",
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                </Grid>
-              );
-            }
-          })}
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Add Phone
-            </Button>
+    <form onSubmit={handleSubmit}>
+      <Grid container spacing={2}>
+        {fieldNames.map((field) => (
+          <Grid item xs={12} sm={6} key={field}>
+            <TextField
+              label={field.replace(/([A-Z])/g, " $1").toUpperCase()} // Format the label
+              variant="outlined"
+              fullWidth
+              name={field}
+              value={formData[field]}
+              onChange={handleInputChange}
+              type={
+                field === "price" || field === "dealPrice" ? "number" : "text"
+              }
+              multiline={
+                field === "largeDescription" || field === "description"
+              }
+              rows={field === "largeDescription" ? 4 : 1}
+              disabled={
+                field === "createdAt" ||
+                field === "updatedAt" ||
+                field === "__v"
+              } // Disable system fields
+            />
           </Grid>
-        </Grid>
-      </form>
-    </Box>
+        ))}
+      </Grid>
+
+      <Box mt={2}>
+        <Button variant="contained" color="primary" type="submit">
+          Add Mouse
+        </Button>
+      </Box>
+    </form>
   );
 };
 

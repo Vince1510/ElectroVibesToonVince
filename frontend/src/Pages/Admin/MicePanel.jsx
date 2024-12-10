@@ -8,18 +8,19 @@ import {
   TableRow,
   Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   IconButton,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete"; // Import Delete icon
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit"; // Import Edit icon
 import axios from "axios";
-import AddMiceForm from "./AddMiceForm"; // Import the form component
+import AddMiceForm from "./AddMiceForm";
+import EditMiceModal from "./EditMiceModal"; // Import the EditMiceModal
 
 const MicePanel = () => {
   const [mice, setMice] = useState([]);
-  const [open, setOpen] = useState(false); // State to control modal visibility
+  const [open, setOpen] = useState(false); // State to control add modal visibility
+  const [editOpen, setEditOpen] = useState(false); // State to control edit modal visibility
+  const [selectedMouse, setSelectedMouse] = useState(null); // Store the mouse being edited
 
   // Fetch mice from the backend API
   useEffect(() => {
@@ -39,7 +40,7 @@ const MicePanel = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:4000/api/mice/${id}`);
-      setMice(mice.filter((mouse) => mouse._id !== id)); // Remove the deleted mouse from the list
+      setMice(mice.filter((mouse) => mouse._id !== id));
     } catch (error) {
       console.error("Error deleting mouse:", error);
     }
@@ -47,6 +48,24 @@ const MicePanel = () => {
 
   const handleAddMouse = (newMouse) => {
     setMice((prevMice) => [...prevMice, newMouse]);
+  };
+
+  // Handle opening and closing the Edit modal
+  const handleEditOpen = (mouse) => {
+    setSelectedMouse(mouse);
+    setEditOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setEditOpen(false);
+  };
+
+  const handleSaveMouse = (updatedMouse) => {
+    setMice(
+      mice.map((mouse) =>
+        mouse._id === updatedMouse._id ? updatedMouse : mouse
+      )
+    );
   };
 
   const renderTable = (data) => (
@@ -69,6 +88,10 @@ const MicePanel = () => {
               </TableCell>
             ))}
             <TableCell>
+              {/* Edit Icon Button */}
+              <IconButton onClick={() => handleEditOpen(mouse)} color="primary">
+                <EditIcon sx={{ color: "white" }} />
+              </IconButton>
               {/* Delete Icon Button */}
               <IconButton
                 onClick={() => handleDelete(mouse._id)}
@@ -83,7 +106,6 @@ const MicePanel = () => {
     </Table>
   );
 
-  // Functions to handle opening and closing the modal
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -96,42 +118,23 @@ const MicePanel = () => {
     <div>
       <Typography variant="h6">Manage Mice</Typography>
 
-      {/* Button to open modal for adding a mouse */}
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Add New Mouse
       </Button>
 
-      {/* Modal for adding a new mouse */}
+      {/* Add Modal */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
-          Add a New Mouse
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
-          <AddMiceForm onAddMouse={handleAddMouse} />
-        </DialogContent>
-        <DialogActions
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
-          <Button
-            onClick={handleClose}
-            color="secondary"
-            sx={{
-              backgroundColor: "#000",
-              color: "#fff",
-            }}
-          >
-            Close
-          </Button>
-        </DialogActions>
+        <AddMiceForm onAddMouse={handleAddMouse} />
       </Dialog>
 
-      {/* Displaying mice in a table */}
+      {/* Edit Modal */}
+      <EditMiceModal
+        mouse={selectedMouse}
+        open={editOpen}
+        onClose={handleEditClose}
+        onSave={handleSaveMouse}
+      />
+
       {mice.length > 0 ? (
         renderTable(mice)
       ) : (
