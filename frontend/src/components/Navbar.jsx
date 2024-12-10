@@ -15,12 +15,12 @@ import {
   Alert,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import logo from "/assets/images/ElectroVibe.png";
 import responsiveLogo from "/assets/images/EV.png";
+import SearchBar from "./SearchBar"; // Import SearchBar component
 
 function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -145,28 +145,7 @@ function Navbar() {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            {!isTabletOrMobile && (
-              <form onSubmit={handleSearch} style={{ display: "flex", alignItems: "center" }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
-                    borderRadius: "10px",
-                    padding: "2px 8px",
-                    marginRight: 2,
-                  }}
-                >
-                  <SearchIcon />
-                  <InputBase
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    sx={{ color: "inherit", marginLeft: 1 }}
-                  />
-                </Box>
-              </form>
-            )}
+            <SearchBar /> {/* Use SearchBar component here */}
             <Button
               variant="contained"
               color="primary"
