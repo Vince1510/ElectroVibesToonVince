@@ -26,12 +26,12 @@ const Filter = ({
 }) => {
   const categories = [
     "All",
-    "Laptop",
-    "Monitor",
+    "Laptops",
+    "Monitors",
     "Games",
-    "Mouse",
-    "Phone",
-    "Keyboard",
+    "Mice",
+    "Phones",
+    "Keyboards",
   ];
   const brands = [
     "Apple",
