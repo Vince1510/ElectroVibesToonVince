@@ -145,7 +145,7 @@ function Navbar() {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <SearchBar /> {/* Use SearchBar component here */}
+            <SearchBar />
             <Button
               variant="contained"
               color="primary"
@@ -169,37 +169,6 @@ function Navbar() {
             </IconButton>
           </Box>
         </Toolbar>
-
-        {isTabletOrMobile && (
-          <Box
-            sx={{
-              backgroundColor: "#111111",
-              padding: 1,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <form onSubmit={handleSearch} style={{ width: "90%" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  borderRadius: "10px",
-                  padding: "2px 8px",
-                }}
-              >
-                <SearchIcon />
-                <InputBase
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  sx={{ color: "inherit", marginLeft: 1, width: "100%" }}
-                />
-              </Box>
-            </form>
-          </Box>
-        )}
       </AppBar>
 
       <Drawer
