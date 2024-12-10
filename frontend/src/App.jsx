@@ -9,6 +9,7 @@ import Login from "./Pages/Login";
 import Admin from "./Pages/Admin/Admin";
 import BreadCrumb from "./components/BreadCrumbs";
 import Product from "./Pages/Product";
+import Cart from "./Pages/Cart";
 import DetailPage from "./Pages/DetailPage";
 import Deals from './Pages/deals'
 import Compare from "./Pages/Compare";
@@ -25,6 +26,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/product" element={<Product />} />
           <Route path="/detail/:category/:productId" element={<DetailPage />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/deals" element={<Deals />} />
           <Route path="/compare" element={<Compare />} />
           <Route path="/login" element={<Login />} />
