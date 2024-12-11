@@ -45,6 +45,17 @@ const Admin = () => {
           onChange={handleChange}
           aria-label="admin panel tabs"
           textColor="inherit"
+          TabIndicatorProps={{
+            sx: { backgroundColor: "primary.main", height: "4px" }, // Custom underline
+          }}
+          sx={{
+            "& .MuiTab-root": {
+              color: "inherit",
+            },
+            "& .Mui-selected": {
+              color: "primary.main", // Color for the active tab
+            },
+          }}
         >
           <Tab label="Games" />
           <Tab label="Keyboards" />
