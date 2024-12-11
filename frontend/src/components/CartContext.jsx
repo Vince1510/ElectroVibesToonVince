@@ -1,46 +1,65 @@
 import React, { createContext, useContext, useState } from "react";
 
+// Create Cart Context
 const CartContext = createContext();
 
-export const useCart = () => {
-  return useContext(CartContext);
-};
+// Custom Hook for Cart
+export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  const addToCart = (product) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
+  // Add to Cart
+  const addToCart = (newProduct) => {
+    setCartItems((prevCartItems) => {
+      // Check if product with same id, color, and model exists
+      const existingItem = prevCartItems.find(
+        (item) =>
+          item.id === newProduct.id &&
+          item.color === newProduct.color &&
+          item.model === newProduct.model
+      );
+
       if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id
+        // Update quantity if exists
+        return prevCartItems.map((item) =>
+          item.id === newProduct.id &&
+          item.color === newProduct.color &&
+          item.model === newProduct.model
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
-      } else {
-        return [...prevItems, { ...product, quantity: 1 }];
       }
+
+      // Add new product to cart
+      return [...prevCartItems, { ...newProduct, quantity: 1 }];
     });
   };
 
-  const removeFromCart = (productId) => {
-    setCartItems((prevItems) =>
-      prevItems.filter((item) => item.id !== productId)
+  // Update Quantity
+  const updateQuantity = (id, color, model, quantity) => {
+    setCartItems((prevCartItems) =>
+      prevCartItems.map((item) =>
+        item.id === id && item.color === color && item.model === model
+          ? { ...item, quantity }
+          : item
+      )
     );
   };
 
-  const updateQuantity = (productId, quantity) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
+  // Remove from Cart
+  const removeFromCart = (id, color, model) => {
+    setCartItems((prevCartItems) =>
+      prevCartItems.filter(
+        (item) =>
+          item.id !== id || item.color !== color || item.model !== model
       )
     );
   };
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateQuantity }}
+      value={{ cartItems, addToCart, updateQuantity, removeFromCart }}
     >
       {children}
     </CartContext.Provider>
