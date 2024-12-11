@@ -192,8 +192,13 @@ const EditGameModal = ({ open, onClose, gameData, onUpdate }) => {
           "developer",
           "releaseRegion",
           "exclusiveContent",
-        ].map((field) => renderTextField(field, field))}
+        ].map((field) => (
+          <React.Fragment key={field}>
+            {renderTextField(field, field)}
+          </React.Fragment>
+        ))}
       </DialogContent>
+
       <DialogActions
         sx={{
           backgroundColor: "#000",
