@@ -46,7 +46,7 @@ const ComparePage = () => {
   };
 
   return (
-    <Box padding={3} style={{ backgroundColor: "transparent" }}>
+    <Box style={{ backgroundColor: "transparent" }}>
       <Typography variant="h4" gutterBottom>
         Compare Products
       </Typography>

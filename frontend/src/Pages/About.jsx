@@ -6,7 +6,6 @@ function About() {
   return (
     <Box
       sx={{
-        padding: "20px",
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
         justifyContent: "space-between",
@@ -19,7 +18,6 @@ function About() {
           lineHeight: 1.6,
           flexBasis: { xs: "100%", md: "46%" },
           marginBottom: { xs: "20px", md: 0 },
-          marginRight: 5,
         }}
       >
         <Typography variant="h4" gutterBottom>
@@ -46,6 +44,7 @@ function About() {
           flexDirection: "column",
           justifyContent: "flex-start",
           flexBasis: { xs: "100%", md: "54%" },
+          marginLeft: 4,
           flexGrow: 1,
         }}
       >
