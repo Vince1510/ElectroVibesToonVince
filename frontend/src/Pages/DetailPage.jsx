@@ -142,6 +142,11 @@ function DetailPage() {
   const { cartItems, addToCart } = useCart();
 
   const handleAddToCart = () => {
+    if (!selectedColor || !selectedModel) {
+      alert("Please select a color and model before adding to cart.");
+      return;
+    }
+  
     const productToAdd = {
       id: product.id,
       name: product.name,
@@ -150,8 +155,9 @@ function DetailPage() {
       model: selectedModel,
       image: product.imageOverview[0], // Main image
     };
+  
     addToCart(productToAdd);
-  };
+  };  
 
   if (loading) {
     return (
