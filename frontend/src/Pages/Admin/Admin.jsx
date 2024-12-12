@@ -46,14 +46,15 @@ const Admin = () => {
           aria-label="admin panel tabs"
           textColor="inherit"
           TabIndicatorProps={{
-            sx: { backgroundColor: "primary.main", height: "4px" }, // Custom underline
+            sx: {
+              backgroundImage:
+                "linear-gradient(180deg, #E70002 0%, #FCD201 100%)",
+              height: "2px", // Height of the underline
+            },
           }}
           sx={{
             "& .MuiTab-root": {
               color: "inherit",
-            },
-            "& .Mui-selected": {
-              color: "primary.main", // Color for the active tab
             },
           }}
         >

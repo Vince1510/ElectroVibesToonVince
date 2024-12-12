@@ -8,10 +8,12 @@ import {
   ListItemText,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredResults, setFilteredResults] = useState([]); // State to store filtered results
+  const [filteredResults, setFilteredResults] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -74,27 +76,20 @@ const SearchBar = () => {
             phonesResponse.json(),
           ]);
 
-          // Merge all the results from different APIs
+          // Merge all the results from different APIs and assign a category
           const results = [
-            ...miceData.filter((item) =>
-              item.name.toLowerCase().includes(searchQuery.toLowerCase())
-            ),
-            ...laptopsData.filter((item) =>
-              item.name.toLowerCase().includes(searchQuery.toLowerCase())
-            ),
-            ...gamesData.filter((item) =>
-              item.name.toLowerCase().includes(searchQuery.toLowerCase())
-            ),
-            ...keyboardsData.filter((item) =>
-              item.name.toLowerCase().includes(searchQuery.toLowerCase())
-            ),
-            ...monitorsData.filter((item) =>
-              item.name.toLowerCase().includes(searchQuery.toLowerCase())
-            ),
-            ...phonesData.filter((item) =>
-              item.name.toLowerCase().includes(searchQuery.toLowerCase())
-            ),
-          ];
+            ...miceData.map((item) => ({ ...item, category: "mice" })),
+            ...laptopsData.map((item) => ({ ...item, category: "laptops" })),
+            ...gamesData.map((item) => ({ ...item, category: "games" })),
+            ...keyboardsData.map((item) => ({
+              ...item,
+              category: "keyboards",
+            })),
+            ...monitorsData.map((item) => ({ ...item, category: "monitors" })),
+            ...phonesData.map((item) => ({ ...item, category: "phones" })),
+          ].filter((item) =>
+            item.name.toLowerCase().includes(searchQuery.toLowerCase())
+          );
 
           setFilteredResults(results); // Update state with filtered results
         } catch (error) {
@@ -112,8 +107,19 @@ const SearchBar = () => {
     setSearchQuery(event.target.value); // Update search query on change
   };
 
+  const handleItemClick = (category, id) => {
+    navigate(`/detail/${category}/${id}`);
+  };
+
   return (
-    <Box sx={{ position: "relative", width: "100%", maxWidth: "400px" }}>
+    <Box
+      sx={{
+        position: "relative",
+        width: "100%",
+        maxWidth: "400px",
+        marginRight: 1,
+      }}
+    >
       <TextField
         variant="outlined"
         placeholder="Search..."
@@ -144,31 +150,33 @@ const SearchBar = () => {
         }}
       />
 
-      {/* Displaying filtered results as an overlay */}
       {filteredResults.length > 0 && (
         <Box
           sx={{
-            position: "absolute", // Position overlay over the input
-            top: "100%", // Place the overlay directly below the search bar
+            position: "absolute",
+            top: "100%",
             left: 0,
             right: 0,
             backgroundColor: "#111111",
             borderRadius: "5px",
             color: "white",
             overflowY: "auto",
-            zIndex: 10, // Ensure it appears above other content
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)", // Add some shadow to make it pop
+            zIndex: 10,
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
             maxWidth: "400px",
             width: "100%",
             "@media (max-width: 600px)": {
-              maxWidth: "100%", // Ensure the overlay doesn't go beyond the search bar width on smaller screens
+              maxWidth: "100%",
             },
           }}
         >
           <List>
             {filteredResults.map((item) => (
-              <ListItem key={item._id}>
-                {/* Assuming _id is unique */}
+              <ListItem
+                key={item._id}
+                button
+                onClick={() => handleItemClick(item.category, item._id)}
+              >
                 <ListItemText primary={item.name} />
               </ListItem>
             ))}
