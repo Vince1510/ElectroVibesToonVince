@@ -20,8 +20,18 @@ const gameSchema = new mongoose.Schema(
     seller: { type: String, required: true },
     sellerScore: { type: Number, required: true },
     deliveryTime: { type: Number, required: true },
-    oftenBoughtWith: { type: [String], required: true },
-    othersAlsoLookAt: { type: [String], required: true },
+    oftenBoughtWith: [
+      {
+        id: { type: String, required: true },
+        category: { type: String, required: true },
+      },
+    ],
+    othersAlsoLookAt: [
+      {
+        id: { type: String, required: true },
+        category: { type: String, required: true },
+      },
+    ],
   
     // Game-specific details
     releaseDate: { type: Date, required: true },
