@@ -114,7 +114,7 @@ const AddPhoneForm = ({ onPhoneAdded }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={2}>
+      <Grid container>
         {fields.map((field, index) => (
           <Grid item xs={field.xs || 12} sm={field.sm || 12} key={index}>
             <TextField

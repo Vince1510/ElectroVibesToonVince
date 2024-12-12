@@ -133,7 +133,7 @@ const KeyboardsPanel = () => {
 
       {/* Modal for adding a new keyboard */}
       <Dialog open={openAdd} onClose={handleAddClose} fullWidth maxWidth="md">
-        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
+        <DialogTitle sx={{ backgroundColor: "#000", color: "#fff" }}>
           Add a New Keyboard
         </DialogTitle>
         <DialogContent

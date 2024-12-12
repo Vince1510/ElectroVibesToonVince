@@ -57,7 +57,6 @@ const EditLaptopModal = ({
   const handleSubmit = async () => {
     try {
       if (isAdding) {
-        // Add new laptop
         await axios.post("http://localhost:4000/api/laptops", formData);
       } else {
         // Edit existing laptop
@@ -74,9 +73,11 @@ const EditLaptopModal = ({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md">
-      <DialogTitle>{isAdding ? "Add New Laptop" : "Edit Laptop"}</DialogTitle>
-      <DialogContent>
+    <Dialog open={open} onClose={handleClose} maxWidth="lg">
+      <DialogTitle sx={{ backgroundColor: "#000", color: "#fff" }}>
+        {isAdding ? "Add New Laptop" : "Edit Laptop"}
+      </DialogTitle>
+      <DialogContent sx={{ backgroundColor: "#000" }}>
         {/* Render text fields dynamically if you have many fields */}
         {Object.keys(formData).map((key) => (
           <TextField
@@ -87,12 +88,36 @@ const EditLaptopModal = ({
             onChange={handleChange}
             fullWidth
             margin="normal"
+            sx={{
+              // Custom styling for the input fields
+              "& .MuiOutlinedInput-root": {
+                color: "#fff",
+                fontFamily: "Arial",
+                fontWeight: "bold",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#fff",
+                  borderWidth: "2px",
+                },
+              },
+              "& .MuiInputLabel-outlined": {
+                color: "#fff",
+                fontWeight: "bold",
+              },
+            }}
           />
         ))}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit} color="primary">
+      <DialogActions sx={{ backgroundColor: "#000", color: "#fff" }}>
+        <Button
+          onClick={handleClose}
+          sx={{ backgroundColor: "#000", color: "#fff" }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          sx={{ backgroundColor: "#000", color: "#fff" }}
+        >
           {isAdding ? "Add" : "Save"}
         </Button>
       </DialogActions>

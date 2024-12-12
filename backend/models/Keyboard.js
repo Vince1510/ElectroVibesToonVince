@@ -8,7 +8,7 @@ const keyboardSchema = new Schema(
     description: { type: String, required: true },
     largeDescription: { type: [String], required: true },
     brand: { type: String, required: true },
-    category: { type: String, default: 'Keyboard' },
+    category: { type: String, default: "Keyboard" },
     price: { type: Number, required: true },
     dealPrice: { type: Number, required: false },
     imageCard: { type: String, required: true },
@@ -24,29 +24,29 @@ const keyboardSchema = new Schema(
     deliveryTime: { type: Number, required: true },
     oftenBoughtWith: { type: [String], required: true },
     othersAlsoLookAt: { type: [String], required: true },
-  
+
     // Keyboard-specific details
     layout: { type: String, required: true },
     connectionType: { type: String, required: true },
     switchType: { type: String, required: true },
     backlighting: { type: String, required: true },
     rgbLighting: { type: String, required: true },
-    keycapMaterial: { type: String }, 
-    size: { type: String }, 
+    keycapMaterial: { type: String },
+    size: { type: String },
     macroKeys: { type: String, required: true },
     hotSwappable: { type: String, required: true },
-    batteryLife: { type: String }, 
-  
+    batteryLife: { type: String },
+
     // Additional features
-    numPad: { type: Boolean, required: true }, 
-    adjustableFeet: { type: Boolean, required: true }, 
+    numPad: { type: Boolean, required: true },
+    adjustableFeet: { type: Boolean, required: true },
     pollingRate: { type: String },
-    onboardMemory: { type: Boolean }, 
-    compatibility: { type: [String], required: true }, 
-    waterproof: { type: Boolean }, 
+    onboardMemory: { type: Boolean },
+    compatibility: { type: [String], required: true },
+    waterproof: { type: Boolean },
     wirelessRange: { type: String },
-    weight: { type: String }, 
-    dimensions: { type: String }, 
+    weight: { type: String },
+    dimensions: { type: String },
   },
   { timestamps: true }
 );

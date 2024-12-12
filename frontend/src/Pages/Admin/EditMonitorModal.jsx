@@ -107,8 +107,10 @@ const EditMonitorModal = ({ open, onClose, monitorId }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
-      <DialogTitle>Edit Monitor</DialogTitle>
-      <DialogContent>
+      <DialogTitle sx={{ backgroundColor: "#000", color: "white" }}>
+        Edit Monitor
+      </DialogTitle>
+      <DialogContent sx={{ backgroundColor: "#000", color: "white" }}>
         <Grid container spacing={2}>
           {inputFields.map((field) => (
             <Grid item xs={12} sm={6} key={field}>
@@ -122,14 +124,40 @@ const EditMonitorModal = ({ open, onClose, monitorId }) => {
                 rows={
                   ["description", "largeDescription"].includes(field) ? 3 : 1
                 }
+                sx={{
+                  // Custom styling for the input fields
+                  "& .MuiOutlinedInput-root": {
+                    color: "#fff",
+                    fontFamily: "Arial",
+                    fontWeight: "bold",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#fff",
+                      borderWidth: "2px",
+                    },
+                  },
+                  "& .MuiInputLabel-outlined": {
+                    color: "#fff",
+                    fontWeight: "bold",
+                  },
+                }}
               />
             </Grid>
           ))}
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSave}>Save</Button>
+      <DialogActions sx={{ backgroundColor: "#000", color: "white" }}>
+        <Button
+          onClick={onClose}
+          sx={{ backgroundColor: "#000", color: "white" }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSave}
+          sx={{ backgroundColor: "#000", color: "white" }}
+        >
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );
