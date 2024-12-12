@@ -392,20 +392,19 @@ function DetailPage() {
             </Button>
           </Box>
           <Divider sx={{ marginY: 4, backgroundColor: "#424242" }} />
-          <Typography variant="h5">Often bought with</Typography>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, marginTop: 2 }}>
-            {oftenBoughtProducts.map((relatedProduct) => (
-              <ProductCard key={relatedProduct.id || relatedProduct.code} product={relatedProduct} />
+          <Typography variant="h5">Often Bought With</Typography>
+          <Grid container spacing={1} sx={{ marginBottom: 4, marginTop: 0.5 }}>
+            {oftenBoughtProducts.map((prod) => (
+              <Grid item key={prod.id}><ProductCard product={prod} /></Grid>
             ))}
-          </Box>
-          <Typography variant="h5" sx={{ marginTop: 4 }}>
-            Others also look at
-          </Typography>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, marginTop: 2 }}>
-            {othersAlsoLookProducts.map((relatedProduct) => (
-              <ProductCard key={relatedProduct.id || relatedProduct.code} product={relatedProduct} />
+          </Grid>
+
+          <Typography variant="h5">Others Also Look At</Typography>
+          <Grid container spacing={1} sx={{ marginTop: 0.5 }}>
+            {othersAlsoLookProducts.map((prod) => (
+              <Grid item key={prod.id}><ProductCard product={prod} /></Grid>
             ))}
-          </Box>
+          </Grid>
         </Grid>
       </Grid>
     </Box>
