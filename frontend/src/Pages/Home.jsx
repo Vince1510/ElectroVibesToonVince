@@ -16,14 +16,16 @@ const Home = () => {
     <Box>
       <Box
         display="flex"
-        justifyContent="space-around"
+        justifyContent={{
+          xs: "center",   // Center on small devices
+          sm: "space-evenly", // Spread out on tablets
+          md: "space-between", // Spread out more on laptops
+        }}
         flexWrap="wrap"
         gap={2}
         sx={{
-          "@media (max-width: 600px)": {
-            flexDirection: "column",
-            alignItems: "center",
-          },
+          width: "100%",
+          padding: 2,
         }}
       >
         {[
@@ -44,9 +46,11 @@ const Home = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              justifyContent: 'center',
               textTransform: "none",
               color: "white",
-              minWidth: "100px",
+              width: "80px",
+              height: "80px",
             }}
           >
             {label}
