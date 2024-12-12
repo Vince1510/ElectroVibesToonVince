@@ -12,9 +12,11 @@ import {
   Grid,
 } from "@mui/material";
 import { Add, Remove, Delete } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
+  const navigate = useNavigate();
 
   const postageCost = 10;
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -203,8 +205,8 @@ function Cart() {
             <Button
               variant="contained"
               fullWidth
-              sx={{ marginTop: 2, backgroundColor: 'transparent', border: 'white 1px solid'}}
-              onClick={() => alert("Purchase completed!")}
+              sx={{ marginTop: 2, backgroundColor: "transparent", border: "white 1px solid" }}
+              onClick={() => navigate("/checkout")}
             >
               Buy
             </Button>
