@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import {
   Typography,
   Card,
@@ -21,112 +21,40 @@ import MouseDetails from "../components/MouseDetails";
 import LaptopDetails from "../components/LaptopDetails";
 import MonitorDetails from "../components/MonitorDetails";
 import KeyboardDetails from "../components/KeyboardDetails";
-import { useCart } from '../components/CartContext.jsx';
 
 function DetailPage() {
   const { category, productId } = useParams();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [oftenBoughtProducts, setOftenBoughtProducts] = useState([]);
-  const [othersAlsoLookProducts, setOthersAlsoLookProducts] = useState([]);
+  const location = useLocation();
+  const [product, setProduct] = useState(location.state?.product || null);
+  const [loading, setLoading] = useState(!product);
   const [currentImage, setCurrentImage] = useState(0);
   const [showAllDescription, setShowAllDescription] = useState(false);
-  const [deliveryDate, setDeliveryDate] = useState(null);
-  const [selectedColor, setSelectedColor] = useState("");
-  const [selectedModel, setSelectedModel] = useState("");
+  const [oftenBoughtProducts, setOftenBoughtProducts] = useState([]);
+  const [othersAlsoLookProducts, setOthersAlsoLookProducts] = useState([]);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedModel, setSelectedModel] = useState(null);
+  const [deliveryDate, setDeliveryDate] = useState(null); // Add a default value
 
   useEffect(() => {
     const fetchProduct = async () => {
-      if (!category || !productId) {
-        console.error("Invalid category or product ID.");
-        return;
-      }
-  
+      if (product) return; // Skip if already loaded
+
       try {
-        // Convert category to lowercase to match API requirements
         const response = await fetch(`http://localhost:4000/api/${category.toLowerCase()}/${productId}`);
-        if (!response.ok) {
-          throw new Error(`Product not found in category: ${category}, ID: ${productId}`);
-        }
+        if (!response.ok) throw new Error("Product not found");
         const foundProduct = await response.json();
         setProduct(foundProduct);
-  
-        // Calculate delivery date if available
-        if (typeof foundProduct.deliveryTime === "number") {
-          const currentDate = new Date();
-          currentDate.setDate(currentDate.getDate() + foundProduct.deliveryTime);
-          setDeliveryDate(
-            currentDate.toLocaleDateString("en-GB", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-            })
-          );
-        }
+        setDeliveryDate("Estimated delivery: 3-5 business days"); // Example static delivery date
       } catch (error) {
         console.error("Error fetching product:", error);
       } finally {
         setLoading(false);
       }
     };
-  
-    fetchProduct();
-  }, [category, productId]);
 
-  useEffect(() => {
-    const fetchSingleProduct = async (id) => {
-      try {
-        // Fetch the product by ID from all possible categories
-        const categories = ["phones", "laptops", "monitors", "mice", "keyboards", "games"];
-        for (const category of categories) {
-          try {
-            const response = await fetch(`http://localhost:4000/api/${category}/${id}`);
-            if (response.ok) {
-              const product = await response.json();
-              return product; // Return the product if found
-            }
-          } catch (error) {
-            // Continue to next category if this one fails
-            console.warn(`Error fetching product ${id} in category ${category}:`, error);
-          }
-        }
-        console.warn(`Product with ID ${id} not found in any category.`);
-        return null; // Return null if product is not found
-      } catch (error) {
-        console.error(`Error fetching product with ID ${id}:`, error);
-        return null;
-      }
-    };
-  
-    const fetchRelatedProducts = async (ids) => {
-      try {
-        const products = await Promise.all(
-          ids.map(async (id) => {
-            const product = await fetchSingleProduct(id);
-            return product; // Return the product if found
-          })
-        );
-  
-        return products.filter((product) => product !== null); // Remove null entries
-      } catch (error) {
-        console.error("Error fetching related products:", error);
-        return [];
-      }
-    };
-  
-    const fetchAllRelatedProducts = async () => {
-      if (product) {
-        // Use product IDs to fetch related products
-        const oftenBoughtProducts = await fetchRelatedProducts(product.oftenBoughtWith || []);
-        const othersAlsoLookProducts = await fetchRelatedProducts(product.othersAlsoLookAt || []);
-        setOftenBoughtProducts(oftenBoughtProducts);
-        setOthersAlsoLookProducts(othersAlsoLookProducts);
-      }
-    };
-  
-    fetchAllRelatedProducts();
-  }, [product]);  
-  
+    fetchProduct();
+  }, [category, productId, product]);
+
   const handleThumbnailClick = (index) => {
     setCurrentImage(index);
   };
@@ -139,25 +67,10 @@ function DetailPage() {
     setSelectedModel(model);
   };
 
-  const { cartItems, addToCart } = useCart();
-
   const handleAddToCart = () => {
-    if (!selectedColor || !selectedModel) {
-      alert("Please select a color and model before adding to cart.");
-      return;
-    }
-  
-    const productToAdd = {
-      id: product.id,
-      name: product.name,
-      price: product.dealPrice || product.price,
-      color: selectedColor,
-      model: selectedModel,
-      image: product.imageOverview[0], // Main image
-    };
-  
-    addToCart(productToAdd);
-  };  
+    console.log(`Adding ${product.name} to the cart`);
+    // Implement adding product to cart functionality here
+  };
 
   if (loading) {
     return (
@@ -168,7 +81,13 @@ function DetailPage() {
   }
 
   if (!product) {
-    return <Typography variant="h5">Product not found.</Typography>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Typography variant="h5" color="error">
+          Product not found. Please check back later.
+        </Typography>
+      </Box>
+    );
   }
 
   return (
@@ -182,58 +101,68 @@ function DetailPage() {
             Brand: <span style={{ cursor: "pointer" }}>{product.brand}</span> |{" "}
             <span style={{ cursor: "pointer" }}>Write a review</span> |{" "}
             <span style={{ cursor: "pointer" }}>Share</span>
-          </Typography>
-          <Card
-            sx={{
-              marginTop: 2,
-              background:
-                "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
-              padding: 1,
-            }}
-          >
-            <Carousel
-              index={currentImage}
-              onChange={(index) => setCurrentImage(index)}
-              indicators={false}
-              navButtonsAlwaysVisible
-            >
-              {product.imageOverview.map((image, index) => (
-                <CardMedia
-                  component="img"
-                  image={image}
-                  alt={`Product Image ${index + 1}`}
-                  style={{ objectFit: "contain", height: 400 }}
-                />
-              ))}
-            </Carousel>
-          </Card>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 1,
-              padding: 2,
-              overflowX: "auto",
-            }}
-          >
-            {product.imageOverview.map((image, index) => (
-              <CardMedia
-                key={index}
-                component="img"
-                image={image}
-                alt={`Thumbnail ${index + 1}`}
-                sx={{
-                  width: 60,
-                  height: 60,
-                  cursor: "pointer",
-                  border: currentImage === index ? "2px solid white" : "2px solid gray",
-                  borderRadius: 1,
-                  padding: 1,
-                }}
-                onClick={() => handleThumbnailClick(index)}
-              />
-            ))}
-          </Box>
+          </Typography><Card
+  sx={{
+    marginTop: 2,
+    background:
+      "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
+    padding: 2,
+    borderRadius: 2,
+    boxShadow: 3, // Adds a slight shadow for a modern look
+  }}
+>
+  <Carousel
+    index={currentImage}
+    onChange={(index) => setCurrentImage(index)}
+    indicators={false}
+    navButtonsAlwaysVisible
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+    }}
+  >
+    {product.imageOverview.map((image, index) => (
+      <CardMedia
+        key={index}
+        component="img"
+        image={image}
+        alt={`Thumbnail ${index + 1}`}
+        sx={{
+          width: "100%", // Ensures the carousel image takes the full width of the container
+          height: 400, // Adjusts the height of the carousel images
+          objectFit: "contain", // Makes sure the images retain their aspect ratio
+          borderRadius: 1,
+        }}
+      />
+    ))}
+  </Carousel>
+
+</Card>
+  {/* Thumbnail Row */}
+  <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+    {product.imageOverview.map((image, index) => (
+      <CardMedia
+        key={index}
+        component="img"
+        image={image}
+        alt={`Thumbnail ${index + 1}`}
+        sx={{
+          width: 80, // Slightly bigger thumbnails for better visibility
+          height: 80,
+          cursor: "pointer",
+          border: currentImage === index ? "3px solid #fff" : "2px solid #aaa", // Highlight selected thumbnail with a white border
+          borderRadius: 1,
+          margin: "0 8px", // Adds some space between the thumbnails
+          transition: "transform 0.3s ease", // Smooth scale transition on hover
+          ":hover": {
+            transform: "scale(1.1)", // Enlarges the thumbnail slightly on hover
+            border: "3px solid #fff", // Highlight on hover
+          },
+        }}
+        onClick={() => handleThumbnailClick(index)} // Clicking a thumbnail will update the currentImage
+      />
+    ))}
+  </Box>
           <Typography variant="h5" gutterBottom sx={{ marginTop: 2 }}>
             Product Bio
           </Typography>
@@ -393,16 +322,20 @@ function DetailPage() {
           </Box>
           <Divider sx={{ marginY: 4, backgroundColor: "#424242" }} />
           <Typography variant="h5">Often Bought With</Typography>
-          <Grid container spacing={1} sx={{ marginBottom: 4, marginTop: 0.5 }}>
+          <Grid container spacing={1}>
             {oftenBoughtProducts.map((prod) => (
-              <Grid item key={prod.id}><ProductCard product={prod} /></Grid>
+              <Grid item key={prod.id || prod._id || Math.random()}>
+                <ProductCard product={prod} />
+              </Grid>
             ))}
           </Grid>
-
+          
           <Typography variant="h5">Others Also Look At</Typography>
-          <Grid container spacing={1} sx={{ marginTop: 0.5 }}>
+          <Grid container spacing={1}>
             {othersAlsoLookProducts.map((prod) => (
-              <Grid item key={prod.id}><ProductCard product={prod} /></Grid>
+              <Grid item key={prod.id}>
+                <ProductCard product={prod} />
+              </Grid>
             ))}
           </Grid>
         </Grid>

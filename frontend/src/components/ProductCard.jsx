@@ -29,6 +29,7 @@ function ProductCard({ product, onCompare, cardStyle = {} }) {
       >
         <Link
           to={`/detail/${product.category}/${product._id}`}
+          state={{ product }}
           style={{
             textDecoration: "none",
             flexGrow: 1,
