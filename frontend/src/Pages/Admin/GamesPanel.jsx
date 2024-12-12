@@ -117,7 +117,7 @@ const GamesPanel = () => {
       <Typography variant="h6">Games Panel</Typography>
 
       {/* Button to open modal for adding a game */}
-      <Button variant="contained" color="primary" onClick={handleClickOpenAdd}>
+      <Button variant="outlined" onClick={handleClickOpenAdd}>
         Add New Game
       </Button>
 

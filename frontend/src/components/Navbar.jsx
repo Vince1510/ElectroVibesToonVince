@@ -147,18 +147,33 @@ function Navbar() {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <SearchBar />
             <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                borderRadius: "10px",
-                textTransform: "none",
-                marginRight: 1,
-              }}
+              variant="outlined"
               component={Link}
               to="/Login"
+              sx={{
+                border: "2px solid transparent",
+                borderImage:
+                  "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+                color: "transparent",
+                backgroundClip: "text",
+                textFillColor: "transparent",
+                backgroundImage:
+                  "linear-gradient(180deg, #E70002 0%, #FCD201 100%)",
+                transition: "border-color 0.3s, color 0.3s",
+                "&:hover": {
+                  border: "2px solid transparent",
+                  borderImage:
+                    "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+                  color: "transparent",
+                  backgroundClip: "text",
+                  backgroundImage:
+                    "linear-gradient(180deg, #E70002 0%, #FCD201 100%)",
+                },
+              }}
             >
               Login
             </Button>
+
             <IconButton
               color="inherit"
               component={Link}
