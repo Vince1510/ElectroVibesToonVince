@@ -1,8 +1,11 @@
-import React from "react";
-import { Typography, Avatar, Link, Box } from "@mui/material";
+import React, { useState } from "react";
+import { Typography, Avatar, Link, Box, Button } from "@mui/material";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 function About() {
+  const [showMoreVince, setShowMoreVince] = useState(false);
+  const [showMoreToon, setShowMoreToon] = useState(false);
+
   return (
     <Box
       sx={{
@@ -25,7 +28,7 @@ function About() {
         </Typography>
         <Typography sx={{ marginBottom: 1 }}>
           Welcome to ElectroVibe, your trusted partner in the world of consumer electronics! We are passionate about innovation and dedicated to delivering not just products, but valuable experiences that enhance your digital life. Founded by a team of tech enthusiasts, ElectroVibe combines a love for technology with a deep understanding of consumer needs.
-        </Typography> 
+        </Typography>
         <Typography sx={{ marginBottom: 1 }}>
           At ElectroVibe, you’ll find a comprehensive range of electronics, from laptops and PCs to specialized gaming accessories and microphones. Each product we offer is carefully selected to meet our high quality standards and the expectations of our customers.
         </Typography>
@@ -48,7 +51,6 @@ function About() {
           flexGrow: 1,
         }}
       >
-
         {/* Vince van Apeldoorn */}
         <Box
           sx={{
@@ -59,37 +61,63 @@ function About() {
           }}
         >
           <Link href="https://vince1510.github.io/portfolio_v3/" target="_blank">
-            <Avatar
-              alt="Vince van Apeldoorn"
-              src="https://media.licdn.com/dms/image/v2/D4E03AQFfTdpM9hTzvQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1729536010670?e=1737590400&v=beta&t=PpYKVnCNmDcAo7w3sKbW9Yg0cEl2ygPkuaVqtV0riVg"
+            <Box
               sx={{
-                width: 200,
-                height: 200,
-                marginRight: { xs: 0, sm: "16px" },
-                marginBottom: { xs: "8px", sm: 0 },
+                display: "inline-block",
+                padding: "4px",
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #E70002, #FCD201)",
+                marginRight: 1,
               }}
-            />
+            >
+              <Avatar
+                alt="Vince van Apeldoorn"
+                src="https://media.licdn.com/dms/image/v2/D4E03AQFfTdpM9hTzvQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1729536010670?e=1737590400&v=beta&t=PpYKVnCNmDcAo7w3sKbW9Yg0cEl2ygPkuaVqtV0riVg"
+                sx={{
+                  width: 200,
+                  height: 200,
+                  borderRadius: "50%",
+                }}
+              />
+            </Box>
           </Link>
           <Box>
-              <Link
-                href="https://www.linkedin.com/in/vince-van-apeldoorn-52997a248/"
-                target="_blank"
-                sx={{
-                  marginTop: "8px",
-                  color: "#0077b5",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  textDecoration: 'none',
-                }}
-              >
+            <Link
+              href="https://www.linkedin.com/in/vince-van-apeldoorn-52997a248/"
+              target="_blank"
+              sx={{
+                marginTop: "8px",
+                color: "#0077b5",
+                display: "inline-flex",
+                alignItems: "center",
+                textDecoration: "none",
+              }}
+            >
               <Typography variant="h4">
                 Vince van Apeldoorn
-                  <LinkedInIcon sx={{ marginLeft: 1 }} />
+                <LinkedInIcon sx={{ marginLeft: 1 }} />
               </Typography>
             </Link>
             <Typography variant="body1">
-            I’m Vince, a passionate and dedicated professional with a background in IT. With 3 years of experience, I specialize in React and am committed to leveraging my skills to drive success and innovation. I thrive in dynamic environments and am always eager to tackle new challenges and contribute positively to organizational goals.
+              {showMoreVince
+                ? "I’m Vince, a passionate and dedicated professional with a background in IT. With 3 years of experience, I specialize in React and am committed to leveraging my skills to drive success and innovation. I thrive in dynamic environments and am always eager to tackle new challenges and contribute positively to organizational goals."
+                : "Want to know more?"}
             </Typography>
+            <Button
+              onClick={() => setShowMoreVince(!showMoreVince)}
+              sx={{
+                marginTop: 1,
+                color: "white",
+                border: "1px solid white",
+                borderRadius: "5px",
+                textTransform: "none",
+                '&:hover': {
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                },
+              }}
+            >
+              {showMoreVince ? "See Less" : "See More"}
+            </Button>
           </Box>
         </Box>
 
@@ -103,35 +131,63 @@ function About() {
           }}
         >
           <Link href="https://www.toonvb.com" target="_blank">
-            <Avatar
-              alt="Toon van Berkel"
-              src="https://media.licdn.com/dms/image/v2/D5603AQEyoBgQdvgbAQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1727362421653?e=1737590400&v=beta&t=Rxk92Bcv8PTOgYSofA5yLC_SKRiFQBbCItzhSxHPjzw"
+            <Box
               sx={{
-                width: 200,
-                height: 200,
-                marginRight: { xs: 0, sm: "16px" },
-                marginBottom: { xs: "8px", sm: 0 },
+                display: "inline-block",
+                padding: "4px",
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #E70002, #FCD201)",
+                marginRight: 1,
               }}
-            />
+            >
+              <Avatar
+                alt="Toon van Berkel"
+                src="https://media.licdn.com/dms/image/v2/D5603AQEyoBgQdvgbAQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1727362421653?e=1737590400&v=beta&t=Rxk92Bcv8PTOgYSofA5yLC_SKRiFQBbCItzhSxHPjzw"
+                sx={{
+                  width: 200,
+                  height: 200,
+                  borderRadius: "50%",
+                }}
+              />
+            </Box>
           </Link>
           <Box>
-            <Link href="https://www.linkedin.com/in/toon-van-berkel-a9112628b/"
+            <Link
+              href="https://www.linkedin.com/in/toon-van-berkel-a9112628b/"
               target="_blank"
               sx={{
                 marginTop: "8px",
                 color: "#0077b5",
                 display: "inline-flex",
                 alignItems: "center",
-                textDecoration: 'none',
-              }}>
+                textDecoration: "none",
+              }}
+            >
               <Typography variant="h4">
                 Toon van Berkel
-                  <LinkedInIcon sx={{ marginLeft: 1 }}  />
+                <LinkedInIcon sx={{ marginLeft: 1 }} />
               </Typography>
             </Link>
             <Typography variant="body1">
-            I'm Toon van Berkel, a 17-year-old aspiring education software developer with a keen interest in creative media. From a young age, I've been fascinated by both programming and design, which has driven me to pursue this unique and dynamic field. I am currently advancing my skills in HTML, CSS/SCSS, JavaScript, React, Pyhton and tools like Gimp, Github and Visual Studio.
+              {showMoreToon
+                ? "I'm Toon van Berkel, a 17-year-old aspiring education software developer with a keen interest in creative media. From a young age, I've been fascinated by both programming and design, which has driven me to pursue this unique and dynamic field. I am currently advancing my skills in HTML, CSS/SCSS, JavaScript, React, Pyhton and tools like Gimp, Github and Visual Studio."
+                : "Want to know more?"}
             </Typography>
+            <Button
+              onClick={() => setShowMoreToon(!showMoreToon)}
+              sx={{
+                marginTop: 1,
+                color: "white",
+                border: "1px solid white",
+                borderRadius: "5px",
+                textTransform: "none", // Optional
+                '&:hover': {
+                  backgroundColor: "rgba(255, 255, 255, 0.1)", // Optional
+                },
+              }}
+            >
+              {showMoreToon ? "See Less" : "See More"}
+            </Button>
           </Box>
         </Box>
       </Box>

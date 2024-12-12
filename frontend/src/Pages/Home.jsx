@@ -28,11 +28,11 @@ const Home = () => {
       >
         {[
           { label: "Games", icon: <VideogameAssetIcon /> },
-          { label: "Keyboard", icon: <KeyboardIcon /> },
-          { label: "Laptop", icon: <LaptopMacIcon /> },
-          { label: "Monitor", icon: <MonitorIcon /> },
-          { label: "Mouse", icon: <MouseIcon /> },
-          { label: "Phone", icon: <PhoneIphoneIcon /> },
+          { label: "Keyboards", icon: <KeyboardIcon /> },
+          { label: "Laptops", icon: <LaptopMacIcon /> },
+          { label: "Monitors", icon: <MonitorIcon /> },
+          { label: "Mice", icon: <MouseIcon /> },
+          { label: "Phones", icon: <PhoneIphoneIcon /> },
         ].map(({ label, icon }) => (
           <Button
             key={label}

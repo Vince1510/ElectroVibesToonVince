@@ -37,13 +37,10 @@ const Filter = ({
     "Apple",
     "Samsung",
     "Logitech",
-    "Asus",
     "Corsair",
-    "Dell",
-    "Google",
-    "Sony",
-    "OnePlus",
-    "Doogee",
+    "Rockstar Games",
+    "Warner Bros. Games",
+    "LG",
   ];
 
   const handlePriceChange = (event, newValue) => {
@@ -137,7 +134,7 @@ const Filter = ({
         onChange={handlePriceChange}
         valueLabelDisplay="auto"
         min={0}
-        max={3000}
+        max={4000}
         sx={{ color: "white" }}
       />
       <Typography>{`${priceRange[0]} - ${priceRange[1]}`}</Typography>

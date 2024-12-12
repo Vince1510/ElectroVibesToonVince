@@ -8,52 +8,58 @@ import FilterPanel from "../components/FilterPanel";
 function Product() {
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [priceRange, setPriceRange] = useState([0, 3000]);
+  const [priceRange, setPriceRange] = useState([0, 4000]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedSpecs, setSelectedSpecs] = useState([]);
   const [sortOrder, setSortOrder] = useState("none");
-  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
-  // Comparison functionality
   const [compareList, setCompareList] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch products from backend
   useEffect(() => {
     const fetchProductsAndGames = async () => {
       try {
-        const responses = await Promise.all([
-          fetch("http://localhost:4000/api/laptops"),
-          fetch("http://localhost:4000/api/keyboards"),
-          fetch("http://localhost:4000/api/phones"),
-          fetch("http://localhost:4000/api/games"),
-          fetch("http://localhost:4000/api/mice"),
-          fetch("http://localhost:4000/api/monitors"),
-        ]);
+        const endpoints = [
+          "http://localhost:4000/api/laptops",
+          "http://localhost:4000/api/keyboards",
+          "http://localhost:4000/api/phones",
+          "http://localhost:4000/api/games",
+          "http://localhost:4000/api/mice",
+          "http://localhost:4000/api/monitors",
+        ];
+
+        const responses = await Promise.all(
+          endpoints.map((url) => fetch(url).catch((err) => err))
+        );
 
         const data = await Promise.all(
-          responses.map(async (response) => {
+          responses.map(async (response, index) => {
             if (!response.ok) {
               console.error(
-                `Error fetching: ${response.url} - Status: ${response.status}`
+                `Error fetching: ${endpoints[index]} - Status: ${response.status}`
               );
-              return []; // Return an empty array for failed requests
+              return [];
             }
-            return await response.json();
+            const result = await response.json();
+            console.log(`Fetched data from ${endpoints[index]}:`, result);
+            return result;
           })
         );
 
         const [laptops, keyboards, phones, games, mice, monitors] = data;
-        setProducts([
+        const combinedProducts = [
           ...laptops,
           ...keyboards,
           ...phones,
           ...games,
           ...monitors,
           ...mice,
-        ]);
+        ];
+
+        setProducts(combinedProducts);
+        console.log("All products loaded:", combinedProducts);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching products:", error.message, error);
       }
     };
 
@@ -74,9 +80,14 @@ function Product() {
         selectedSpecs.every((spec) =>
           Object.values(product.specs || {}).includes(spec)
         );
-      return (
-        isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch
-      );
+
+      const isIncluded =
+        isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch;
+
+      if (!isIncluded) {
+        console.warn("Filtered Out Product:", product);
+      }
+      return isIncluded;
     })
     .sort((a, b) => {
       if (sortOrder === "lowToHigh") return a.price - b.price;
@@ -92,22 +103,23 @@ function Product() {
 
   const handleCompare = (product) => {
     if (compareList.some((item) => item._id === product._id)) {
-      return; // Prevent adding duplicate products
+      return;
     }
 
     const updatedCompareList = [...compareList, product];
     setCompareList(updatedCompareList);
 
-    // Redirect after the state is updated and if two products are selected
     if (updatedCompareList.length === 2) {
       setTimeout(() => {
         navigate("/compare", { state: { products: updatedCompareList } });
-      }, 300); // Delay navigation slightly to allow event propagation
+      }, 300);
     }
   };
 
   const handleRemoveFromCompare = (productId) => {
-    setCompareList((prev) => prev.filter((product) => product._id !== productId));
+    setCompareList((prev) =>
+      prev.filter((product) => product._id !== productId)
+    );
   };
 
   const clearCompareList = () => {
@@ -116,7 +128,6 @@ function Product() {
 
   return (
     <Box display="flex" flexDirection={{ xs: "column", sm: "row" }}>
-      {/* Filter Panel */}
       <Box sx={{ display: { xs: "block", sm: "block" } }}>
         <FilterPanel
           selectedCategory={selectedCategory}
@@ -131,7 +142,6 @@ function Product() {
         />
       </Box>
 
-      {/* Products List */}
       <Box
         sx={{
           flexGrow: 1,
@@ -145,17 +155,25 @@ function Product() {
         </Typography>
 
         <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              onCompare={handleCompare} // Pass compare handler to ProductCard
-            />
-          ))}
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                onCompare={handleCompare}
+              />
+            ))
+          ) : (
+            <Typography
+              variant="h6"
+              sx={{ color: "white", marginTop: 2 }}
+            >
+              No products found.
+            </Typography>
+          )}
         </Grid>
       </Box>
 
-      {/* Compare List */}
       {compareList.length > 0 && (
         <CompareList
           compareList={compareList}
