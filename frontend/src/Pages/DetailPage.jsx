@@ -35,68 +35,91 @@ function DetailPage() {
   const [selectedModel, setSelectedModel] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
 
-  useEffect(() => {
-    const transformRelatedProducts = (relatedProducts) => {
-      if (!Array.isArray(relatedProducts)) {
-        console.error("Invalid relatedProducts format:", relatedProducts);
-        return [];
-      }
+  // Helper function to transform related products into valid arrays
+  const transformRelatedProducts = (relatedProducts) => {
+    if (!Array.isArray(relatedProducts)) {
+      console.error("Invalid relatedProducts format:", relatedProducts);
+      return [];
+    }
   
-      return relatedProducts.map((item) => {
-        if (Array.isArray(item) && item.length === 2) {
-          const [id, category] = item;
-          return { id, category };
-        }
-  
-        if (item && typeof item === "object" && item[0] && item[1]) {
-          return { id: item[0], category: item[1] };
-        }
-  
-        console.error("Unexpected item format in relatedProducts:", item);
-        return null;
-      }).filter(Boolean);
-    };
-  
-    const fetchFullProductDetails = async (relatedProducts) => {
-      const promises = relatedProducts.map(({ id, category }) =>
-        fetch(`http://localhost:4000/api/${category.toLowerCase()}/${id}`)
-          .then((res) => (res.ok ? res.json() : null))
-          .catch((err) => {
-            console.error(`Error fetching product ${id} in category ${category}:`, err);
-            return null;
-          })
-      );
-      return Promise.all(promises).then((products) => products.filter(Boolean)); // Remove nulls
-    };
-  
-    const fetchProductData = async () => {
-      if (!product) {
-        try {
-          const productResponse = await fetch(`http://localhost:4000/api/${category.toLowerCase()}/${productId}`);
-          if (!productResponse.ok) throw new Error("Failed to fetch product");
-  
-          const productData = await productResponse.json();
-          setProduct(productData);
-  
-          const oftenBought = transformRelatedProducts(productData.oftenBoughtWith || []);
-          const othersLook = transformRelatedProducts(productData.othersAlsoLookAt || []);
-  
-          const [oftenBoughtDetails, othersLookDetails] = await Promise.all([
-            fetchFullProductDetails(oftenBought),
-            fetchFullProductDetails(othersLook),
-          ]);
-  
-          setOftenBoughtProducts(oftenBoughtDetails);
-          setOthersAlsoLookProducts(othersLookDetails);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        } finally {
-          setLoading(false);
-        }
+    return relatedProducts.map((item) => {
+      // Ensure item is an object and contains keys "0" and "1"
+      if (item && item[0] && item[1]) {
+        return { id: item[0], category: item[1] };
       } else {
-        const oftenBought = transformRelatedProducts(product.oftenBoughtWith || []);
-        const othersLook = transformRelatedProducts(product.othersAlsoLookAt || []);
+        console.error("Malformed item in relatedProducts:", item);
+        return null; // Skip invalid items
+      }
+    }).filter(Boolean); // Filter out null values
+  };  
+
+  // Fetch full product details
+  const fetchFullProductDetails = async (relatedProducts) => {
+    try {
+      const products = await Promise.all(
+        relatedProducts.map(({ id, category }) => {
+          const url = `http://localhost:4000/api/${category.toLowerCase()}/${id}`;
+          return fetch(url)
+            .then((res) => (res.ok ? res.json() : null))
+            .catch((err) => {
+              console.error(`Error fetching product ${id} in category ${category}:`, err);
+              return null;
+            });
+        })
+      );
+      return products.filter(Boolean);
+    } catch (err) {
+      console.error("Error fetching related products:", err);
+      return [];
+    }
+  };  
+
+  // Fetch product data
+  const fetchProductData = async () => {
+    try {
+      const productResponse = await fetch(`http://localhost:4000/api/${category.toLowerCase()}/${productId}`);
+      if (!productResponse.ok) throw new Error("Failed to fetch product");
+
+      const productData = await productResponse.json();
+      setProduct(productData);
+
+      const oftenBought = transformRelatedProducts(productData.oftenBoughtWith || []);
+      const othersLook = transformRelatedProducts(productData.othersAlsoLookAt || []);
+
+      console.log("Often Bought With Raw Data:", oftenBought);
+      console.log("Others Also Look At Raw Data:", othersLook);
+
+      const [oftenBoughtDetails, othersLookDetails] = await Promise.all([
+        fetchFullProductDetails(oftenBought),
+        fetchFullProductDetails(othersLook),
+      ]);
+
+      setOftenBoughtProducts(oftenBoughtDetails);
+      setOthersAlsoLookProducts(othersLookDetails);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Main useEffect hook
+  useEffect(() => {
+    const fetchProductData = async () => {
+      try {
+        const productResponse = await fetch(
+          `http://localhost:4000/api/${category.toLowerCase()}/${productId}`
+        );
+        if (!productResponse.ok) throw new Error("Failed to fetch product");
   
+        const productData = await productResponse.json();
+        setProduct(productData);
+  
+        // Transform related products
+        const oftenBought = transformRelatedProducts(productData.oftenBoughtWith || []);
+        const othersLook = transformRelatedProducts(productData.othersAlsoLookAt || []);
+  
+        // Fetch details for related products
         const [oftenBoughtDetails, othersLookDetails] = await Promise.all([
           fetchFullProductDetails(oftenBought),
           fetchFullProductDetails(othersLook),
@@ -104,12 +127,15 @@ function DetailPage() {
   
         setOftenBoughtProducts(oftenBoughtDetails);
         setOthersAlsoLookProducts(othersLookDetails);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
         setLoading(false);
       }
     };
   
     fetchProductData();
-  }, [product, category, productId]);  
+  }, [category, productId]);  
 
   const handleThumbnailClick = (index) => {
     setCurrentImage(index);
@@ -144,6 +170,7 @@ function DetailPage() {
       </Box>
     );
   }
+
   return (
     <Box sx={{ padding: 4, backgroundColor: "transparent", color: "white", minHeight: "100vh" }}>
       <Grid container spacing={4}>
@@ -158,13 +185,26 @@ function DetailPage() {
           </Typography>
 
           {/* Product Carousel */}
-          <Card sx={{ marginTop: 2, background: "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)", padding: 2, borderRadius: 2, boxShadow: 3 }}>
+          <Card
+            sx={{
+              marginTop: 2,
+              background:
+                "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
+              padding: 2,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
             <Carousel
               index={currentImage}
               onChange={(index) => setCurrentImage(index)}
               indicators={false}
               navButtonsAlwaysVisible
-              sx={{ display: "flex", justifyContent: "center" }}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                maxHeight: { xs: 300, sm: 400 }, // Responsive height for small screens
+              }}
             >
               {product.imageOverview.map((image, index) => (
                 <CardMedia
@@ -172,14 +212,27 @@ function DetailPage() {
                   component="img"
                   image={image}
                   alt={`Thumbnail ${index + 1}`}
-                  sx={{ width: "100%", height: 400, objectFit: "contain", borderRadius: 1 }}
+                  sx={{
+                    width: "100%",
+                    height: { xs: 300, sm: 400 }, // Responsive height for images
+                    objectFit: "contain",
+                    borderRadius: 1,
+                  }}
                 />
               ))}
             </Carousel>
           </Card>
-
+            
           {/* Thumbnail Row */}
-          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap", // Wrap thumbnails on smaller screens
+              gap: 1, // Add spacing between thumbnails
+              marginTop: 2,
+            }}
+          >
             {product.imageOverview.map((image, index) => (
               <CardMedia
                 key={index}
@@ -187,9 +240,15 @@ function DetailPage() {
                 image={image}
                 alt={`Thumbnail ${index + 1}`}
                 sx={{
-                  width: 80, height: 80, cursor: "pointer", border: currentImage === index ? "3px solid #fff" : "2px solid #aaa",
-                  borderRadius: 1, margin: "0 8px", transition: "transform 0.3s ease", ":hover": {
-                    transform: "scale(1.1)", border: "3px solid #fff",
+                  width: { xs: 60, sm: 80 }, // Responsive width for thumbnails
+                  height: { xs: 60, sm: 80 }, // Responsive height for thumbnails
+                  cursor: "pointer",
+                  border: currentImage === index ? "3px solid #fff" : "2px solid #aaa",
+                  borderRadius: 1,
+                  transition: "transform 0.3s ease",
+                  ":hover": {
+                    transform: "scale(1.1)",
+                    border: "3px solid #fff",
                   },
                 }}
                 onClick={() => handleThumbnailClick(index)}
@@ -277,15 +336,33 @@ function DetailPage() {
               </Typography>
               <Typography variant="body1">Sold by <span>{product.seller}</span> <span style={{ fontWeight: "bold" }}>{product.sellerScore}</span></Typography>
             </Box>
-            <Button variant="contained" size="large" onClick={handleAddToCart} sx={{ fontWeight: "bold", background: "transparent", border: "1px solid white", alignSelf: "end", marginTop: 4, borderRadius: 2, width: 140, height: 45 }}>
-              <ShoppingCartIcon /> In Cart
+            <Button
+              variant="contained"
+              size="large"
+              onClick={handleAddToCart}
+              sx={{
+                fontWeight: "bold",
+                background: "transparent",
+                border: "1px solid white",
+                alignSelf: "end",
+                marginTop: 4,
+                borderRadius: 2,
+                width: { xs: 45, sm: 140 }, // Adjust width for small screens
+                height: 45,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ShoppingCartIcon sx={{ display: { xs: "block", sm: "none" } }} />
+              <Box sx={{ display: { xs: "none", sm: "block" } }}>In Cart</Box>
             </Button>
           </Box>
 
           {/* Often Bought With Section */}
           <Divider sx={{ marginY: 4, backgroundColor: "#424242" }} />
           <Typography variant="h5">Often Bought With</Typography>
-          <Grid container spacing={1} sx={{ marginY: 2 }}>
+          <Grid container spacing={1} sx={{ marginY: 2, width: "110%" }}>
             {oftenBoughtProducts.map((prod) => (
               <Grid item key={prod.id || prod._id || Math.random()}>
                 <ProductCard product={prod} />
@@ -295,9 +372,9 @@ function DetailPage() {
 
           {/* Others Also Look At Section */}
           <Typography variant="h5">Others Also Look At</Typography>
-          <Grid container spacing={1} sx={{ marginY: 2 }}>
+          <Grid container spacing={1} sx={{ marginY: 2, width: "110%" }}>
             {othersAlsoLookProducts.map((prod) => (
-              <Grid item key={prod.id}>
+              <Grid item key={prod.id || prod._id || Math.random()}>
                 <ProductCard product={prod} />
               </Grid>
             ))}

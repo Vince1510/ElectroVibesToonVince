@@ -144,7 +144,6 @@ function Product() {
         sx={{
           flexGrow: 1,
           paddingLeft: { sm: 3 },
-          paddingTop: { xs: 2, sm: 0 },
           paddingBottom: 10,
         }}
       >
@@ -152,24 +151,33 @@ function Product() {
           Products Page
         </Typography>
 
-        <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="center"
+          gap={3} // Controls spacing between cards
+        >
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
-              <ProductCard
+              <Box
                 key={product._id}
-                product={product}
-                onCompare={handleCompare}
-              />
+                sx={{
+                  flex: "1 1 calc(25% - 16px)",
+                  maxWidth: "calc(25% - 16px)",
+                  minWidth: "250px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <ProductCard product={product} onCompare={handleCompare} />
+              </Box>
             ))
           ) : (
-            <Typography
-              variant="h6"
-              sx={{ color: "white", marginTop: 2 }}
-            >
+            <Typography variant="h6" sx={{ color: "white", marginTop: 2 }}>
               No products found.
             </Typography>
           )}
-        </Grid>
+        </Box>
       </Box>
 
       {compareList.length > 0 && (
