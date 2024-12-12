@@ -41,7 +41,6 @@ function Deals() {
               return [];
             }
             const result = await response.json();
-            console.log(`Fetched data from ${endpoints[index]}:`, result);
             return result;
           })
         );
@@ -57,7 +56,6 @@ function Deals() {
         ].filter(product => product.dealPrice);
 
         setProducts(combinedProducts);
-        console.log("All products with dealPrice loaded:", combinedProducts);
       } catch (error) {
         console.error("Error fetching products:", error.message, error);
       }
@@ -123,6 +121,7 @@ function Deals() {
   };
 
   return (
+
     <Box display="flex" flexDirection={{ xs: "column", sm: "row" }}>
       <Box sx={{ display: { xs: "block", sm: "block" } }}>
         <FilterPanel
@@ -142,23 +141,40 @@ function Deals() {
         sx={{
           flexGrow: 1,
           paddingLeft: { sm: 3 },
-          paddingTop: { xs: 2, sm: 0 },
           paddingBottom: 10,
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ color: "white" }}>
-          Deals Page
+          Products Page
         </Typography>
 
-        <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              onCompare={handleCompare}
-            />
-          ))}
-        </Grid>
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="center"
+          gap={3} // Controls spacing between cards
+        >
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <Box
+                key={product._id}
+                sx={{
+                  flex: "1 1 calc(25% - 16px)",
+                  maxWidth: "calc(25% - 16px)",
+                  minWidth: "250px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <ProductCard product={product} onCompare={handleCompare} />
+              </Box>
+            ))
+          ) : (
+            <Typography variant="h6" sx={{ color: "white", marginTop: 2 }}>
+              No products found.
+            </Typography>
+          )}
+        </Box>
       </Box>
 
       {compareList.length > 0 && (
