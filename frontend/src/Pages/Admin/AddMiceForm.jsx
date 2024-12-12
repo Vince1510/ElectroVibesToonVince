@@ -4,10 +4,15 @@ import {
   Button,
   Grid,
   Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 
@@ -78,11 +83,14 @@ const AddMiceForm = ({ onAddMouse }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={2}>
+      <DialogTitle sx={{ backgroundColor: "#000", color: "white" }}>
+        Add a Monitor
+      </DialogTitle>{" "}
+      <Grid container spacing={2} sx={{ backgroundColor: "black" }}>
         {fieldNames.map((field) => (
           <Grid item xs={12} sm={6} key={field}>
             <TextField
-              label={field.replace(/([A-Z])/g, " $1").toUpperCase()} // Format the label
+              label={field.replace(/([A-Z])/g, " $1").toLowerCase()} // Format the label
               variant="outlined"
               fullWidth
               name={field}
@@ -99,13 +107,27 @@ const AddMiceForm = ({ onAddMouse }) => {
                 field === "createdAt" ||
                 field === "updatedAt" ||
                 field === "__v"
-              } // Disable system fields
+              }
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  color: "#fff",
+                  fontFamily: "Arial",
+                  fontWeight: "bold",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#fff",
+                    borderWidth: "2px",
+                  },
+                },
+                "& .MuiInputLabel-outlined": {
+                  color: "#fff",
+                  fontWeight: "bold",
+                },
+              }}
             />
           </Grid>
         ))}
       </Grid>
-
-      <Box mt={2}>
+      <Box sx={{ backgroundColor: "black" }}>
         <Button variant="contained" color="primary" type="submit">
           Add Mouse
         </Button>

@@ -8,17 +8,23 @@ import {
   TableRow,
   Button,
   IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import EditLaptopModal from "./EditLaptopModal";
+import AddLaptopForm from "./AddLaptopForm"; // Import AddLaptopForm
 
 const LaptopsPanel = () => {
   const [laptops, setLaptops] = useState([]);
   const [openEditModal, setOpenEditModal] = useState(false); // State to control edit modal visibility
   const [selectedLaptopId, setSelectedLaptopId] = useState(null); // Store the laptop ID to edit
   const [isAdding, setIsAdding] = useState(false); // State to distinguish between edit and add new laptop
+  const [openAddLaptopDialog, setOpenAddLaptopDialog] = useState(false); // State to manage AddLaptopDialog visibility
 
   useEffect(() => {
     const fetchLaptops = async () => {
@@ -50,11 +56,11 @@ const LaptopsPanel = () => {
     setOpenEditModal(true);
   };
 
-  // Open the modal for adding a new laptop
+  // Open the dialog for adding a new laptop
   const handleAddNewClick = () => {
     setSelectedLaptopId(null); // No laptop selected for adding
     setIsAdding(true); // Set to true for adding
-    setOpenEditModal(true);
+    setOpenAddLaptopDialog(true); // Open the dialog
   };
 
   // Function to refresh laptop list after update
@@ -126,8 +132,34 @@ const LaptopsPanel = () => {
         open={openEditModal}
         handleClose={() => setOpenEditModal(false)}
         onLaptopUpdated={handleLaptopUpdated}
-        isAdding={isAdding}
       />
+
+      {/* Add Laptop Dialog */}
+      <Dialog
+        open={openAddLaptopDialog}
+        onClose={() => setOpenAddLaptopDialog(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ backgroundColor: "#000", color: "white" }}>
+          Add New Laptop
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            backgroundColor: "#000",
+          }}
+        >
+          <AddLaptopForm handleClose={() => setOpenAddLaptopDialog(false)} />
+        </DialogContent>
+        <DialogActions sx={{ backgroundColor: "#000" }}>
+          <Button
+            onClick={() => setOpenAddLaptopDialog(false)}
+            sx={{ color: "white" }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

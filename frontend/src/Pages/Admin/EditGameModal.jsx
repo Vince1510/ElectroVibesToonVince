@@ -6,13 +6,7 @@ import {
   DialogActions,
   Button,
   TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Checkbox,
-  FormControlLabel,
-  InputAdornment,
+  Grid,
 } from "@mui/material";
 import axios from "axios";
 
@@ -110,8 +104,8 @@ const EditGameModal = ({ open, onClose, gameData, onUpdate }) => {
         `http://localhost:4000/api/games/${gameData._id}`,
         updatedGame
       );
-      onUpdate(response.data); // Notify parent that the game was updated
-      onClose(); // Close the modal
+      onUpdate(response.data);
+      onClose();
     } catch (error) {
       console.error("Error updating game:", error);
     }
@@ -125,18 +119,15 @@ const EditGameModal = ({ open, onClose, gameData, onUpdate }) => {
       value={formData[name] || ""}
       onChange={handleChange}
       sx={{
-        // Root class for the input field
         "& .MuiOutlinedInput-root": {
           color: "#fff",
           fontFamily: "Arial",
           fontWeight: "bold",
-          // Class for the border around the input field
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "#fff",
             borderWidth: "2px",
           },
         },
-        // Class for the label of the input field
         "& .MuiInputLabel-outlined": {
           color: "#fff",
           fontWeight: "bold",
@@ -147,7 +138,7 @@ const EditGameModal = ({ open, onClose, gameData, onUpdate }) => {
   );
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle
         sx={{
           backgroundColor: "#000",
@@ -160,43 +151,45 @@ const EditGameModal = ({ open, onClose, gameData, onUpdate }) => {
           backgroundColor: "#000",
         }}
       >
-        {[
-          "name",
-          "description",
-          "largeDescription",
-          "brand",
-          "price",
-          "dealPrice",
-          "imageCard",
-          "imageOverview",
-          "commercial",
-          "amount",
-          "maxAmount",
-          "state",
-          "color",
-          "model",
-          "seller",
-          "sellerScore",
-          "deliveryTime",
-          "oftenBoughtWith",
-          "othersAlsoLookAt",
-          "releaseDate",
-          "genre",
-          "platform",
-          "multiplayerModes",
-          "ageRating",
-          "languages",
-          "specialEditions",
-          "fileSize",
-          "publisher",
-          "developer",
-          "releaseRegion",
-          "exclusiveContent",
-        ].map((field) => (
-          <React.Fragment key={field}>
-            {renderTextField(field, field)}
-          </React.Fragment>
-        ))}
+        <Grid container spacing={2}>
+          {[
+            "name",
+            "description",
+            "largeDescription",
+            "brand",
+            "price",
+            "dealPrice",
+            "imageCard",
+            "imageOverview",
+            "commercial",
+            "amount",
+            "maxAmount",
+            "state",
+            "color",
+            "model",
+            "seller",
+            "sellerScore",
+            "deliveryTime",
+            "oftenBoughtWith",
+            "othersAlsoLookAt",
+            "releaseDate",
+            "genre",
+            "platform",
+            "multiplayerModes",
+            "ageRating",
+            "languages",
+            "specialEditions",
+            "fileSize",
+            "publisher",
+            "developer",
+            "releaseRegion",
+            "exclusiveContent",
+          ].map((field) => (
+            <Grid item xs={12} sm={6} key={field}>
+              {renderTextField(field, field)}
+            </Grid>
+          ))}
+        </Grid>
       </DialogContent>
 
       <DialogActions

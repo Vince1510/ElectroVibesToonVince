@@ -25,11 +25,8 @@ const CardSlider = () => {
         ];
 
         const responses = await Promise.all(
-          endpoints.map((endpoint) =>  fetch(endpoint))
-        
+          endpoints.map((endpoint) => fetch(endpoint))
         );
-
-      
 
         const data = await Promise.all(
           responses.map((response) => {
@@ -63,7 +60,10 @@ const CardSlider = () => {
   };
 
   useEffect(() => {
-    intervalRef.current = setInterval(() => handleScroll("right"), slideInterval);
+    intervalRef.current = setInterval(
+      () => handleScroll("right"),
+      slideInterval
+    );
     return () => clearInterval(intervalRef.current);
   }, []);
 
