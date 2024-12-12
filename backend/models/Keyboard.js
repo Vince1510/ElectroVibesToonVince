@@ -22,8 +22,18 @@ const keyboardSchema = new Schema(
     seller: { type: String, required: true },
     sellerScore: { type: Number, required: true },
     deliveryTime: { type: Number, required: true },
-    oftenBoughtWith: { type: [String], required: true },
-    othersAlsoLookAt: { type: [String], required: true },
+    oftenBoughtWith: [
+      {
+        id: { type: String, required: true },
+        category: { type: String, required: true },
+      },
+    ],
+    othersAlsoLookAt: [
+      {
+        id: { type: String, required: true },
+        category: { type: String, required: true },
+      },
+    ],
   
     // Keyboard-specific details
     layout: { type: String, required: true },

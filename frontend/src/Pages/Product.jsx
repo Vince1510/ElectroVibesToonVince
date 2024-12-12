@@ -41,7 +41,6 @@ function Product() {
               return [];
             }
             const result = await response.json();
-            console.log(`Fetched data from ${endpoints[index]}:`, result);
             return result;
           })
         );
@@ -57,7 +56,6 @@ function Product() {
         ];
 
         setProducts(combinedProducts);
-        console.log("All products loaded:", combinedProducts);
       } catch (error) {
         console.error("Error fetching products:", error.message, error);
       }
