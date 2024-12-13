@@ -82,9 +82,6 @@ function Product() {
       const isIncluded =
         isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch;
 
-      if (!isIncluded) {
-        console.warn("Filtered Out Product:", product);
-      }
       return isIncluded;
     })
     .sort((a, b) => {
