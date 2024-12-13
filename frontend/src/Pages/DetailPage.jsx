@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Typography,
   Card,
@@ -21,121 +21,133 @@ import MouseDetails from "../components/MouseDetails";
 import LaptopDetails from "../components/LaptopDetails";
 import MonitorDetails from "../components/MonitorDetails";
 import KeyboardDetails from "../components/KeyboardDetails";
+import { useCart } from "../components/CartContext.jsx";
 
 function DetailPage() {
   const { category, productId } = useParams();
-  const location = useLocation();
-  const [product, setProduct] = useState(location.state?.product || null);
-  const [loading, setLoading] = useState(!product);
-  const [currentImage, setCurrentImage] = useState(0);
-  const [showAllDescription, setShowAllDescription] = useState(false);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [oftenBoughtProducts, setOftenBoughtProducts] = useState([]);
   const [othersAlsoLookProducts, setOthersAlsoLookProducts] = useState([]);
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedModel, setSelectedModel] = useState(null);
+  const [currentImage, setCurrentImage] = useState(0);
+  const [showAllDescription, setShowAllDescription] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedModel, setSelectedModel] = useState("");
 
-  // Helper function to transform related products into valid arrays
-  const transformRelatedProducts = (relatedProducts) => {
-    if (!Array.isArray(relatedProducts)) {
-      console.error("Invalid relatedProducts format:", relatedProducts);
-      return [];
-    }
-  
-    return relatedProducts.map((item) => {
-      // Ensure item is an object and contains keys "0" and "1"
-      if (item && item[0] && item[1]) {
-        return { id: item[0], category: item[1] };
-      } else {
-        console.error("Malformed item in relatedProducts:", item);
-        return null; // Skip invalid items
-      }
-    }).filter(Boolean); // Filter out null values
-  };  
-
-  // Fetch full product details
-  const fetchFullProductDetails = async (relatedProducts) => {
-    try {
-      const products = await Promise.all(
-        relatedProducts.map(({ id, category }) => {
-          const url = `http://localhost:4000/api/${category.toLowerCase()}/${id}`;
-          return fetch(url)
-            .then((res) => (res.ok ? res.json() : null))
-            .catch((err) => {
-              console.error(`Error fetching product ${id} in category ${category}:`, err);
-              return null;
-            });
-        })
-      );
-      return products.filter(Boolean);
-    } catch (err) {
-      console.error("Error fetching related products:", err);
-      return [];
-    }
-  };  
-
-  // Fetch product data
-  const fetchProductData = async () => {
-    try {
-      const productResponse = await fetch(`http://localhost:4000/api/${category.toLowerCase()}/${productId}`);
-      if (!productResponse.ok) throw new Error("Failed to fetch product");
-
-      const productData = await productResponse.json();
-      setProduct(productData);
-
-      const oftenBought = transformRelatedProducts(productData.oftenBoughtWith || []);
-      const othersLook = transformRelatedProducts(productData.othersAlsoLookAt || []);
-
-      console.log("Often Bought With Raw Data:", oftenBought);
-      console.log("Others Also Look At Raw Data:", othersLook);
-
-      const [oftenBoughtDetails, othersLookDetails] = await Promise.all([
-        fetchFullProductDetails(oftenBought),
-        fetchFullProductDetails(othersLook),
-      ]);
-
-      setOftenBoughtProducts(oftenBoughtDetails);
-      setOthersAlsoLookProducts(othersLookDetails);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Main useEffect hook
   useEffect(() => {
-    const fetchProductData = async () => {
+    const fetchProduct = async () => {
+      if (!category || !productId) {
+        console.error("Invalid category or product ID.");
+        return;
+      }
+
       try {
-        const productResponse = await fetch(
+        // Convert category to lowercase to match API requirements
+        const response = await fetch(
           `http://localhost:4000/api/${category.toLowerCase()}/${productId}`
         );
-        if (!productResponse.ok) throw new Error("Failed to fetch product");
-  
-        const productData = await productResponse.json();
-        setProduct(productData);
-  
-        // Transform related products
-        const oftenBought = transformRelatedProducts(productData.oftenBoughtWith || []);
-        const othersLook = transformRelatedProducts(productData.othersAlsoLookAt || []);
-  
-        // Fetch details for related products
-        const [oftenBoughtDetails, othersLookDetails] = await Promise.all([
-          fetchFullProductDetails(oftenBought),
-          fetchFullProductDetails(othersLook),
-        ]);
-  
-        setOftenBoughtProducts(oftenBoughtDetails);
-        setOthersAlsoLookProducts(othersLookDetails);
+        if (!response.ok) {
+          throw new Error(
+            `Product not found in category: ${category}, ID: ${productId}`
+          );
+        }
+        const foundProduct = await response.json();
+        setProduct(foundProduct);
+
+        // Calculate delivery date if available
+        if (typeof foundProduct.deliveryTime === "number") {
+          const currentDate = new Date();
+          currentDate.setDate(
+            currentDate.getDate() + foundProduct.deliveryTime
+          );
+          setDeliveryDate(
+            currentDate.toLocaleDateString("en-GB", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+            })
+          );
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching product:", error);
       } finally {
         setLoading(false);
       }
     };
-  
-    fetchProductData();
-  }, [category, productId]);  
+
+    fetchProduct();
+  }, [category, productId]);
+
+  useEffect(() => {
+    const fetchSingleProduct = async (id) => {
+      try {
+        // Fetch the product by ID from all possible categories
+        const categories = [
+          "phones",
+          "laptops",
+          "monitors",
+          "mice",
+          "keyboards",
+          "games",
+        ];
+        for (const category of categories) {
+          try {
+            const response = await fetch(
+              `http://localhost:4000/api/${category}/${id}`
+            );
+            if (response.ok) {
+              const product = await response.json();
+              return product; // Return the product if found
+            }
+          } catch (error) {
+            // Continue to next category if this one fails
+            console.warn(
+              `Error fetching product ${id} in category ${category}:`,
+              error
+            );
+          }
+        }
+        console.warn(`Product with ID ${id} not found in any category.`);
+        return null; // Return null if product is not found
+      } catch (error) {
+        console.error(`Error fetching product with ID ${id}:`, error);
+        return null;
+      }
+    };
+
+    const fetchRelatedProducts = async (ids) => {
+      try {
+        const products = await Promise.all(
+          ids.map(async (id) => {
+            const product = await fetchSingleProduct(id);
+            return product; // Return the product if found
+          })
+        );
+
+        return products.filter((product) => product !== null); // Remove null entries
+      } catch (error) {
+        console.error("Error fetching related products:", error);
+        return [];
+      }
+    };
+
+    const fetchAllRelatedProducts = async () => {
+      if (product) {
+        // Use product IDs to fetch related products
+        const oftenBoughtProducts = await fetchRelatedProducts(
+          product.oftenBoughtWith || []
+        );
+        const othersAlsoLookProducts = await fetchRelatedProducts(
+          product.othersAlsoLookAt || []
+        );
+        setOftenBoughtProducts(oftenBoughtProducts);
+        setOthersAlsoLookProducts(othersAlsoLookProducts);
+      }
+    };
+
+    fetchAllRelatedProducts();
+  }, [product]);
 
   const handleThumbnailClick = (index) => {
     setCurrentImage(index);
@@ -149,30 +161,52 @@ function DetailPage() {
     setSelectedModel(model);
   };
 
+  const { cartItems, addToCart } = useCart();
+
   const handleAddToCart = () => {
-    console.log(`Adding ${product.name} to the cart`);
+    if (!selectedColor || !selectedModel) {
+      alert("Please select a color and model before adding to cart.");
+      return;
+    }
+
+    const productToAdd = {
+      id: product.id,
+      name: product.name,
+      price: product.dealPrice || product.price,
+      color: selectedColor,
+      model: selectedModel,
+      image: product.imageOverview[0], // Main image
+    };
+
+    addToCart(productToAdd);
   };
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
         <CircularProgress />
       </Box>
     );
   }
 
   if (!product) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <Typography variant="h5" color="error">
-          Product not found. Please check back later.
-        </Typography>
-      </Box>
-    );
+    return <Typography variant="h5">Product not found.</Typography>;
   }
 
   return (
-    <Box sx={{ padding: 4, backgroundColor: "transparent", color: "white", minHeight: "100vh" }}>
+    <Box
+      sx={{
+        padding: 4,
+        backgroundColor: "transparent",
+        color: "white",
+        minHeight: "100vh",
+      }}
+    >
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           <Typography variant="h4" gutterBottom>
@@ -183,16 +217,12 @@ function DetailPage() {
             <span style={{ cursor: "pointer" }}>Write a review</span> |{" "}
             <span style={{ cursor: "pointer" }}>Share</span>
           </Typography>
-
-          {/* Product Carousel */}
           <Card
             sx={{
               marginTop: 2,
               background:
                 "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
-              padding: 2,
-              borderRadius: 2,
-              boxShadow: 3,
+              padding: 1,
             }}
           >
             <Carousel
@@ -200,37 +230,24 @@ function DetailPage() {
               onChange={(index) => setCurrentImage(index)}
               indicators={false}
               navButtonsAlwaysVisible
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                maxHeight: { xs: 300, sm: 400 }, // Responsive height for small screens
-              }}
             >
               {product.imageOverview.map((image, index) => (
                 <CardMedia
-                  key={index}
                   component="img"
                   image={image}
-                  alt={`Thumbnail ${index + 1}`}
-                  sx={{
-                    width: "100%",
-                    height: { xs: 300, sm: 400 }, // Responsive height for images
-                    objectFit: "contain",
-                    borderRadius: 1,
-                  }}
+                  alt={`Product Image ${index + 1}`}
+                  style={{ objectFit: "contain", height: 400 }}
                 />
               ))}
             </Carousel>
           </Card>
-            
-          {/* Thumbnail Row */}
           <Box
             sx={{
               display: "flex",
               justifyContent: "center",
-              flexWrap: "wrap", // Wrap thumbnails on smaller screens
-              gap: 1, // Add spacing between thumbnails
-              marginTop: 2,
+              gap: 1,
+              padding: 2,
+              overflowX: "auto",
             }}
           >
             {product.imageOverview.map((image, index) => (
@@ -240,41 +257,52 @@ function DetailPage() {
                 image={image}
                 alt={`Thumbnail ${index + 1}`}
                 sx={{
-                  width: { xs: 60, sm: 80 }, // Responsive width for thumbnails
-                  height: { xs: 60, sm: 80 }, // Responsive height for thumbnails
+                  width: 60,
+                  height: 60,
                   cursor: "pointer",
-                  border: currentImage === index ? "3px solid #fff" : "2px solid #aaa",
+                  border:
+                    currentImage === index
+                      ? "2px solid white"
+                      : "2px solid gray",
                   borderRadius: 1,
-                  transition: "transform 0.3s ease",
-                  ":hover": {
-                    transform: "scale(1.1)",
-                    border: "3px solid #fff",
-                  },
+                  padding: 1,
                 }}
                 onClick={() => handleThumbnailClick(index)}
               />
             ))}
           </Box>
-
-          {/* Product Description */}
           <Typography variant="h5" gutterBottom sx={{ marginTop: 2 }}>
             Product Bio
           </Typography>
-          {product.largeDescription.slice(0, showAllDescription ? product.largeDescription.length : 2).map((description, index) => (
-            <Typography key={index} variant="body1" gutterBottom sx={{ marginBottom: 2 }}>
-              {description}
-            </Typography>
-          ))}
+          {product.largeDescription
+            .slice(0, showAllDescription ? product.largeDescription.length : 2)
+            .map((description, index) => (
+              <Typography
+                key={index}
+                variant="body1"
+                gutterBottom
+                sx={{ marginBottom: 2 }}
+              >
+                {description}
+              </Typography>
+            ))}
           <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
-            <Button variant="outlined" onClick={() => setShowAllDescription(!showAllDescription)} sx={{ color: "#ffffff", borderColor: "#ffffff", width: 150 }}>
+            <Button
+              variant="outlined"
+              onClick={() => setShowAllDescription(!showAllDescription)}
+              sx={{ color: "#ffffff", borderColor: "#ffffff", width: 150 }}
+            >
               {showAllDescription ? "Show Less" : "Show More"}
             </Button>
           </Box>
           <Card sx={{ marginTop: 4 }}>
-            <iframe src={`${product.commercial}&controls=0`} title="Commercial" style={{ width: "100%", height: 300, border: "none" }} allowFullScreen />
+            <iframe
+              src={`${product.commercial}&controls=0`}
+              title="Commercial"
+              style={{ width: "100%", height: 300, border: "none" }}
+              allowFullScreen
+            />
           </Card>
-
-          {/* Category-specific Details */}
           {product.category === "Phones" ? (
             <PhoneDetails product={product} />
           ) : product.category === "Laptops" ? (
@@ -291,50 +319,125 @@ function DetailPage() {
             <Typography>Category not found!</Typography>
           )}
         </Grid>
-
         <Grid item xs={12} md={6}>
-          {/* Color Selection */}
           <Typography variant="h6">Choose your color</Typography>
           <Box sx={{ display: "flex", gap: 2, marginTop: 2, flexWrap: "wrap" }}>
             {product.color.map((color, index) => (
-              <Box key={index} onClick={() => handleColorSelect(color)} sx={{ width: 25, height: 25, backgroundColor: color, borderRadius: "50%", border: selectedColor === color ? "2px solid white" : "2px solid gray", cursor: "pointer", transition: "0.3s" }} />
+              <Box
+                key={index}
+                onClick={() => handleColorSelect(color)}
+                sx={{
+                  width: 25,
+                  height: 25,
+                  backgroundColor: color,
+                  borderRadius: "50%",
+                  border:
+                    selectedColor === color
+                      ? "2px solid white"
+                      : "2px solid gray",
+                  cursor: "pointer",
+                  transition: "0.3s",
+                }}
+              />
             ))}
           </Box>
-
-          {/* Model Selection */}
-          <Typography variant="h6" sx={{ marginTop: 2 }}>Choose your model</Typography>
-          <Box sx={{ display: "flex", gap: 2, marginTop: 2, marginBottom: 2, flexWrap: "wrap" }}>
+          <Typography variant="h6" sx={{ marginTop: 2 }}>
+            Choose your model
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              marginTop: 2,
+              marginBottom: 2,
+              flexWrap: "wrap",
+            }}
+          >
             {product.model.map((model, index) => (
-              <Box key={index} onClick={() => handleModelSelect(model)} sx={{ padding: "8px 16px", borderRadius: 2, border: selectedModel === model ? "2px solid white" : "2px solid gray", cursor: "pointer", backgroundColor: "transparent", color: "white", transition: "0.3s", textAlign: "center" }}>
+              <Box
+                key={index}
+                onClick={() => handleModelSelect(model)}
+                sx={{
+                  padding: "8px 16px",
+                  borderRadius: 2,
+                  border:
+                    selectedModel === model
+                      ? "2px solid white"
+                      : "2px solid gray",
+                  cursor: "pointer",
+                  backgroundColor: "transparent",
+                  color: "white",
+                  transition: "0.3s",
+                  textAlign: "center",
+                }}
+              >
                 {model}
               </Box>
             ))}
           </Box>
-
-          {/* Price and Cart */}
-          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
             <Box>
               {product.dealPrice ? (
                 <Box>
-                  <Typography variant="h5" sx={{ fontWeight: "bold", color: "#f50057", display: "flex", alignItems: "center", gap: 1 }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: "bold",
+                      color: "#f50057",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
                     <span>€{product.dealPrice}</span>
-                    <Typography variant="body1" sx={{ textDecoration: "line-through", color: "#b0b0b0", fontSize: "1rem" }}>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        textDecoration: "line-through",
+                        color: "#b0b0b0",
+                        fontSize: "1rem",
+                      }}
+                    >
                       €{product.price}
                     </Typography>
                   </Typography>
                 </Box>
               ) : (
-                <Typography variant="h5" sx={{ fontWeight: "bold", color: "#f50057" }}>
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: "bold", color: "#f50057" }}
+                >
                   <span>€{product.price}</span>
                 </Typography>
               )}
               <Typography variant="body1" gutterBottom>
-                Delivered no later than{" "} <span>{deliveryDate || "N/A"}</span>
-                <Tooltip title="This delivery date may vary during holidays or special circumstances." arrow>
-                  <InfoOutlinedIcon style={{ marginLeft: "2px", fontSize: "1rem", verticalAlign: "middle", cursor: "pointer" }} />
+                Delivered no later than <span>{deliveryDate || "N/A"}</span>
+                <Tooltip
+                  title="This delivery date may vary during holidays or special circumstances."
+                  arrow
+                >
+                  <InfoOutlinedIcon
+                    style={{
+                      marginLeft: "2px",
+                      fontSize: "1rem",
+                      verticalAlign: "middle",
+                      cursor: "pointer",
+                    }}
+                  />
                 </Tooltip>
               </Typography>
-              <Typography variant="body1">Sold by <span>{product.seller}</span> <span style={{ fontWeight: "bold" }}>{product.sellerScore}</span></Typography>
+              <Typography variant="body1">
+                Sold by <span>{product.seller}</span>{" "}
+                <span style={{ fontWeight: "bold" }}>
+                  {product.sellerScore}
+                </span>
+              </Typography>
             </Box>
             <Button
               variant="contained"
@@ -347,42 +450,38 @@ function DetailPage() {
                 alignSelf: "end",
                 marginTop: 4,
                 borderRadius: 2,
-                width: { xs: 45, sm: 140 }, // Adjust width for small screens
+                width: 140,
                 height: 45,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
               }}
             >
-              <ShoppingCartIcon sx={{ display: { xs: "block", sm: "none" } }} />
-              <Box sx={{ display: { xs: "none", sm: "block" } }}>In Cart</Box>
+              <ShoppingCartIcon /> In Cart
             </Button>
           </Box>
-
-          {/* Often Bought With Section */}
           <Divider sx={{ marginY: 4, backgroundColor: "#424242" }} />
-          <Typography variant="h5">Often Bought With</Typography>
-          <Grid container spacing={1} sx={{ marginY: 2, width: "110%" }}>
-            {oftenBoughtProducts.map((prod) => (
-              <Grid item key={prod.id || prod._id || Math.random()}>
-                <ProductCard product={prod} />
-              </Grid>
+          <Typography variant="h5">Often bought with</Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, marginTop: 2 }}>
+            {oftenBoughtProducts.map((relatedProduct) => (
+              <ProductCard
+                key={relatedProduct.id || relatedProduct.code}
+                product={relatedProduct}
+              />
             ))}
-          </Grid>
-
-          {/* Others Also Look At Section */}
-          <Typography variant="h5">Others Also Look At</Typography>
-          <Grid container spacing={1} sx={{ marginY: 2, width: "110%" }}>
-            {othersAlsoLookProducts.map((prod) => (
-              <Grid item key={prod.id || prod._id || Math.random()}>
-                <ProductCard product={prod} />
-              </Grid>
+          </Box>
+          <Typography variant="h5" sx={{ marginTop: 4 }}>
+            Others also look at
+          </Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, marginTop: 2 }}>
+            {othersAlsoLookProducts.map((relatedProduct) => (
+              <ProductCard
+                key={relatedProduct.id || relatedProduct.code}
+                product={relatedProduct}
+              />
             ))}
-          </Grid>
+          </Box>
         </Grid>
       </Grid>
     </Box>
   );
-};
+}
 
 export default DetailPage;
