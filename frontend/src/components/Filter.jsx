@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -47,7 +47,8 @@ const Filter = ({
     "Doogee",
   ];
 
-  const handlePriceChange = (newValue) => {
+  // Initialize priceRange if it's undefined or null
+  const handlePriceChange = (event, newValue) => {
     setPriceRange(newValue);
   };
 
@@ -137,11 +138,13 @@ const Filter = ({
         value={priceRange}
         onChange={handlePriceChange}
         valueLabelDisplay="auto"
+        valueLabelFormat={(value) => `€${value}`}
         min={0}
         max={3000}
         sx={{ color: "white" }}
       />
       <Typography>{`€${priceRange[0]} - €${priceRange[1]}`}</Typography>
+
       <Typography sx={{ paddingTop: "20px" }}>Brand</Typography>
       <FormGroup>
         {brands.map((brand) => (
