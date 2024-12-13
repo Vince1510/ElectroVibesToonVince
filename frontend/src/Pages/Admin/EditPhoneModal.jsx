@@ -121,9 +121,10 @@ const EditPhoneModal = ({ open, onClose, phoneData, onPhoneUpdated }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>Edit Phone</DialogTitle>
-      <DialogContent>
-        <Typography variant="h6">Edit the details of the phone:</Typography>
+      <DialogTitle sx={{ backgroundColor: "#000", color: "#fff" }}>
+        Edit Phone
+      </DialogTitle>
+      <DialogContent sx={{ backgroundColor: "#000", color: "#fff" }}>
         <form>
           {fields.map(({ name, label, type = "text", defaultValue }) => (
             <TextField
@@ -135,13 +136,44 @@ const EditPhoneModal = ({ open, onClose, phoneData, onPhoneUpdated }) => {
               onChange={handleInputChange}
               fullWidth
               margin="normal"
+              sx={{
+                // Custom styling for the input fields
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#000",
+                  color: "#fff",
+                  fontFamily: "Arial",
+                  fontWeight: "bold",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#fff",
+                    borderWidth: "2px",
+                  },
+                },
+                "& .MuiInputLabel-outlined": {
+                  color: "#fff",
+                  fontWeight: "bold",
+                },
+              }}
             />
           ))}
         </form>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleSubmit}>Save</Button>
-        <Button onClick={onClose}>Cancel</Button>
+      <DialogActions sx={{ backgroundColor: "#000", color: "#fff" }}>
+        <Button
+          onClick={handleSubmit}
+          sx={{
+            color: "#fff",
+          }}
+        >
+          Save
+        </Button>
+        <Button
+          onClick={onClose}
+          sx={{
+            color: "#fff",
+          }}
+        >
+          Cancel
+        </Button>
       </DialogActions>
     </Dialog>
   );

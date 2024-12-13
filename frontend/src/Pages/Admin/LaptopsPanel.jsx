@@ -12,9 +12,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Box,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add"; // Add this import
 import axios from "axios";
 import EditLaptopModal from "./EditLaptopModal";
 import AddLaptopForm from "./AddLaptopForm"; // Import AddLaptopForm
@@ -71,7 +73,7 @@ const LaptopsPanel = () => {
   };
 
   const renderTable = (data) => (
-    <Table sx={{ mt: 2 }}>
+    <Table>
       <TableHead>
         <TableRow>
           {["_id", "Name", "Brand", "Price", "Actions"].map((column) => (
@@ -111,15 +113,29 @@ const LaptopsPanel = () => {
 
   return (
     <div>
-      <Typography variant="h6">Manage Laptops</Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleAddNewClick}
-        sx={{ mb: 2 }}
+      {/* Add Icon Button positioned at the top-right corner */}
+      <Box
+        sx={{ position: "relative", display: "inline-block", width: "100%" }}
       >
-        Add New Laptop
-      </Button>
+        <IconButton
+          onClick={handleAddNewClick}
+          color="primary"
+          sx={{
+            borderRadius: "50%",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            color: "#fff",
+            border: "1px solid",
+            borderImage: "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+          }}
+        >
+          <AddIcon sx={{ color: "white" }} />
+        </IconButton>
+      </Box>
+      <Typography variant="h6">Manage Laptops</Typography>
+
+      {/* Table rendering */}
       {laptops.length > 0 ? (
         renderTable(laptops)
       ) : (

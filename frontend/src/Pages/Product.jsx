@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Grid, Box } from "@mui/material";
+import {
+  Typography,
+  Grid,
+  Box,
+  Button,
+  Modal,
+  IconButton,
+} from "@mui/material";
 import ProductCard from "../components/ProductCard";
 import CompareList from "../components/CompareList";
 import FilterPanel from "../components/FilterPanel";
+import { useMediaQuery } from "@mui/material";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import CloseIcon from "@mui/icons-material/Close";
 
 function Product() {
   const [products, setProducts] = useState([]);
@@ -14,7 +24,11 @@ function Product() {
   const [sortOrder, setSortOrder] = useState("none");
 
   const [compareList, setCompareList] = useState([]);
+  const [openFilterModal, setOpenFilterModal] = useState(false);
   const navigate = useNavigate();
+
+  // Using useMediaQuery to check the screen size
+  const isLargeScreen = useMediaQuery("(min-width:1170px)");
 
   useEffect(() => {
     const fetchProductsAndGames = async () => {
@@ -126,19 +140,101 @@ function Product() {
 
   return (
     <Box display="flex" flexDirection={{ xs: "column", sm: "row" }}>
-      <Box sx={{ display: { xs: "block", sm: "block" } }}>
-        <FilterPanel
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          priceRange={priceRange}
-          setPriceRange={setPriceRange}
-          selectedBrands={selectedBrands}
-          setSelectedBrands={setSelectedBrands}
-          selectedSpecs={selectedSpecs}
-          setSelectedSpecs={setSelectedSpecs}
-          handleSortChange={handleSortChange}
-        />
-      </Box>
+      {/* For screens larger than 1170px, show FilterPanel to the right */}
+      {isLargeScreen && (
+        <Box sx={{ display: { xs: "none", sm: "block" }, width: "25%" }}>
+          <FilterPanel
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            selectedBrands={selectedBrands}
+            setSelectedBrands={setSelectedBrands}
+            selectedSpecs={selectedSpecs}
+            setSelectedSpecs={setSelectedSpecs}
+            handleSortChange={handleSortChange}
+          />
+        </Box>
+      )}
+
+      {/* For smaller screens, show a sticky left-side filter modal */}
+      {!isLargeScreen && (
+        <>
+          <Button
+            onClick={() => setOpenFilterModal(true)}
+            variant="contained"
+            sx={{
+              position: "absolute",
+
+              zIndex: 1000,
+              backgroundColor: "transparent",
+              borderRadius: "50%",
+              position: "absolute",
+              top: "90px",
+              right: "20px",
+              color: "#fff",
+              border: "1px solid",
+              borderImage:
+                "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+            }}
+          >
+            <FilterAltIcon sx={{ color: "white" }} />
+          </Button>
+
+          {/* Sticky Left-Side Filter Modal for smaller screens */}
+          <Modal
+            open={openFilterModal}
+            onClose={() => setOpenFilterModal(false)}
+            aria-labelledby="filter-modal-title"
+            aria-describedby="filter-modal-description"
+          >
+            <Box
+              sx={{
+                position: "fixed",
+                top: 0,
+                right: 0,
+                width: "300px",
+                height: "100%",
+                backgroundColor: "white",
+                zIndex: 1000,
+                overflowY: "auto",
+                boxShadow: 2,
+                backgroundColor: "#191919",
+              }}
+            >
+              <IconButton
+                onClick={() => setOpenFilterModal(false)}
+                sx={{
+                  position: "absolute",
+                  top: "20px",
+                  right: "20px",
+                  borderRadius: "50%",
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  color: "#fff",
+                  border: "1px solid",
+                  borderImage:
+                    "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <FilterPanel
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+                selectedBrands={selectedBrands}
+                setSelectedBrands={setSelectedBrands}
+                selectedSpecs={selectedSpecs}
+                setSelectedSpecs={setSelectedSpecs}
+                handleSortChange={handleSortChange}
+              />
+            </Box>
+          </Modal>
+        </>
+      )}
 
       <Box
         sx={{

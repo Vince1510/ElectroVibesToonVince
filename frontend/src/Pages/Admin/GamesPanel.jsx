@@ -20,6 +20,7 @@ import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditGameModal from "./EditGameModal"; // Import the EditGameModal
+import AddIcon from "@mui/icons-material/Add"; // Import the AddIcon
 
 const GamesPanel = () => {
   const [games, setGames] = useState([]);
@@ -113,13 +114,24 @@ const GamesPanel = () => {
   };
 
   return (
-    <Box>
-      <Typography variant="h6">Games Panel</Typography>
+    <Box sx={{ position: "relative" }}>
+      {/* Add Game Icon Button */}
+      <IconButton
+        onClick={handleClickOpenAdd}
+        sx={{
+          borderRadius: "50%",
+          position: "absolute",
+          top: 0,
+          right: 0,
+          color: "#fff",
+          border: "1px solid",
+          borderImage: "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+        }}
+      >
+        <AddIcon />
+      </IconButton>
 
-      {/* Button to open modal for adding a game */}
-      <Button variant="outlined" onClick={handleClickOpenAdd}>
-        Add New Game
-      </Button>
+      <Typography variant="h6">Games Panel</Typography>
 
       {/* Modal for adding a new game */}
       <Dialog

@@ -6,12 +6,13 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Button,
   Dialog,
   IconButton,
+  Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit"; // Import Edit icon
+import AddIcon from "@mui/icons-material/Add"; // Import Add icon
 import axios from "axios";
 import AddMiceForm from "./AddMiceForm";
 import EditMiceModal from "./EditMiceModal"; // Import the EditMiceModal
@@ -116,30 +117,45 @@ const MicePanel = () => {
 
   return (
     <div>
-      <Typography variant="h6">Manage Mice</Typography>
+      <Box sx={{ position: "relative" }}>
+        <Typography variant="h6">Manage Mice</Typography>
 
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        Add New Mouse
-      </Button>
+        {/* Plus Icon Button for adding new mouse */}
+        <IconButton
+          onClick={handleClickOpen}
+          color="primary"
+          sx={{
+            borderRadius: "50%",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            color: "#fff",
+            border: "1px solid",
+            borderImage: "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+          }}
+        >
+          <AddIcon sx={{ color: "white" }} />
+        </IconButton>
 
-      {/* Add Modal */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-        <AddMiceForm onAddMouse={handleAddMouse} />
-      </Dialog>
+        {/* Add Modal */}
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+          <AddMiceForm onAddMouse={handleAddMouse} />
+        </Dialog>
 
-      {/* Edit Modal */}
-      <EditMiceModal
-        mouse={selectedMouse}
-        open={editOpen}
-        onClose={handleEditClose}
-        onSave={handleSaveMouse}
-      />
+        {/* Edit Modal */}
+        <EditMiceModal
+          mouse={selectedMouse}
+          open={editOpen}
+          onClose={handleEditClose}
+          onSave={handleSaveMouse}
+        />
 
-      {mice.length > 0 ? (
-        renderTable(mice)
-      ) : (
-        <Typography>No mice available or loading...</Typography>
-      )}
+        {mice.length > 0 ? (
+          renderTable(mice)
+        ) : (
+          <Typography>No mice available or loading...</Typography>
+        )}
+      </Box>
     </div>
   );
 };
