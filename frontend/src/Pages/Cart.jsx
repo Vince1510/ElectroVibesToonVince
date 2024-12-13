@@ -12,14 +12,15 @@ import {
   Grid,
 } from "@mui/material";
 import { Add, Remove, Delete } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
-  const navigate = useNavigate();
 
   const postageCost = 10;
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
   const finalAmount = totalPrice + postageCost;
 
   if (cartItems.length === 0) {
@@ -74,71 +75,71 @@ function Cart() {
                     marginTop: 1,
                   }}
                 >
-              <IconButton
-                size="small"
-                onClick={() =>
-                  updateQuantity(
-                    item.id,
-                    item.color,
-                    item.model,
-                    Math.max(item.quantity - 1, 1)
-                  )
-                }
-                sx={{ color: "white" }}
-              >
-                <Remove />
-              </IconButton>
-              
-              <TextField
-                value={item.quantity}
-                size="small"
-                sx={{
-                  width: 70,
-                  "& input": {
-                    textAlign: "center",
-                    color: "white",      // Ensures the input text is white
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "white", // Normal border
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "white", // Hover border
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "white", // Focused border
-                    },
-                  },
-                }}
-                inputProps={{
-                  type: "number",
-                  min: 1,
-                }}
-                onChange={(e) =>
-                  updateQuantity(
-                    item.id,
-                    item.color,
-                    item.model,
-                    Math.max(Number(e.target.value), 1)
-                  )
-                }
-              />
-              
-              <IconButton
-                size="small"
-                onClick={() =>
-                  updateQuantity(
-                    item.id,
-                    item.color,
-                    item.model,
-                    item.quantity + 1
-                  )
-                }
-                sx={{ color: "white" }}
-              >
-                <Add />
-              </IconButton>              
-              </Box>
+                  <IconButton
+                    size="small"
+                    onClick={() =>
+                      updateQuantity(
+                        item.id,
+                        item.color,
+                        item.model,
+                        Math.max(item.quantity - 1, 1)
+                      )
+                    }
+                    sx={{ color: "white" }}
+                  >
+                    <Remove />
+                  </IconButton>
+
+                  <TextField
+                    value={item.quantity}
+                    size="small"
+                    sx={{
+                      width: 70,
+                      "& input": {
+                        textAlign: "center",
+                        color: "white", // Ensures the input text is white
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "white", // Normal border
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "white", // Hover border
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "white", // Focused border
+                        },
+                      },
+                    }}
+                    inputProps={{
+                      type: "number",
+                      min: 1,
+                    }}
+                    onChange={(e) =>
+                      updateQuantity(
+                        item.id,
+                        item.color,
+                        item.model,
+                        Math.max(Number(e.target.value), 1)
+                      )
+                    }
+                  />
+
+                  <IconButton
+                    size="small"
+                    onClick={() =>
+                      updateQuantity(
+                        item.id,
+                        item.color,
+                        item.model,
+                        item.quantity + 1
+                      )
+                    }
+                    sx={{ color: "white" }}
+                  >
+                    <Add />
+                  </IconButton>
+                </Box>
               </Box>
               <IconButton
                 onClick={() => removeFromCart(item.id, item.color, item.model)}
@@ -205,13 +206,22 @@ function Cart() {
             <Button
               variant="contained"
               fullWidth
-              sx={{ marginTop: 2, backgroundColor: "transparent", border: "white 1px solid" }}
-              onClick={() => navigate("/checkout")}
+              sx={{
+                marginTop: 2,
+                backgroundColor: "transparent",
+                border: "white 1px solid",
+              }}
+              onClick={() => alert("Purchase completed!")}
             >
               Buy
             </Button>
             <Box
-              sx={{ display: "flex", justifyContent: "center", marginTop: 2, gap: 2 }}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 2,
+                gap: 2,
+              }}
             >
               <CardMedia
                 component="img"
