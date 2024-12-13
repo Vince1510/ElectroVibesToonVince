@@ -47,10 +47,11 @@ const Filter = ({
     "Doogee",
   ];
 
-  // Initialize priceRange if it's undefined or null
   const handlePriceChange = (event, newValue) => {
-    setPriceRange(newValue);
-  };
+    if (Array.isArray(newValue) && newValue.every((val) => typeof val === "number")) {
+      setPriceRange(newValue);
+    }
+  };  
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
@@ -138,9 +139,9 @@ const Filter = ({
         value={priceRange}
         onChange={handlePriceChange}
         valueLabelDisplay="auto"
-        valueLabelFormat={(value) => `€${value}`}
+        valueLabelFormat={(value) => Number(value)}
         min={0}
-        max={3000}
+        max={4000}
         sx={{ color: "white" }}
       />
       <Typography>{`€${priceRange[0]} - €${priceRange[1]}`}</Typography>
