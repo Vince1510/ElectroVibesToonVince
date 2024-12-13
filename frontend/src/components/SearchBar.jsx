@@ -6,6 +6,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListItemIcon,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
@@ -177,6 +178,21 @@ const SearchBar = () => {
                 button
                 onClick={() => handleItemClick(item.category, item._id)}
               >
+                <ListItemIcon>
+                  {item.imageCard && (
+                    <img
+                      src={item.imageCard}
+                      alt={item.name}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        objectFit: "cover",
+                        borderRadius: "5px",
+                        marginRight: "10px",
+                      }}
+                    />
+                  )}
+                </ListItemIcon>
                 <ListItemText primary={item.name} />
               </ListItem>
             ))}

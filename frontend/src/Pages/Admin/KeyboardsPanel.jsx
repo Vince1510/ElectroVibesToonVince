@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import {
   Typography,
   Table,
@@ -6,15 +7,17 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   IconButton,
+  Button,
+  Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add"; // Import the Add icon
 import axios from "axios";
 import AddKeyboardForm from "./AddKeyboardForm";
 import EditKeyboardModal from "./EditKeyboardModal";
@@ -124,12 +127,27 @@ const KeyboardsPanel = () => {
 
   return (
     <div>
+      {/* Add Icon Button positioned at the top-right corner */}
+      <Box
+        sx={{ position: "relative", display: "inline-block", width: "100%" }}
+      >
+        <IconButton
+          onClick={handleAddOpen}
+          color="primary"
+          sx={{
+            borderRadius: "50%",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            color: "#fff",
+            border: "1px solid",
+            borderImage: "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+          }}
+        >
+          <AddIcon sx={{ color: "white" }} />
+        </IconButton>
+      </Box>
       <Typography variant="h6">Manage Keyboards</Typography>
-
-      {/* Button to open modal for adding a keyboard */}
-      <Button variant="contained" color="primary" onClick={handleAddOpen}>
-        Add New Keyboard
-      </Button>
 
       {/* Modal for adding a new keyboard */}
       <Dialog open={openAdd} onClose={handleAddClose} fullWidth maxWidth="md">

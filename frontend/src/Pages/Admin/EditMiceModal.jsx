@@ -66,9 +66,17 @@ const EditMiceModal = ({ mouse, open, onClose, onSave }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>Edit Mouse</DialogTitle>
-      <DialogContent>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="md"
+      sx={{ backgroundColor: "#000", color: "#fff" }}
+    >
+      <DialogTitle sx={{ backgroundColor: "#000", color: "#fff" }}>
+        Edit Mouse
+      </DialogTitle>
+      <DialogContent sx={{ backgroundColor: "#000", color: "#fff" }}>
         {fields.map((field) => (
           <TextField
             key={field}
@@ -78,12 +86,39 @@ const EditMiceModal = ({ mouse, open, onClose, onSave }) => {
             value={editedMouse[field] || ""}
             onChange={handleChange}
             fullWidth
+            sx={{
+              // Custom styling for the input fields
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#000",
+                color: "#fff",
+                fontFamily: "Arial",
+                fontWeight: "bold",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#fff",
+                  borderWidth: "2px",
+                },
+              },
+              "& .MuiInputLabel-outlined": {
+                color: "#fff",
+                fontWeight: "bold",
+              },
+            }}
           />
         ))}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSave}>Save</Button>
+      <DialogActions sx={{ backgroundColor: "#000", color: "#fff" }}>
+        <Button
+          onClick={onClose}
+          sx={{ backgroundColor: "#000", color: "#fff" }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSave}
+          sx={{ backgroundColor: "#000", color: "#fff" }}
+        >
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );

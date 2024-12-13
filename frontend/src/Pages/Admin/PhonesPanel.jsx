@@ -7,15 +7,17 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Button,
   IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  Box,
+  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add"; // Import the Plus Icon
 import axios from "axios";
 import AddPhoneForm from "./AddPhoneForm";
 import EditPhoneModal from "./EditPhoneModal"; // Import the EditPhoneModal component
@@ -101,56 +103,68 @@ const PhonesPanel = () => {
 
   return (
     <div>
-      <Typography variant="h6">Manage Phones</Typography>
-
-      {/* Button to open modal for adding a phone */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setOpenAddModal(true)}
-      >
-        Add New Phone
-      </Button>
-
-      {/* Modal for adding a new phone */}
-      <Dialog
-        open={openAddModal}
-        onClose={() => setOpenAddModal(false)}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
-          Add a New Phone
-        </DialogTitle>
-        <DialogContent sx={{ backgroundColor: "#000" }}>
-          <AddPhoneForm onPhoneAdded={fetchPhones} />
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: "#000" }}>
-          <Button
-            onClick={() => setOpenAddModal(false)}
-            sx={{ color: "white" }}
+      <Box sx={{ position: "relative" }}>
+        {/* Plus IconButton to open the add phone modal, placed at the top right */}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          <IconButton
+            onClick={() => setOpenAddModal(true)}
+            color="primary"
+            sx={{
+              borderRadius: "50%",
+              position: "absolute",
+              top: 0,
+              right: 0,
+              color: "#fff",
+              border: "1px solid",
+              borderImage:
+                "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+            }}
           >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <AddIcon sx={{ color: "white" }} />
+          </IconButton>
+        </Box>
+        <Typography variant="h6">Manage Phones</Typography>
 
-      {/* Modal for editing a phone */}
-      {selectedPhone && (
-        <EditPhoneModal
-          open={openEditModal}
-          onClose={handleCloseEditModal}
-          phoneData={selectedPhone}
-          onPhoneUpdated={fetchPhones}
-        />
-      )}
+        {/* Modal for adding a new phone */}
+        <Dialog
+          open={openAddModal}
+          onClose={() => setOpenAddModal(false)}
+          fullWidth
+          maxWidth="md"
+        >
+          <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
+            Add a New Phone
+          </DialogTitle>
+          <DialogContent sx={{ backgroundColor: "#000" }}>
+            <AddPhoneForm onPhoneAdded={fetchPhones} />
+          </DialogContent>
+          <DialogActions sx={{ backgroundColor: "#000" }}>
+            <Button
+              onClick={() => setOpenAddModal(false)}
+              sx={{ color: "white" }}
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      {/* Displaying phones in a table */}
-      {phones.length > 0 ? (
-        renderTable(phones)
-      ) : (
-        <Typography>No phones available or loading...</Typography>
-      )}
+        {/* Modal for editing a phone */}
+        {selectedPhone && (
+          <EditPhoneModal
+            open={openEditModal}
+            onClose={handleCloseEditModal}
+            phoneData={selectedPhone}
+            onPhoneUpdated={fetchPhones}
+          />
+        )}
+
+        {/* Displaying phones in a table */}
+        {phones.length > 0 ? (
+          renderTable(phones)
+        ) : (
+          <Typography>No phones available or loading...</Typography>
+        )}
+      </Box>
     </div>
   );
 };

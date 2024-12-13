@@ -6,18 +6,20 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   IconButton,
+  Button,
+  Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit"; // Make sure this import is added
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add"; // Import the Add Icon
 import axios from "axios";
 import AddMonitorForm from "./AddMonitorForm";
-import EditMonitorModal from "./EditMonitorModal"; // Assuming you have this modal
+import EditMonitorModal from "./EditMonitorModal";
 
 const MonitorsPanel = () => {
   const [monitors, setMonitors] = useState([]);
@@ -104,54 +106,64 @@ const MonitorsPanel = () => {
 
   return (
     <div>
-      <Typography variant="h6">Manage Monitors</Typography>
+      <Box sx={{ position: "relative" }}>
+        <Typography variant="h6">Manage Monitors</Typography>
 
-      {/* Button to open modal for adding a monitor */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setOpenAddModal(true)}
-      >
-        Add New Monitor
-      </Button>
+        {/* Plus Icon Button for adding new monitor */}
+        <IconButton
+          onClick={() => setOpenAddModal(true)}
+          color="primary"
+          sx={{
+            borderRadius: "50%",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            color: "#fff",
+            border: "1px solid",
+            borderImage: "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+          }}
+        >
+          <AddIcon sx={{ color: "white" }} />
+        </IconButton>
 
-      {/* Add Monitor Modal */}
-      <Dialog
-        open={openAddModal}
-        onClose={handleCloseModal}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
-          Add a New Monitor
-        </DialogTitle>
-        <DialogContent sx={{ backgroundColor: "#000" }}>
-          <AddMonitorForm />
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: "#000" }}>
-          <Button
-            onClick={handleCloseModal}
-            color="secondary"
-            sx={{ backgroundColor: "#000", color: "#fff" }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {/* Add Monitor Modal */}
+        <Dialog
+          open={openAddModal}
+          onClose={handleCloseModal}
+          fullWidth
+          maxWidth="md"
+        >
+          <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
+            Add a New Monitor
+          </DialogTitle>
+          <DialogContent sx={{ backgroundColor: "#000" }}>
+            <AddMonitorForm />
+          </DialogContent>
+          <DialogActions sx={{ backgroundColor: "#000" }}>
+            <Button
+              onClick={handleCloseModal}
+              color="secondary"
+              sx={{ backgroundColor: "#000", color: "#fff" }}
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      {/* Edit Monitor Modal */}
-      <EditMonitorModal
-        open={openEditModal}
-        onClose={handleCloseModal}
-        monitorId={selectedMonitorId}
-      />
+        {/* Edit Monitor Modal */}
+        <EditMonitorModal
+          open={openEditModal}
+          onClose={handleCloseModal}
+          monitorId={selectedMonitorId}
+        />
 
-      {/* Displaying monitors in a table */}
-      {monitors.length > 0 ? (
-        renderTable(monitors)
-      ) : (
-        <Typography>No monitors available or loading...</Typography>
-      )}
+        {/* Displaying monitors in a table */}
+        {monitors.length > 0 ? (
+          renderTable(monitors)
+        ) : (
+          <Typography>No monitors available or loading...</Typography>
+        )}
+      </Box>
     </div>
   );
 };
