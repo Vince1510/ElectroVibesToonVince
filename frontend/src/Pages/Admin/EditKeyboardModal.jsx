@@ -40,7 +40,7 @@ const EditKeyboardModal = ({ open, handleClose, keyboardId, onSave }) => {
         `http://localhost:4000/api/keyboards/${keyboardId}`,
         keyboardData
       );
-      onSave(); // Trigger callback to refresh the keyboard list
+      onSave();
       handleClose();
     } catch (error) {
       console.error("Error updating keyboard:", error);

@@ -22,7 +22,6 @@ const EditLaptopModal = ({
     description: "",
     brand: "",
     price: "",
-    // Add all other fields you need
   });
 
   useEffect(() => {
@@ -41,7 +40,6 @@ const EditLaptopModal = ({
         description: "",
         brand: "",
         price: "",
-        // Reset other fields
       });
     }
   }, [laptopId, isAdding]);
@@ -65,8 +63,8 @@ const EditLaptopModal = ({
           formData
         );
       }
-      onLaptopUpdated(); // Refresh laptop list after submission
-      handleClose(); // Close the modal
+      onLaptopUpdated();
+      handleClose();
     } catch (error) {
       console.error("Error saving laptop:", error);
     }

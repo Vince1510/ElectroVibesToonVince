@@ -150,33 +150,28 @@ function Product() {
         <Typography variant="h4" gutterBottom sx={{ color: "white" }}>
           Products Page
         </Typography>
-        <Box
-          display="flex"
-          flexWrap="wrap"
-          justifyContent="center"
-          gap={3} // Controls spacing between cards
-        >
+        <Box display="flex" flexWrap="wrap" justifyContent="center" gap={3}>
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <Box
-              key={product._id}
-              sx={{
-                flex: "1 1 calc(25% - 16px)",
-                maxWidth: "calc(25% - 16px)",
-                minWidth: "250px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <ProductCard product={product} onCompare={handleCompare} />
-            </Box>
-          ))
-        ) : (
-          <Typography variant="h6" sx={{ color: "white", marginTop: 2 }}>
-          No products found.
-        </Typography>
-      )}
-             </Box>
+                key={product._id}
+                sx={{
+                  flex: "1 1 calc(25% - 16px)",
+                  maxWidth: "calc(25% - 16px)",
+                  minWidth: "250px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <ProductCard product={product} onCompare={handleCompare} />
+              </Box>
+            ))
+          ) : (
+            <Typography variant="h6" sx={{ color: "white", marginTop: 2 }}>
+              No products found.
+            </Typography>
+          )}
+        </Box>
       </Box>
 
       {compareList.length > 0 && (

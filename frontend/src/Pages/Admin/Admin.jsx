@@ -38,7 +38,7 @@ const Admin = () => {
     <div>
       <AppBar
         position="static"
-        sx={{ backgroundColor: "transparent", boxShadow: "none" }} // Set transparency
+        sx={{ backgroundColor: "transparent", boxShadow: "none" }}
       >
         <Tabs
           value={activeTab}
@@ -49,7 +49,7 @@ const Admin = () => {
             sx: {
               backgroundImage:
                 "linear-gradient(180deg, #E70002 0%, #FCD201 100%)",
-              height: "2px", // Height of the underline
+              height: "2px",
             },
           }}
           sx={{

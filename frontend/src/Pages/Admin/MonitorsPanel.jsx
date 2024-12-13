@@ -16,16 +16,16 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add"; // Import the Add Icon
+import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import AddMonitorForm from "./AddMonitorForm";
 import EditMonitorModal from "./EditMonitorModal";
 
 const MonitorsPanel = () => {
   const [monitors, setMonitors] = useState([]);
-  const [openAddModal, setOpenAddModal] = useState(false); // State for Add Monitor Modal
-  const [openEditModal, setOpenEditModal] = useState(false); // State for Edit Monitor Modal
-  const [selectedMonitorId, setSelectedMonitorId] = useState(null); // To hold selected monitor for editing
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectedMonitorId, setSelectedMonitorId] = useState(null);
 
   useEffect(() => {
     const fetchMonitors = async () => {
@@ -52,7 +52,7 @@ const MonitorsPanel = () => {
 
   // Open Edit Modal
   const handleEditClick = (id) => {
-    setSelectedMonitorId(id); // Set the monitor id to edit
+    setSelectedMonitorId(id);
     setOpenEditModal(true);
   };
 
@@ -107,7 +107,9 @@ const MonitorsPanel = () => {
   return (
     <div>
       <Box sx={{ position: "relative" }}>
-        <Typography variant="h6" component="div">Manage Monitors</Typography>
+        <Typography variant="h6" component="div">
+          Manage Monitors
+        </Typography>
 
         {/* Plus Icon Button for adding new monitor */}
         <IconButton
@@ -161,7 +163,9 @@ const MonitorsPanel = () => {
         {monitors.length > 0 ? (
           renderTable(monitors)
         ) : (
-          <Typography component="div">No monitors available or loading...</Typography>
+          <Typography component="div">
+            No monitors available or loading...
+          </Typography>
         )}
       </Box>
     </div>

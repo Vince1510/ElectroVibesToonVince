@@ -194,13 +194,13 @@ const textFieldStyles = {
   },
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
-      borderColor: "white", // Default border
+      borderColor: "white",
     },
     "&:hover fieldset": {
-      borderColor: "white", // Hover border
+      borderColor: "white",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "white", // Focused border
+      borderColor: "white",
     },
   },
 };

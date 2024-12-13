@@ -63,7 +63,7 @@ const AddLaptopForm = ({ onLaptopAdded }) => {
         formData
       );
       onLaptopAdded(response.data);
-      setFormData(initialState); // Clear form after submission
+      setFormData(initialState);
     } catch (error) {
       console.error("Error adding laptop:", error);
     }

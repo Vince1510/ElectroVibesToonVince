@@ -20,7 +20,6 @@ const FadeInAnimation = ({ onComplete }) => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     mount.appendChild(renderer.domElement);
 
-    // Create a simple plane that will fade in
     const geometry = new THREE.PlaneGeometry(10, 10);
     const material = new THREE.MeshBasicMaterial({
       color: 0x00ff00,

@@ -72,14 +72,14 @@ const AddMiceForm = ({ onAddMouse }) => {
         "http://localhost:4000/api/mice/",
         formData
       );
-      onAddMouse(response.data); // Add the new mouse to the list
-      setFormData(initialState); // Reset the form
+      onAddMouse(response.data);
+      setFormData(initialState);
     } catch (error) {
       console.error("Error adding mouse:", error);
     }
   };
 
-  const fieldNames = Object.keys(initialState); // Get all field names
+  const fieldNames = Object.keys(initialState);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -90,7 +90,7 @@ const AddMiceForm = ({ onAddMouse }) => {
         {fieldNames.map((field) => (
           <Grid item xs={12} sm={6} key={field}>
             <TextField
-              label={field.replace(/([A-Z])/g, " $1").toLowerCase()} // Format the label
+              label={field.replace(/([A-Z])/g, " $1").toLowerCase()}
               variant="outlined"
               fullWidth
               name={field}

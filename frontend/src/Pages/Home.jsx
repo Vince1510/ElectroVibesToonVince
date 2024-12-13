@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Box } from "@mui/material";
 import CardSlider from "../components/CardSlider.jsx";
-import '../app.css'
+import "../app.css";
 
 import VideogameAssetIcon from "@mui/icons-material/VideogameAsset";
 import KeyboardIcon from "@mui/icons-material/Keyboard";
@@ -17,9 +17,9 @@ const Home = () => {
       <Box
         display="flex"
         justifyContent={{
-          xs: "center",   // Center on small devices
-          sm: "space-evenly", // Spread out on tablets
-          md: "space-between", // Spread out more on laptops
+          xs: "center",
+          sm: "space-evenly",
+          md: "space-between",
         }}
         flexWrap="wrap"
         gap={2}
@@ -46,7 +46,7 @@ const Home = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: 'center',
+              justifyContent: "center",
               textTransform: "none",
               color: "white",
               width: "80px",

@@ -92,7 +92,7 @@ const SearchBar = () => {
             item.name.toLowerCase().includes(searchQuery.toLowerCase())
           );
 
-          setFilteredResults(results); // Update state with filtered results
+          setFilteredResults(results);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -100,12 +100,12 @@ const SearchBar = () => {
 
       fetchData();
     } else {
-      setFilteredResults([]); // Clear results if the search query is empty
+      setFilteredResults([]);
     }
   }, [searchQuery]);
 
   const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value); // Update search query on change
+    setSearchQuery(event.target.value);
   };
 
   const handleItemClick = (category, id) => {

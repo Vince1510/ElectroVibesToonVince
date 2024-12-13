@@ -11,17 +11,17 @@ import {
   Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit"; // Import Edit icon
-import AddIcon from "@mui/icons-material/Add"; // Import Add icon
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import AddMiceForm from "./AddMiceForm";
-import EditMiceModal from "./EditMiceModal"; // Import the EditMiceModal
+import EditMiceModal from "./EditMiceModal";
 
 const MicePanel = () => {
   const [mice, setMice] = useState([]);
-  const [open, setOpen] = useState(false); // State to control add modal visibility
-  const [editOpen, setEditOpen] = useState(false); // State to control edit modal visibility
-  const [selectedMouse, setSelectedMouse] = useState(null); // Store the mouse being edited
+  const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedMouse, setSelectedMouse] = useState(null);
 
   // Fetch mice from the backend API
   useEffect(() => {
@@ -118,7 +118,9 @@ const MicePanel = () => {
   return (
     <div>
       <Box sx={{ position: "relative" }}>
-        <Typography variant="h6" component="div">Manage Mice</Typography>
+        <Typography variant="h6" component="div">
+          Manage Mice
+        </Typography>
 
         {/* Plus Icon Button for adding new mouse */}
         <IconButton
@@ -153,7 +155,9 @@ const MicePanel = () => {
         {mice.length > 0 ? (
           renderTable(mice)
         ) : (
-          <Typography component="div">No mice available or loading...</Typography>
+          <Typography component="div">
+            No mice available or loading...
+          </Typography>
         )}
       </Box>
     </div>

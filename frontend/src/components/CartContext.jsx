@@ -12,7 +12,6 @@ export const CartProvider = ({ children }) => {
   // Add to Cart
   const addToCart = (newProduct) => {
     setCartItems((prevCartItems) => {
-      // Check if product with same id, color, and model exists
       const existingItem = prevCartItems.find(
         (item) =>
           item.id === newProduct.id &&
@@ -51,8 +50,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = (id, color, model) => {
     setCartItems((prevCartItems) =>
       prevCartItems.filter(
-        (item) =>
-          item.id !== id || item.color !== color || item.model !== model
+        (item) => item.id !== id || item.color !== color || item.model !== model
       )
     );
   };

@@ -13,7 +13,7 @@ const EditMiceModal = ({ mouse, open, onClose, onSave }) => {
 
   useEffect(() => {
     if (mouse) {
-      setEditedMouse(mouse); // Initialize with the selected mouse's data
+      setEditedMouse(mouse);
     }
   }, [mouse]);
 
@@ -61,7 +61,7 @@ const EditMiceModal = ({ mouse, open, onClose, onSave }) => {
   ];
 
   const handleSave = () => {
-    onSave(editedMouse); // Save changes
+    onSave(editedMouse);
     onClose();
   };
 

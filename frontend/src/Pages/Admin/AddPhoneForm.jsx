@@ -8,7 +8,7 @@ const AddPhoneForm = ({ onPhoneAdded }) => {
     code: "",
     description: "",
     brand: "",
-    category: "Phone", // default value
+    category: "Phone",
     price: "",
     dealPrice: "",
     imageCard: "",
@@ -33,7 +33,7 @@ const AddPhoneForm = ({ onPhoneAdded }) => {
     batteryCapacity: "",
     chargingSpeed: "",
     wirelessCharging: "",
-    simType: "Nano-SIM", // default value
+    simType: "Nano-SIM",
     network: "",
     waterproof: "",
     fingerprintSensor: "",

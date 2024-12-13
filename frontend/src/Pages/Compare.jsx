@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Typography, Box, Grid, Card, CardContent, Button } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Button,
+} from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import PhoneDetails from "../components/PhoneDetails";
 import MouseDetails from "../components/MouseDetails";
@@ -13,7 +20,7 @@ const ComparePage = () => {
   const location = useLocation();
   const { products } = location.state || { products: [] }; // Safely retrieve products
   const [showFullDescriptions, setShowFullDescriptions] = useState(
-    Array(products.length).fill(false) // Initialize state for each product
+    Array(products.length).fill(false)
   );
 
   const toggleDescription = (index) => {
@@ -54,7 +61,9 @@ const ComparePage = () => {
         <Grid container spacing={2}>
           {products.map((product, index) => (
             <Grid item xs={12} sm={6} md={4} key={product._id}>
-              <Card style={{ backgroundColor: "transparent", color: "#ffffff" }}>
+              <Card
+                style={{ backgroundColor: "transparent", color: "#ffffff" }}
+              >
                 {/* Carousel for multiple images */}
                 <Carousel
                   indicators={false}
@@ -67,14 +76,22 @@ const ComparePage = () => {
                         key={idx}
                         src={image}
                         alt={`Product ${idx + 1}`}
-                        style={{ objectFit: "contain", height: "200px", width: "100%" }}
+                        style={{
+                          objectFit: "contain",
+                          height: "200px",
+                          width: "100%",
+                        }}
                       />
                     ))
                   ) : (
                     <img
                       src={product.imageOverview || ""}
                       alt="Product"
-                      style={{ objectFit: "contain", height: "200px", width: "100%" }}
+                      style={{
+                        objectFit: "contain",
+                        height: "200px",
+                        width: "100%",
+                      }}
                     />
                   )}
                 </Carousel>
@@ -83,7 +100,12 @@ const ComparePage = () => {
                     {product.name}
                   </Typography>
                   {product.largeDescription
-                    .slice(0, showFullDescriptions[index] ? product.largeDescription.length : 1)
+                    .slice(
+                      0,
+                      showFullDescriptions[index]
+                        ? product.largeDescription.length
+                        : 1
+                    )
                     .map((description, idx) => (
                       <Typography
                         key={idx}
@@ -98,7 +120,12 @@ const ComparePage = () => {
                   <Button
                     variant="outlined"
                     onClick={() => toggleDescription(index)}
-                    sx={{ color: "#ffffff", borderColor: "#ffffff", textAlign: "center", width: 150 }}
+                    sx={{
+                      color: "#ffffff",
+                      borderColor: "#ffffff",
+                      textAlign: "center",
+                      width: 150,
+                    }}
                   >
                     {showFullDescriptions[index] ? "Show Less" : "Show More"}
                   </Button>
