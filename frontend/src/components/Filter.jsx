@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Typography,
@@ -12,13 +12,7 @@ import {
   Checkbox,
   RadioGroup,
   Radio,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 
 const Filter = ({
   selectedCategory,
@@ -30,29 +24,30 @@ const Filter = ({
   setSelectedSpecs,
   handleSortChange,
 }) => {
-  const [open, setOpen] = useState(false);
-
   const categories = [
     "All",
-    "Laptops",
-    "Monitors",
+    "Laptop",
+    "Monitor",
     "Games",
-    "Mice",
-    "Phones",
-    "Keyboards",
+    "Mouse",
+    "Phone",
+    "Keyboard",
+    "Headphones",
   ];
-
   const brands = [
     "Apple",
     "Samsung",
     "Logitech",
+    "Asus",
     "Corsair",
-    "Rockstar Games",
-    "Warner Bros. Games",
-    "LG",
+    "Dell",
+    "Google",
+    "Sony",
+    "OnePlus",
+    "Doogee",
   ];
 
-  const handlePriceChange = (event, newValue) => {
+  const handlePriceChange = (newValue) => {
     setPriceRange(newValue);
   };
 
@@ -70,17 +65,23 @@ const Filter = ({
     }
   };
 
-  const FilterContent = () => (
+  return (
     <Box
       sx={{
-        width: { md: "300px" },
+        width: 300,
         padding: 2,
         backgroundColor: "#191919",
         color: "white",
       }}
     >
       <Typography variant="h6">Filter</Typography>
-      <FormControl fullWidth variant="outlined" margin="normal">
+
+      <FormControl
+        fullWidth
+        variant="outlined"
+        margin="normal"
+        sx={{ color: "white" }}
+      >
         <InputLabel sx={{ color: "white" }}>Category</InputLabel>
         <Select
           value={selectedCategory}
@@ -104,20 +105,31 @@ const Filter = ({
         onChange={(e) => handleSortChange(e.target.value)}
         sx={{ color: "white" }}
       >
-        {[
-          { value: "none", label: "None" },
-          { value: "lowToHigh", label: "Price: Low to High" },
-          { value: "highToLow", label: "Price: High to Low" },
-          { value: "aToZ", label: "Name: A to Z" },
-          { value: "zToA", label: "Name: Z to A" },
-        ].map(({ value, label }) => (
-          <FormControlLabel
-            key={value}
-            value={value}
-            control={<Radio sx={{ color: "white" }} />}
-            label={label}
-          />
-        ))}
+        <FormControlLabel
+          value="none"
+          control={<Radio sx={{ color: "white" }} />}
+          label="None"
+        />
+        <FormControlLabel
+          value="lowToHigh"
+          control={<Radio sx={{ color: "white" }} />}
+          label="Price: Low to High"
+        />
+        <FormControlLabel
+          value="highToLow"
+          control={<Radio sx={{ color: "white" }} />}
+          label="Price: High to Low"
+        />
+        <FormControlLabel
+          value="aToZ"
+          control={<Radio sx={{ color: "white" }} />}
+          label="Name: A to Z"
+        />
+        <FormControlLabel
+          value="zToA"
+          control={<Radio sx={{ color: "white" }} />}
+          label="Name: Z to A"
+        />
       </RadioGroup>
 
       <Typography sx={{ paddingTop: "20px" }}>Price</Typography>
@@ -126,11 +138,10 @@ const Filter = ({
         onChange={handlePriceChange}
         valueLabelDisplay="auto"
         min={0}
-        max={4000}
+        max={3000}
         sx={{ color: "white" }}
       />
-      <Typography>{`${priceRange[0]} - ${priceRange[1]}`}</Typography>
-
+      <Typography>{`€${priceRange[0]} - €${priceRange[1]}`}</Typography>
       <Typography sx={{ paddingTop: "20px" }}>Brand</Typography>
       <FormGroup>
         {brands.map((brand) => (
@@ -148,43 +159,6 @@ const Filter = ({
           />
         ))}
       </FormGroup>
-    </Box>
-  );
-
-  return (
-    <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 2 }}>
-      <Button
-        variant="text"
-        onClick={() => setOpen(true)}
-        sx={{ 
-          display: { xs: "block", md: "none" }, 
-          border: "1px solid white", 
-          color: "white", 
-          marginBottom: 2 
-        }}
-      >
-        Filter
-      </Button>
-
-      <Box sx={{ display: { xs: "none", md: "block" } }}>
-        <FilterContent />
-      </Box>
-
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
-        <DialogTitle sx={{ backgroundColor: "#191919", color: "white" }}>
-          Filter
-          <IconButton
-            aria-label="close"
-            onClick={() => setOpen(false)}
-            sx={{ position: "absolute", right: 8, top: 8, color: "white" }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent sx={{ backgroundColor: "#191919", color: "white" }}>
-          <FilterContent />
-        </DialogContent>
-      </Dialog>
     </Box>
   );
 };
