@@ -98,9 +98,6 @@ function DetailPage() {
         productData.othersAlsoLookAt || []
       );
 
-      console.log("Often Bought With Raw Data:", oftenBought);
-      console.log("Others Also Look At Raw Data:", othersLook);
-
       const [oftenBoughtDetails, othersLookDetails] = await Promise.all([
         fetchFullProductDetails(oftenBought),
         fetchFullProductDetails(othersLook),

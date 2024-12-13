@@ -80,7 +80,6 @@ const AddGameForm = () => {
         "http://localhost:4000/api/games",
         formData
       );
-      console.log("Game added:", response.data);
       setFormData({
         name: "",
         description: "",
