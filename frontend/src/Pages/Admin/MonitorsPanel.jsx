@@ -107,7 +107,7 @@ const MonitorsPanel = () => {
   return (
     <div>
       <Box sx={{ position: "relative" }}>
-        <Typography variant="h6">Manage Monitors</Typography>
+        <Typography variant="h6" component="div">Manage Monitors</Typography>
 
         {/* Plus Icon Button for adding new monitor */}
         <IconButton
@@ -161,7 +161,7 @@ const MonitorsPanel = () => {
         {monitors.length > 0 ? (
           renderTable(monitors)
         ) : (
-          <Typography>No monitors available or loading...</Typography>
+          <Typography component="div">No monitors available or loading...</Typography>
         )}
       </Box>
     </div>

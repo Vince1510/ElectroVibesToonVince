@@ -1,4 +1,3 @@
-// PhonesPanel.jsx
 import React, { useState, useEffect } from "react";
 import {
   Typography,
@@ -17,10 +16,10 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add"; // Import the Plus Icon
+import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import AddPhoneForm from "./AddPhoneForm";
-import EditPhoneModal from "./EditPhoneModal"; // Import the EditPhoneModal component
+import EditPhoneModal from "./EditPhoneModal";
 
 const PhonesPanel = () => {
   const [phones, setPhones] = useState([]);
@@ -60,55 +59,53 @@ const PhonesPanel = () => {
   };
 
   const renderTable = (data) => (
-    <Table sx={{ mt: 2 }}>
-      <TableHead>
-        <TableRow>
-          {["_id", "Name", "Brand", "Price", "Actions"].map((column) => (
-            <TableCell key={column} sx={{ color: "white" }}>
-              {column}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {data.map((phone) => (
-          <TableRow key={phone._id}>
-            {["_id", "name", "brand", "price"].map((column) => (
+    <Box sx={{ mt: 2 }}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            {['ID', 'Name', 'Brand', 'Price', 'Actions'].map((column) => (
               <TableCell key={column} sx={{ color: "white" }}>
-                {phone[column.toLowerCase()] || phone._id}
+                {column}
               </TableCell>
             ))}
-            <TableCell>
-              {/* Edit Icon Button */}
-              <IconButton
-                onClick={() => handleOpenEditModal(phone)}
-                color="primary"
-              >
-                <EditIcon sx={{ color: "white" }} />
-              </IconButton>
-
-              {/* Delete Icon Button */}
-              <IconButton
-                onClick={() => handleDelete(phone._id)}
-                color="secondary"
-              >
-                <DeleteIcon sx={{ color: "white" }} />
-              </IconButton>
-            </TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {data.map((phone) => (
+            <TableRow key={phone._id}>
+              {["_id", "name", "brand", "price"].map((column) => (
+                <TableCell key={column} sx={{ color: "white" }}>
+                  {phone[column.toLowerCase()] || phone._id}
+                </TableCell>
+              ))}
+              <TableCell>
+                <IconButton
+                  onClick={() => handleOpenEditModal(phone)}
+                  color="primary"
+                >
+                  <EditIcon sx={{ color: "white" }} />
+                </IconButton>
+
+                <IconButton
+                  onClick={() => handleDelete(phone._id)}
+                  color="secondary"
+                >
+                  <DeleteIcon sx={{ color: "white" }} />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Box>
   );
 
   return (
     <div>
       <Box sx={{ position: "relative" }}>
-        {/* Plus IconButton to open the add phone modal, placed at the top right */}
         <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
           <IconButton
             onClick={() => setOpenAddModal(true)}
-            color="primary"
             sx={{
               borderRadius: "50%",
               position: "absolute",
@@ -123,9 +120,10 @@ const PhonesPanel = () => {
             <AddIcon sx={{ color: "white" }} />
           </IconButton>
         </Box>
-        <Typography variant="h6">Manage Phones</Typography>
+        <Typography variant="h6" component="div">
+          Manage Phones
+        </Typography>
 
-        {/* Modal for adding a new phone */}
         <Dialog
           open={openAddModal}
           onClose={() => setOpenAddModal(false)}
@@ -148,7 +146,6 @@ const PhonesPanel = () => {
           </DialogActions>
         </Dialog>
 
-        {/* Modal for editing a phone */}
         {selectedPhone && (
           <EditPhoneModal
             open={openEditModal}
@@ -158,11 +155,12 @@ const PhonesPanel = () => {
           />
         )}
 
-        {/* Displaying phones in a table */}
         {phones.length > 0 ? (
           renderTable(phones)
         ) : (
-          <Typography>No phones available or loading...</Typography>
+          <Typography component="div" sx={{ mt: 2 }}>
+            No phones available or loading...
+          </Typography>
         )}
       </Box>
     </div>

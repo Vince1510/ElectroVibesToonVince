@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useCart } from "../components/CartContext";
 import { useLocation, useParams } from "react-router-dom";
 import {
   Typography,
@@ -34,14 +35,13 @@ function DetailPage() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedModel, setSelectedModel] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
+  const { addToCart } = useCart();
 
-  // Helper function to transform related products into valid arrays
   const transformRelatedProducts = (relatedProducts) => {
     if (!Array.isArray(relatedProducts)) {
       console.error("Invalid relatedProducts format:", relatedProducts);
       return [];
     }
-  
     return relatedProducts.map((item) => {
       // Ensure item is an object and contains keys "0" and "1"
       if (item && item[0] && item[1]) {
@@ -67,6 +67,7 @@ function DetailPage() {
             });
         })
       );
+
       return products.filter(Boolean);
     } catch (err) {
       console.error("Error fetching related products:", err);
@@ -111,70 +112,88 @@ function DetailPage() {
           `http://localhost:4000/api/${category.toLowerCase()}/${productId}`
         );
         if (!productResponse.ok) throw new Error("Failed to fetch product");
-  
         const productData = await productResponse.json();
         setProduct(productData);
-  
-        // Transform related products
-        const oftenBought = transformRelatedProducts(productData.oftenBoughtWith || []);
-        const othersLook = transformRelatedProducts(productData.othersAlsoLookAt || []);
-  
-        // Fetch details for related products
-        const [oftenBoughtDetails, othersLookDetails] = await Promise.all([
-          fetchFullProductDetails(oftenBought),
-          fetchFullProductDetails(othersLook),
-        ]);
-  
-        setOftenBoughtProducts(oftenBoughtDetails);
-        setOthersAlsoLookProducts(othersLookDetails);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchProductData();
-  }, [category, productId]);  
+                // Transform related products
+                const oftenBought = transformRelatedProducts(productData.oftenBoughtWith || []);
+                const othersLook = transformRelatedProducts(productData.othersAlsoLookAt || []);
+          
+                // Fetch details for related products
+                const [oftenBoughtDetails, othersLookDetails] = await Promise.all([
+                  fetchFullProductDetails(oftenBought),
+                  fetchFullProductDetails(othersLook),
+                ]);
+          
+                setOftenBoughtProducts(oftenBoughtDetails);
+                setOthersAlsoLookProducts(othersLookDetails);
+              } catch (error) {
+                console.error("Error fetching data:", error);
+              } finally {
+                setLoading(false);
+              }
+            };
+          
+            fetchProductData();
+          }, [category, productId]);  
 
-  const handleThumbnailClick = (index) => {
-    setCurrentImage(index);
-  };
+          const handleThumbnailClick = (index) => {
+            setCurrentImage(index);
+          };
+        
+          const handleColorSelect = (color) => {
+            setSelectedColor(color);
+          };
+        
+          const handleModelSelect = (model) => {
+            setSelectedModel(model);
+          };
 
-  const handleColorSelect = (color) => {
-    setSelectedColor(color);
-  };
-
-  const handleModelSelect = (model) => {
-    setSelectedModel(model);
-  };
-
-  const handleAddToCart = () => {
-    console.log(`Adding ${product.name} to the cart`);
-  };
-
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (!product) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <Typography variant="h5" color="error">
-          Product not found. Please check back later.
-        </Typography>
-      </Box>
-    );
-  }
-
-  return (
-    <Box sx={{ padding: 4, backgroundColor: "transparent", color: "white", minHeight: "100vh" }}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
+          const handleAddToCart = () => {
+            if (!product) {
+              alert("Product information is not available.");
+              return;
+            }
+            if (!selectedColor || !selectedModel) {
+              alert("Please select a color and model.");
+              return;
+            }
+        
+            const productToAdd = {
+              id: product.id || product._id || "unknown",
+              name: product.name || "Unnamed Product",
+              price: product.dealPrice || product.price || 0,
+              color: selectedColor,
+              model: selectedModel,
+              image: product.imageOverview?.[0] || "placeholder-image-url",
+              seller: product.seller || "Unknown Seller",
+            };
+        
+            addToCart(productToAdd);
+            alert("Product added to cart!");
+          };
+        
+          if (loading) {
+            return (
+              <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+              </Box>
+            );
+          }
+        
+          if (!product) {
+            return (
+              <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <Typography variant="h5" color="error">
+                  Product not found. Please check back later.
+                </Typography>
+              </Box>
+            );
+          }
+        
+          return (
+            <Box sx={{ padding: 4, backgroundColor: "transparent", color: "white", minHeight: "100vh" }}>
+              <Grid container spacing={4}>
+              <Grid item xs={12} md={6}>
           <Typography variant="h4" gutterBottom>
             {product.name}
           </Typography>
@@ -222,9 +241,8 @@ function DetailPage() {
               ))}
             </Carousel>
           </Card>
-            
-          {/* Thumbnail Row */}
-          <Box
+                   {/* Thumbnail Row */}
+                   <Box
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -347,7 +365,7 @@ function DetailPage() {
                 alignSelf: "end",
                 marginTop: 4,
                 borderRadius: 2,
-                width: { xs: 45, sm: 140 }, // Adjust width for small screens
+                width: { xs: 45, sm: 140 },
                 height: 45,
                 display: "flex",
                 justifyContent: "center",
@@ -373,16 +391,17 @@ function DetailPage() {
           {/* Others Also Look At Section */}
           <Typography variant="h5">Others Also Look At</Typography>
           <Grid container spacing={1} sx={{ marginY: 2, width: "110%" }}>
-            {othersAlsoLookProducts.map((prod) => (
-              <Grid item key={prod.id || prod._id || Math.random()}>
-                <ProductCard product={prod} />
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
-    </Box>
-  );
-};
-
-export default DetailPage;
+          {othersAlsoLookProducts.map((prod) => (
+                         <Grid item key={prod.id || prod._id || Math.random()}>
+                         <ProductCard product={prod} />
+                       </Grid>
+                     ))}
+                   </Grid>
+                 </Grid>
+               </Grid>
+             </Box>
+           );
+         };
+         
+         export default DetailPage;
+         

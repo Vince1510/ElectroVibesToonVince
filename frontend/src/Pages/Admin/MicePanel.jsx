@@ -118,7 +118,7 @@ const MicePanel = () => {
   return (
     <div>
       <Box sx={{ position: "relative" }}>
-        <Typography variant="h6">Manage Mice</Typography>
+        <Typography variant="h6" component="div">Manage Mice</Typography>
 
         {/* Plus Icon Button for adding new mouse */}
         <IconButton
@@ -153,7 +153,7 @@ const MicePanel = () => {
         {mice.length > 0 ? (
           renderTable(mice)
         ) : (
-          <Typography>No mice available or loading...</Typography>
+          <Typography component="div">No mice available or loading...</Typography>
         )}
       </Box>
     </div>

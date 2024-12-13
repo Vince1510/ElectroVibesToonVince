@@ -147,7 +147,9 @@ const KeyboardsPanel = () => {
           <AddIcon sx={{ color: "white" }} />
         </IconButton>
       </Box>
-      <Typography variant="h6">Manage Keyboards</Typography>
+      <Typography variant="h6" component="div">
+        Keyboards Panel
+      </Typography>
 
       {/* Modal for adding a new keyboard */}
       <Dialog open={openAdd} onClose={handleAddClose} fullWidth maxWidth="md">
@@ -190,7 +192,7 @@ const KeyboardsPanel = () => {
       {keyboards.length > 0 ? (
         renderTable(keyboards)
       ) : (
-        <Typography>No keyboards available or loading...</Typography>
+        <Typography component="div">No games available or loading...</Typography>
       )}
     </div>
   );

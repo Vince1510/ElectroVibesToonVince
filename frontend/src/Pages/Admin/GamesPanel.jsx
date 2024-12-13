@@ -131,7 +131,9 @@ const GamesPanel = () => {
         <AddIcon />
       </IconButton>
 
-      <Typography variant="h6">Games Panel</Typography>
+      <Typography variant="h6" component="div">
+        Games Panel
+      </Typography>
 
       {/* Modal for adding a new game */}
       <Dialog
@@ -161,7 +163,7 @@ const GamesPanel = () => {
       {games.length > 0 ? (
         renderTable(games)
       ) : (
-        <Typography>No games available or loading...</Typography>
+        <Typography component="div">No games available or loading...</Typography>
       )}
 
       {/* Edit Game Modal */}

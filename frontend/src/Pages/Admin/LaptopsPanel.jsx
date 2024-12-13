@@ -133,13 +133,13 @@ const LaptopsPanel = () => {
           <AddIcon sx={{ color: "white" }} />
         </IconButton>
       </Box>
-      <Typography variant="h6">Manage Laptops</Typography>
+      <Typography variant="h6" component="div">Manage Laptops</Typography>
 
       {/* Table rendering */}
       {laptops.length > 0 ? (
         renderTable(laptops)
       ) : (
-        <Typography>No laptops available or loading...</Typography>
+        <Typography component="div">No laptops available or loading...</Typography>
       )}
 
       {/* Edit Laptop Modal */}
