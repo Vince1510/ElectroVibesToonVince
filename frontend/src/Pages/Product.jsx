@@ -170,7 +170,7 @@ function Product() {
               backgroundColor: "transparent",
               borderRadius: "50%",
               position: "absolute",
-              top: "90px",
+              top: "175px",
               right: "20px",
               color: "#fff",
               border: "1px solid",
