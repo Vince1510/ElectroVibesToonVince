@@ -9,22 +9,20 @@ import {
   List,
   ListItem,
   ListItemText,
-  InputBase,
-  useMediaQuery,
   Snackbar,
   Alert,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import logo from "/assets/images/ElectroVibe.png";
 import responsiveLogo from "/assets/images/EV.png";
+import SearchBar from "./SearchBar";
 
 function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -32,30 +30,6 @@ function Navbar() {
 
   const handleDrawerToggle = () => {
     setMobileOpen((prev) => !prev);
-  };
-
-  const handleSearch = (event) => {
-    event.preventDefault();
-
-    const recognizedBrands = [
-      "Apple",
-      "Samsung",
-      "Logitech",
-      "Asus",
-      "Corsair",
-      "Dell",
-      "Google",
-      "Sony",
-      "OnePlus",
-      "Doogee",
-    ];
-
-    if (recognizedBrands.includes(searchQuery.trim())) {
-      navigate(`/Product?brand=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery("");
-    } else {
-      setShowNotification(true);
-    }
   };
 
   const drawer = (
@@ -69,24 +43,18 @@ function Navbar() {
       onClick={() => setMobileOpen(false)}
     >
       <List>
-        <ListItem component={Link} to="./" sx={{ color: "white" }}>
-          <ListItemText primary="Home" />
-        </ListItem>
-        <ListItem component={Link} to="./Product" sx={{ color: "white" }}>
-          <ListItemText primary="Products" />
-        </ListItem>
-        <ListItem component={Link} to="./Deals" sx={{ color: "white" }}>
-          <ListItemText primary="Deals" />
-        </ListItem>
-        <ListItem component={Link} to="./Compare" sx={{ color: "white" }}>
-          <ListItemText primary="Compare" />
-        </ListItem>
-        <ListItem component={Link} to="./About" sx={{ color: "white" }}>
-          <ListItemText primary="About" />
-        </ListItem>
-        <ListItem component={Link} to="./Admin" sx={{ color: "white" }}>
-          <ListItemText primary="Admin" />
-        </ListItem>
+        {[
+          { label: "Home", path: "./" },
+          { label: "Products", path: "./Product" },
+          { label: "Deals", path: "./Deals" },
+          { label: "Compare", path: "./Compare" },
+          { label: "About", path: "./About" },
+          { label: "Admin", path: "./Admin" },
+        ].map((item) => (
+          <ListItem key={item.label} component={Link} to={item.path} sx={{ color: "white" }}>
+            <ListItemText primary={item.label} />
+          </ListItem>
+        ))}
       </List>
     </Box>
   );
@@ -100,13 +68,13 @@ function Navbar() {
           boxShadow: "none",
         }}
       >
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
               color="inherit"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ display: isTabletOrMobile ? "block" : "none" }}
+              sx={{ display: { md: "none" } }}
             >
               <MenuIcon />
             </IconButton>
@@ -120,58 +88,39 @@ function Navbar() {
                 component="img"
                 src={isTabletOrMobile ? responsiveLogo : logo}
                 alt="ElectroVibe"
-                sx={{ height: 40, marginRight: 2 }}
+                sx={{ height: { xs: 40, md: 40 }, marginRight: 2 }}
               />
             </Button>
-            {!isTabletOrMobile && (
-              <Box sx={{ display: "flex" }}>
-                <Button color="inherit" component={Link} to="/Product">
-                  Products
+            <Box sx={{ display: { xs: "none", md: "flex" }, fontSize: { md: "1.3rem" } }}>
+              {[
+                { label: "Products", path: "/Product" },
+                { label: "Deals", path: "/Deals" },
+                { label: "Compare", path: "/Compare" },
+                { label: "About", path: "/About" },
+                { label: "Admin", path: "/Admin" },
+              ].map((item) => (
+                <Button
+                  key={item.label}
+                  color="inherit"
+                  component={Link}
+                  to={item.path}
+                  sx={{ textTransform: "none", fontSize: "1.1rem" }}
+                >
+                  {item.label}
                 </Button>
-                <Button color="inherit" component={Link} to="/Deals">
-                  Deals
-                </Button>
-                <Button color="inherit" component={Link} to="/Compare">
-                  Compare
-                </Button>
-                <Button color="inherit" component={Link} to="/About">
-                  About
-                </Button>
-                <Button color="inherit" component={Link} to="/Admin">
-                  Admin
-                </Button>
-              </Box>
-            )}
+              ))}
+            </Box>
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            {!isTabletOrMobile && (
-              <form onSubmit={handleSearch} style={{ display: "flex", alignItems: "center" }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
-                    borderRadius: "10px",
-                    padding: "2px 8px",
-                    marginRight: 2,
-                  }}
-                >
-                  <SearchIcon />
-                  <InputBase
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    sx={{ color: "inherit", marginLeft: 1 }}
-                  />
-                </Box>
-              </form>
-            )}
+            <Box sx={{ display: { xs: "none", md: "flex" }, marginRight: 2 }}>
+              <SearchBar />
+            </Box>
             <Button
-              variant="contained"
-              color="primary"
+              variant="outlined"
               sx={{
-                borderRadius: "10px",
+                border: "1px solid white",
+                color: "white",
                 textTransform: "none",
                 marginRight: 1,
               }}
@@ -180,6 +129,7 @@ function Navbar() {
             >
               Login
             </Button>
+
             <IconButton
               color="inherit"
               component={Link}
@@ -189,38 +139,18 @@ function Navbar() {
               <ShoppingCartIcon />
             </IconButton>
           </Box>
-        </Toolbar>
 
-        {isTabletOrMobile && (
           <Box
             sx={{
-              backgroundColor: "#111111",
-              padding: 1,
-              display: "flex",
-              justifyContent: "center",
+              width: { xs: "100%", md: "auto" },
+              mt: { xs: 2, md: 0 },
+              ml: { md: 2 },
+              display: { md: "none" },
             }}
           >
-            <form onSubmit={handleSearch} style={{ width: "90%" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  borderRadius: "10px",
-                  padding: "2px 8px",
-                }}
-              >
-                <SearchIcon />
-                <InputBase
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  sx={{ color: "inherit", marginLeft: 1, width: "100%" }}
-                />
-              </Box>
-            </form>
+            <SearchBar />
           </Box>
-        )}
+        </Toolbar>
       </AppBar>
 
       <Drawer

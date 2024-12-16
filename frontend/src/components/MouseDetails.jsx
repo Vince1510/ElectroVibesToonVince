@@ -18,7 +18,26 @@ const MouseDetails = ({ product }) => {
       <Typography variant="h6" gutterBottom sx={{ color: "#bdbdbd" }}>
         Mouse-specific details
       </Typography>
-      <List>
+            <List
+              sx={{
+                "& .MuiListItemText-root": {
+                  display: "flex",
+                  flexDirection: "row",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  paddingTop: 0,
+                  paddingBottom: 0,
+                  margin: 0,
+                },
+                "& .MuiListItem-root:nth-of-type(odd)": {
+                  backgroundColor: "#2d2d2d",
+                },
+                "& .MuiListItem-root:nth-of-type(even)": {
+                  backgroundColor: "transparent",
+                },
+              }}
+            >
         <ListItem>
           <ListItemText primary="DPI" secondary={product.dpi || "N/A"} />
         </ListItem>

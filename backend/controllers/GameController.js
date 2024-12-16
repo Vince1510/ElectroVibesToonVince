@@ -32,17 +32,106 @@ export const getGame = async (req, res) => {
 
 // Create a new game
 export const createGame = async (req, res) => {
-  const { name, description, largeDescription, brand, category, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, releaseDate, genre, platform, multiplayerSupport, multiplayerModes, ageRating, languages, dlcAvailable, specialEditions, achievements, inAppPurchases, fileSize, systemRequirements, physicalEdition, vrSupport, publisher, developer, releaseRegion, exclusiveContent } = req.body;
+  const {
+    name,
+    description,
+    largeDescription,
+    brand,
+    category,
+    price,
+    dealPrice,
+    imageCard,
+    imageOverview,
+    commercial,
+    amount,
+    maxAmount,
+    state,
+    color,
+    model,
+    seller,
+    sellerScore,
+    deliveryTime,
+    oftenBoughtWith,
+    othersAlsoLookAt,
+    releaseDate,
+    genre,
+    platform,
+    multiplayerSupport,
+    multiplayerModes,
+    ageRating,
+    languages,
+    dlcAvailable,
+    specialEditions,
+    achievements,
+    inAppPurchases,
+    fileSize,
+    systemRequirements,
+    physicalEdition,
+    vrSupport,
+    publisher,
+    developer,
+    releaseRegion,
+    exclusiveContent,
+  } = req.body;
 
-  if (!name || !description || !price || !releaseDate || !genre || !imageCard || !imageOverview || !brand || !category) {
+  if (
+    !name ||
+    !description ||
+    !price ||
+    !releaseDate ||
+    !genre ||
+    !imageCard ||
+    !imageOverview ||
+    !brand ||
+    !category
+  ) {
     return res.status(400).json({
-      message: "All fields are required: name, description, price, releaseDate, genre, imageCard, imageOverview, brand, category",
+      message:
+        "All fields are required: name, description, price, releaseDate, genre, imageCard, imageOverview, brand, category",
     });
   }
 
   try {
     const newGame = new Game({
-      name, description, largeDescription, brand, category, price, dealPrice, imageCard, imageOverview, commercial, amount, maxAmount, state, color, model, seller, sellerScore, deliveryTime, oftenBoughtWith, othersAlsoLookAt, releaseDate, genre, platform, multiplayerSupport, multiplayerModes, ageRating, languages, dlcAvailable, specialEditions, achievements, inAppPurchases, fileSize, systemRequirements, physicalEdition, vrSupport, publisher, developer, releaseRegion, exclusiveContent
+      name,
+      description,
+      largeDescription,
+      brand,
+      category,
+      price,
+      dealPrice,
+      imageCard,
+      imageOverview,
+      commercial,
+      amount,
+      maxAmount,
+      state,
+      color,
+      model,
+      seller,
+      sellerScore,
+      deliveryTime,
+      oftenBoughtWith,
+      othersAlsoLookAt,
+      releaseDate,
+      genre,
+      platform,
+      multiplayerSupport,
+      multiplayerModes,
+      ageRating,
+      languages,
+      dlcAvailable,
+      specialEditions,
+      achievements,
+      inAppPurchases,
+      fileSize,
+      systemRequirements,
+      physicalEdition,
+      vrSupport,
+      publisher,
+      developer,
+      releaseRegion,
+      exclusiveContent,
     });
 
     await newGame.save();
@@ -86,9 +175,6 @@ export const updateGame = async (req, res) => {
   } = req.body;
 
   try {
-    // Log the ID to make sure it's being passed correctly
-    console.log("Updating game with ID:", id);
-
     const updatedGame = await Game.findByIdAndUpdate(
       id,
       {

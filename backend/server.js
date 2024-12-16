@@ -20,9 +20,6 @@ app.use(cors());
 
 // Logger Middleware
 app.use((req, res, next) => {
-  console.log(
-    `[${new Date().toISOString()}] ${req.method} request to ${req.path}`
-  );
   next();
 });
 
@@ -41,12 +38,7 @@ const PORT = process.env.PORT || 4000;
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("Connected to MongoDB successfully");
-
-    // Start the server
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+    app.listen(PORT);
   })
   .catch((error) => {
     console.error("Error connecting to the database:", error.message);

@@ -7,17 +7,26 @@ import {
   TableHead,
   TableRow,
   Button,
+  IconButton,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
+  DialogContent,
+  DialogTitle,
+  Box,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add"; // Add this import
 import axios from "axios";
-import AddLaptopForm from "./AddLaptopForm";
+import EditLaptopModal from "./EditLaptopModal";
+import AddLaptopForm from "./AddLaptopForm"; // Import AddLaptopForm
 
 const LaptopsPanel = () => {
   const [laptops, setLaptops] = useState([]);
-  const [open, setOpen] = useState(false); // State to control modal visibility
+  const [openEditModal, setOpenEditModal] = useState(false); // State to control edit modal visibility
+  const [selectedLaptopId, setSelectedLaptopId] = useState(null); // Store the laptop ID to edit
+  const [isAdding, setIsAdding] = useState(false); // State to distinguish between edit and add new laptop
+  const [openAddLaptopDialog, setOpenAddLaptopDialog] = useState(false); // State to manage AddLaptopDialog visibility
 
   useEffect(() => {
     const fetchLaptops = async () => {
@@ -32,11 +41,42 @@ const LaptopsPanel = () => {
     fetchLaptops();
   }, []);
 
+  // Function to handle deleting a laptop
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/laptops/${id}`);
+      setLaptops(laptops.filter((laptop) => laptop._id !== id)); // Remove the deleted laptop from the list
+    } catch (error) {
+      console.error("Error deleting laptop:", error);
+    }
+  };
+
+  // Open the edit modal for a specific laptop
+  const handleEditClick = (id) => {
+    setSelectedLaptopId(id);
+    setIsAdding(false); // Set to false for editing
+    setOpenEditModal(true);
+  };
+
+  // Open the dialog for adding a new laptop
+  const handleAddNewClick = () => {
+    setSelectedLaptopId(null); // No laptop selected for adding
+    setIsAdding(true); // Set to true for adding
+    setOpenAddLaptopDialog(true); // Open the dialog
+  };
+
+  // Function to refresh laptop list after update
+  const handleLaptopUpdated = () => {
+    axios.get("http://localhost:4000/api/laptops/").then((response) => {
+      setLaptops(response.data); // Refresh the laptop list after editing
+    });
+  };
+
   const renderTable = (data) => (
-    <Table sx={{ mt: 2 }}>
+    <Table>
       <TableHead>
         <TableRow>
-          {["_id", "Name", "Brand", "Price"].map((column) => (
+          {["_id", "Name", "Brand", "Price", "Actions"].map((column) => (
             <TableCell key={column} sx={{ color: "white" }}>
               {column}
             </TableCell>
@@ -51,72 +91,91 @@ const LaptopsPanel = () => {
                 {laptop[column.toLowerCase()] || laptop._id}
               </TableCell>
             ))}
+            <TableCell>
+              <IconButton
+                onClick={() => handleEditClick(laptop._id)}
+                color="primary"
+              >
+                <EditIcon sx={{ color: "white" }} />
+              </IconButton>
+              <IconButton
+                onClick={() => handleDelete(laptop._id)}
+                color="secondary"
+              >
+                <DeleteIcon sx={{ color: "white" }} />
+              </IconButton>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
   );
 
-  const handleLaptopAdded = () => {
-    axios.get("http://localhost:4000/api/laptops/").then((response) => {
-      setLaptops(response.data); // Refresh the laptop list after adding
-    });
-  };
-
-  // Functions to handle opening and closing the modal
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <div>
-      <Typography variant="h6">Manage Laptops</Typography>
+      {/* Add Icon Button positioned at the top-right corner */}
+      <Box
+        sx={{ position: "relative", display: "inline-block", width: "100%" }}
+      >
+        <IconButton
+          onClick={handleAddNewClick}
+          color="primary"
+          sx={{
+            borderRadius: "50%",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            color: "#fff",
+            border: "1px solid",
+            borderImage: "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
+          }}
+        >
+          <AddIcon sx={{ color: "white" }} />
+        </IconButton>
+      </Box>
+      <Typography variant="h6" component="div">Manage Laptops</Typography>
 
-      {/* Button to open modal for adding a laptop */}
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        Add New Laptop
-      </Button>
+      {/* Table rendering */}
+      {laptops.length > 0 ? (
+        renderTable(laptops)
+      ) : (
+        <Typography component="div">No laptops available or loading...</Typography>
+      )}
 
-      {/* Modal for adding a new laptop */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
-          Add a New Laptop
+      {/* Edit Laptop Modal */}
+      <EditLaptopModal
+        laptopId={selectedLaptopId}
+        open={openEditModal}
+        handleClose={() => setOpenEditModal(false)}
+        onLaptopUpdated={handleLaptopUpdated}
+      />
+
+      {/* Add Laptop Dialog */}
+      <Dialog
+        open={openAddLaptopDialog}
+        onClose={() => setOpenAddLaptopDialog(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ backgroundColor: "#000", color: "white" }}>
+          Add New Laptop
         </DialogTitle>
         <DialogContent
           sx={{
             backgroundColor: "#000",
           }}
         >
-          <AddLaptopForm onLaptopAdded={handleLaptopAdded} />
+          <AddLaptopForm handleClose={() => setOpenAddLaptopDialog(false)} />
         </DialogContent>
-        <DialogActions
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
+        <DialogActions sx={{ backgroundColor: "#000" }}>
           <Button
-            onClick={handleClose}
-            color="secondary"
-            sx={{
-              backgroundColor: "#000",
-              color: "#fff",
-            }}
+            onClick={() => setOpenAddLaptopDialog(false)}
+            sx={{ color: "white" }}
           >
-            Close
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Display laptops in a table */}
-      {laptops.length > 0 ? (
-        renderTable(laptops)
-      ) : (
-        <Typography>No laptops available or loading...</Typography>
-      )}
     </div>
   );
 };

@@ -20,7 +20,7 @@ const TabPanel = (props) => {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography component="div">{children}</Typography>
         </Box>
       )}
     </div>
@@ -38,13 +38,25 @@ const Admin = () => {
     <div>
       <AppBar
         position="static"
-        sx={{ backgroundColor: "transparent", boxShadow: "none" }} // Set transparency
+        sx={{ backgroundColor: "transparent", boxShadow: "none" }}
       >
         <Tabs
           value={activeTab}
           onChange={handleChange}
           aria-label="admin panel tabs"
           textColor="inherit"
+          TabIndicatorProps={{
+            sx: {
+              backgroundImage:
+                "linear-gradient(180deg, #E70002 0%, #FCD201 100%)",
+              height: "2px",
+            },
+          }}
+          sx={{
+            "& .MuiTab-root": {
+              color: "inherit",
+            },
+          }}
         >
           <Tab label="Games" />
           <Tab label="Keyboards" />

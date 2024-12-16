@@ -6,18 +6,22 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  IconButton,
+  Box,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
-import AddMiceForm from "./AddMiceForm"; // Import the form component
+import AddMiceForm from "./AddMiceForm";
+import EditMiceModal from "./EditMiceModal";
 
 const MicePanel = () => {
   const [mice, setMice] = useState([]);
-  const [open, setOpen] = useState(false); // State to control modal visibility
+  const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedMouse, setSelectedMouse] = useState(null);
 
   // Fetch mice from the backend API
   useEffect(() => {
@@ -33,15 +37,43 @@ const MicePanel = () => {
     fetchMice();
   }, []);
 
+  // Function to handle deleting a mouse
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/mice/${id}`);
+      setMice(mice.filter((mouse) => mouse._id !== id));
+    } catch (error) {
+      console.error("Error deleting mouse:", error);
+    }
+  };
+
   const handleAddMouse = (newMouse) => {
     setMice((prevMice) => [...prevMice, newMouse]);
+  };
+
+  // Handle opening and closing the Edit modal
+  const handleEditOpen = (mouse) => {
+    setSelectedMouse(mouse);
+    setEditOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setEditOpen(false);
+  };
+
+  const handleSaveMouse = (updatedMouse) => {
+    setMice(
+      mice.map((mouse) =>
+        mouse._id === updatedMouse._id ? updatedMouse : mouse
+      )
+    );
   };
 
   const renderTable = (data) => (
     <Table sx={{ mt: 2 }}>
       <TableHead>
         <TableRow>
-          {["_id", "Name", "Brand", "Price"].map((column) => (
+          {["_id", "Name", "Brand", "Price", "Actions"].map((column) => (
             <TableCell key={column} sx={{ color: "white" }}>
               {column}
             </TableCell>
@@ -56,13 +88,25 @@ const MicePanel = () => {
                 {mouse[column.toLowerCase()] || mouse._id}
               </TableCell>
             ))}
+            <TableCell>
+              {/* Edit Icon Button */}
+              <IconButton onClick={() => handleEditOpen(mouse)} color="primary">
+                <EditIcon sx={{ color: "white" }} />
+              </IconButton>
+              {/* Delete Icon Button */}
+              <IconButton
+                onClick={() => handleDelete(mouse._id)}
+                color="secondary"
+              >
+                <DeleteIcon sx={{ color: "white" }} />
+              </IconButton>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
   );
 
-  // Functions to handle opening and closing the modal
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -73,49 +117,49 @@ const MicePanel = () => {
 
   return (
     <div>
-      <Typography variant="h6">Manage Mice</Typography>
+      <Box sx={{ position: "relative" }}>
+        <Typography variant="h6" component="div">
+          Manage Mice
+        </Typography>
 
-      {/* Button to open modal for adding a mouse */}
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        Add New Mouse
-      </Button>
-
-      {/* Modal for adding a new mouse */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-        <DialogTitle sx={{ color: "white", backgroundColor: "#000" }}>
-          Add a New Mouse
-        </DialogTitle>
-        <DialogContent
+        {/* Plus Icon Button for adding new mouse */}
+        <IconButton
+          onClick={handleClickOpen}
+          color="primary"
           sx={{
-            backgroundColor: "#000",
+            borderRadius: "50%",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            color: "#fff",
+            border: "1px solid",
+            borderImage: "linear-gradient(180deg, #E70002 0%, #FCD201 100%) 1",
           }}
         >
+          <AddIcon sx={{ color: "white" }} />
+        </IconButton>
+
+        {/* Add Modal */}
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
           <AddMiceForm onAddMouse={handleAddMouse} />
-        </DialogContent>
-        <DialogActions
-          sx={{
-            backgroundColor: "#000",
-          }}
-        >
-          <Button
-            onClick={handleClose}
-            color="secondary"
-            sx={{
-              backgroundColor: "#000",
-              color: "#fff",
-            }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </Dialog>
 
-      {/* Displaying mice in a table */}
-      {mice.length > 0 ? (
-        renderTable(mice)
-      ) : (
-        <Typography>No mice available or loading...</Typography>
-      )}
+        {/* Edit Modal */}
+        <EditMiceModal
+          mouse={selectedMouse}
+          open={editOpen}
+          onClose={handleEditClose}
+          onSave={handleSaveMouse}
+        />
+
+        {mice.length > 0 ? (
+          renderTable(mice)
+        ) : (
+          <Typography component="div">
+            No mice available or loading...
+          </Typography>
+        )}
+      </Box>
     </div>
   );
 };

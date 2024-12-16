@@ -7,63 +7,70 @@ import FilterPanel from "../components/FilterPanel";
 
 function Deals() {
   const [products, setProducts] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 3000]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [priceRange, setPriceRange] = useState([0, 4000]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedSpecs, setSelectedSpecs] = useState([]);
   const [sortOrder, setSortOrder] = useState("none");
 
-  // Comparison functionality
   const [compareList, setCompareList] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch products from backend
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProductsAndGames = async () => {
       try {
-        const responses = await Promise.all([
-          fetch("http://localhost:4000/api/laptops"),
-          fetch("http://localhost:4000/api/keyboards"),
-          fetch("http://localhost:4000/api/phones"),
-          fetch("http://localhost:4000/api/games"),
-          fetch("http://localhost:4000/api/mice"),
-          fetch("http://localhost:4000/api/monitors"),
-        ]);
+        const endpoints = [
+          "http://localhost:4000/api/laptops",
+          "http://localhost:4000/api/keyboards",
+          "http://localhost:4000/api/phones",
+          "http://localhost:4000/api/games",
+          "http://localhost:4000/api/mice",
+          "http://localhost:4000/api/monitors",
+        ];
+
+        const responses = await Promise.all(
+          endpoints.map((url) => fetch(url).catch((err) => err))
+        );
 
         const data = await Promise.all(
-          responses.map(async (response) => {
+          responses.map(async (response, index) => {
             if (!response.ok) {
               console.error(
-                `Error fetching: ${response.url} - Status: ${response.status}`
+                `Error fetching: ${endpoints[index]} - Status: ${response.status}`
               );
               return [];
             }
-            return await response.json();
+            const result = await response.json();
+            return result;
           })
         );
 
         const [laptops, keyboards, phones, games, mice, monitors] = data;
-        setProducts([
+        const combinedProducts = [
           ...laptops,
           ...keyboards,
           ...phones,
           ...games,
           ...monitors,
           ...mice,
-        ]);
+        ].filter(product => product.dealPrice);
+
+        setProducts(combinedProducts);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching products:", error.message, error);
       }
     };
 
-    fetchProducts();
+    fetchProductsAndGames();
   }, []);
 
-  // Filter products with dealPrice
   const filteredProducts = products
-    .filter((product) => product.dealPrice) // Show only products with dealPrice
     .filter((product) => {
       const isWithinPriceRange =
-        product.dealPrice >= priceRange[0] && product.dealPrice <= priceRange[1];
+        product.price >= priceRange[0] && product.price <= priceRange[1];
+      const isCategoryMatch =
+        selectedCategory === "All" ||
+        product.category?.toLowerCase() === selectedCategory.toLowerCase();
       const isBrandMatch =
         selectedBrands.length === 0 || selectedBrands.includes(product.brand);
       const isSpecsMatch =
@@ -71,11 +78,14 @@ function Deals() {
         selectedSpecs.every((spec) =>
           Object.values(product.specs || {}).includes(spec)
         );
-      return isWithinPriceRange && isBrandMatch && isSpecsMatch;
+
+      return (
+        isWithinPriceRange && isCategoryMatch && isBrandMatch && isSpecsMatch
+      );
     })
     .sort((a, b) => {
-      if (sortOrder === "lowToHigh") return a.dealPrice - b.dealPrice;
-      if (sortOrder === "highToLow") return b.dealPrice - a.dealPrice;
+      if (sortOrder === "lowToHigh") return a.price - b.price;
+      if (sortOrder === "highToLow") return b.price - a.price;
       if (sortOrder === "aToZ") return a.name.localeCompare(b.name);
       if (sortOrder === "zToA") return b.name.localeCompare(a.name);
       return 0;
@@ -87,22 +97,23 @@ function Deals() {
 
   const handleCompare = (product) => {
     if (compareList.some((item) => item._id === product._id)) {
-      return; // Prevent adding duplicate products
+      return;
     }
 
     const updatedCompareList = [...compareList, product];
     setCompareList(updatedCompareList);
 
-    // Redirect after the state is updated and if two products are selected
     if (updatedCompareList.length === 2) {
       setTimeout(() => {
         navigate("/compare", { state: { products: updatedCompareList } });
-      }, 300); // Delay navigation slightly to allow event propagation
+      }, 300);
     }
   };
 
   const handleRemoveFromCompare = (productId) => {
-    setCompareList((prev) => prev.filter((product) => product._id !== productId));
+    setCompareList((prev) =>
+      prev.filter((product) => product._id !== productId)
+    );
   };
 
   const clearCompareList = () => {
@@ -110,10 +121,12 @@ function Deals() {
   };
 
   return (
+
     <Box display="flex" flexDirection={{ xs: "column", sm: "row" }}>
-      {/* Filter Panel */}
       <Box sx={{ display: { xs: "block", sm: "block" } }}>
         <FilterPanel
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
           selectedBrands={selectedBrands}
@@ -124,31 +137,46 @@ function Deals() {
         />
       </Box>
 
-      {/* Deals List */}
       <Box
         sx={{
           flexGrow: 1,
           paddingLeft: { sm: 3 },
-          paddingTop: { xs: 2, sm: 0 },
           paddingBottom: 10,
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ color: "white" }}>
-          Deals Page
+          Products Page
         </Typography>
 
-        <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              onCompare={handleCompare} // Pass compare handler to ProductCard
-            />
-          ))}
-        </Grid>
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="center"
+          gap={3} // Controls spacing between cards
+        >
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <Box
+                key={product._id}
+                sx={{
+                  flex: "1 1 calc(25% - 16px)",
+                  maxWidth: "calc(25% - 16px)",
+                  minWidth: "250px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <ProductCard product={product} onCompare={handleCompare} />
+              </Box>
+            ))
+          ) : (
+            <Typography variant="h6" sx={{ color: "white", marginTop: 2 }}>
+              No products found.
+            </Typography>
+          )}
+        </Box>
       </Box>
 
-      {/* Compare List */}
       {compareList.length > 0 && (
         <CompareList
           compareList={compareList}

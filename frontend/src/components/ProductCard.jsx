@@ -21,6 +21,7 @@ function ProductCard({ product, onCompare, cardStyle = {} }) {
             "linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), linear-gradient(180deg, #E70002 0%, #000 50.07%, #FCD201 100%)",
           boxShadow: "0px 4px 4px 0px #000",
           display: "flex",
+          pt: 1,
           flexDirection: "column",
           justifyContent: "space-between",
           ...cardStyle,
@@ -28,6 +29,7 @@ function ProductCard({ product, onCompare, cardStyle = {} }) {
       >
         <Link
           to={`/detail/${product.category}/${product._id}`}
+          state={{ product }}
           style={{
             textDecoration: "none",
             flexGrow: 1,

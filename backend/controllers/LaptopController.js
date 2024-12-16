@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 export const getAllLaptops = async (req, res) => {
   try {
     const laptops = await Laptop.find({});
-    console.log("Laptops fetched:", laptops);
     res.status(200).json(laptops);
   } catch (error) {
     console.error("Error fetching laptops:", error);
@@ -29,7 +28,7 @@ export const getLaptop = async (req, res) => {
 
   res.status(200).json(laptop);
 };
-  
+
 // Create a new laptop
 export const createLaptop = async (req, res) => {
   const {

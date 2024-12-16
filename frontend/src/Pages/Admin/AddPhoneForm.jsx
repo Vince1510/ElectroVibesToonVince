@@ -8,7 +8,7 @@ const AddPhoneForm = ({ onPhoneAdded }) => {
     code: "",
     description: "",
     brand: "",
-    category: "Phone", // default value
+    category: "Phone",
     price: "",
     dealPrice: "",
     imageCard: "",
@@ -33,7 +33,7 @@ const AddPhoneForm = ({ onPhoneAdded }) => {
     batteryCapacity: "",
     chargingSpeed: "",
     wirelessCharging: "",
-    simType: "Nano-SIM", // default value
+    simType: "Nano-SIM",
     network: "",
     waterproof: "",
     fingerprintSensor: "",
@@ -114,7 +114,7 @@ const AddPhoneForm = ({ onPhoneAdded }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={2}>
+      <Grid container>
         {fields.map((field, index) => (
           <Grid item xs={field.xs || 12} sm={field.sm || 12} key={index}>
             <TextField

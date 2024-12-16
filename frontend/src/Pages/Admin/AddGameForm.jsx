@@ -80,7 +80,6 @@ const AddGameForm = () => {
         "http://localhost:4000/api/games",
         formData
       );
-      console.log("Game added:", response.data);
       setFormData({
         name: "",
         description: "",
@@ -171,92 +170,83 @@ const AddGameForm = () => {
       <Box component="form" onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           {/* First Column */}
-          <Grid item xs={12} sm={6}>
-            {textFields.map((field) => (
-              <Grid key={field} item xs={12}>
-                <TextField
-                  label={field
-                    .replace(/([A-Z])/g, " $1")
-                    .replace(/^./, (str) => str.toUpperCase())}
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  fullWidth
-                  required={["name", "description", "price"].includes(field)}
-                  sx={{
-                    // Root class for the input field
-                    "& .MuiOutlinedInput-root": {
-                      color: "#fff",
-                      fontFamily: "Arial",
-                      fontWeight: "bold",
-                      // Class for the border around the input field
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#fff",
-                        borderWidth: "2px",
-                      },
+          {textFields.map((field) => (
+            <Grid key={field} item xs={12} sm={6}>
+              <TextField
+                label={field
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())}
+                name={field}
+                value={formData[field]}
+                onChange={handleChange}
+                fullWidth
+                required={["name", "description", "price"].includes(field)}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    color: "#fff",
+                    fontFamily: "Arial",
+                    fontWeight: "bold",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#fff",
+                      borderWidth: "2px",
                     },
-                    // Class for the label of the input field
-                    "& .MuiInputLabel-outlined": {
-                      color: "#fff",
-                      fontWeight: "bold",
-                    },
-                  }}
-                />
-              </Grid>
-            ))}
-          </Grid>
+                  },
+                  "& .MuiInputLabel-outlined": {
+                    color: "#fff",
+                    fontWeight: "bold",
+                  },
+                }}
+              />
+            </Grid>
+          ))}
 
-          {/* Second Column (Checkboxes and System Requirements) */}
-          <Grid item xs={12} sm={6}>
-            {checkboxes.map(({ name, label }) => (
-              <Grid key={name} item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={formData[name]}
-                      onChange={handleChange}
-                      name={name}
-                      color="primary"
-                    />
-                  }
-                  label={label}
-                />
-              </Grid>
-            ))}
+          {/* Checkboxes and System Requirements */}
+          {checkboxes.map(({ name, label }) => (
+            <Grid key={name} item xs={12} sm={6}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formData[name]}
+                    onChange={handleChange}
+                    name={name}
+                    sx={{ color: "#fff" }}
+                  />
+                }
+                label={label}
+              />
+            </Grid>
+          ))}
 
-            {/* System Requirements */}
-            {systemReqFields.map((type) => (
-              <Grid key={type} item xs={12}>
-                <TextField
-                  label={`${type.replace(/^./, (str) =>
-                    str.toUpperCase()
-                  )} System Requirements`}
-                  name={`systemRequirements.${type}`}
-                  value={formData.systemRequirements?.[type]}
-                  onChange={handleChange}
-                  fullWidth
-                  sx={{
-                    // Root class for the input field
-                    "& .MuiOutlinedInput-root": {
-                      color: "#fff",
-                      fontFamily: "Arial",
-                      fontWeight: "bold",
-                      // Class for the border around the input field
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#fff",
-                        borderWidth: "2px",
-                      },
+          {systemReqFields.map((type) => (
+            <Grid key={type} item xs={12} sm={6}>
+              <TextField
+                label={`${type.replace(/^./, (str) =>
+                  str.toUpperCase()
+                )} System Requirements`}
+                name={`systemRequirements.${type}`}
+                value={formData.systemRequirements?.[type]}
+                onChange={handleChange}
+                fullWidth
+                sx={{
+                  marginBottom: 2,
+                  padding: 1,
+                  "& .MuiOutlinedInput-root": {
+                    color: "#fff",
+                    fontFamily: "Arial",
+                    fontWeight: "bold",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#fff",
+                      borderWidth: "2px",
                     },
-                    // Class for the label of the input field
-                    "& .MuiInputLabel-outlined": {
-                      color: "#fff",
-                      fontWeight: "bold",
-                    },
-                  }}
-                />
-              </Grid>
-            ))}
-          </Grid>
+                  },
+                  "& .MuiInputLabel-outlined": {
+                    color: "#fff",
+                    fontWeight: "bold",
+                  },
+                }}
+              />
+            </Grid>
+          ))}
         </Grid>
 
         {/* Submit Button */}
@@ -272,5 +262,4 @@ const AddGameForm = () => {
     </Container>
   );
 };
-
 export default AddGameForm;

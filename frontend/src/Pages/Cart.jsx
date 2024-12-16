@@ -9,11 +9,21 @@ import {
   Divider,
   IconButton,
   TextField,
+  Grid,
 } from "@mui/material";
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Remove, Delete } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
+  const navigate = useNavigate();
+
+  const postageCost = 10;
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const finalAmount = totalPrice + postageCost;
 
   if (cartItems.length === 0) {
     return (
@@ -26,94 +36,223 @@ function Cart() {
   }
 
   return (
-    <Box sx={{ padding: 4 }}>
+    <Box>
       <Typography variant="h4" gutterBottom>
-        Your Cart
+        Shopping Cart
       </Typography>
-      {cartItems.map((item) => (
-        <Card
-          key={item.id}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: 2,
-            padding: 2,
-            border: "1px solid #D9D9D9",
-            borderRadius: 2,
-            backgroundColor: "transparent",
-          }}
-        >
-          <CardMedia
-            component="img"
-            image={item.image}
-            alt={item.name}
-            sx={{ width: 100, height: 100, marginRight: 2 }}
-          />
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="h6">{item.name}</Typography>
-            <Typography variant="body2">Color: {item.color}</Typography>
-            <Typography variant="body2">Model: {item.model}</Typography>
-            <Typography variant="body2">Price: €{item.price}</Typography>
-            <Box
+      <Grid container spacing={4}>
+        {/* Left Section: Products */}
+        <Grid item xs={12} md={7}>
+          {cartItems.map((item) => (
+            <Card
+              key={`${item.id}-${item.color}-${item.model}`}
               sx={{
                 display: "flex",
                 alignItems: "center",
+                marginBottom: 2,
+                padding: 1,
+                border: "1px solid #D9D9D9",
+                borderRadius: 2,
+                backgroundColor: "transparent",
+                height: 155,
+              }}
+            >
+              <CardMedia
+                component="img"
+                image={item.image}
+                alt={item.name}
+                sx={{ width: 80, height: 80, marginRight: 2 }}
+              />
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h6" sx={{ fontSize: "1.1rem" }}>
+                  {item.name}
+                </Typography>
+                <Typography variant="body2">Color: {item.color}</Typography>
+                <Typography variant="body2">Model: {item.model}</Typography>
+                <Typography variant="body2">Price: €{item.price}</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: 1,
+                  }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={() =>
+                      updateQuantity(
+                        item.id,
+                        item.color,
+                        item.model,
+                        Math.max(item.quantity - 1, 1)
+                      )
+                    }
+                    sx={{ color: "white" }}
+                  >
+                    <Remove />
+                  </IconButton>
+
+                  <TextField
+                    value={item.quantity}
+                    size="small"
+                    sx={{
+                      width: 70,
+                      "& input": {
+                        textAlign: "center",
+                        color: "white",
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "white",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "white",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "white",
+                        },
+                      },
+                    }}
+                    inputProps={{
+                      type: "number",
+                      min: 1,
+                    }}
+                    onChange={(e) =>
+                      updateQuantity(
+                        item.id,
+                        item.color,
+                        item.model,
+                        Math.max(Number(e.target.value), 1)
+                      )
+                    }
+                  />
+
+                  <IconButton
+                    size="small"
+                    onClick={() =>
+                      updateQuantity(
+                        item.id,
+                        item.color,
+                        item.model,
+                        item.quantity + 1
+                      )
+                    }
+                    sx={{ color: "white" }}
+                  >
+                    <Add />
+                  </IconButton>
+                </Box>
+              </Box>
+              <IconButton
+                onClick={() => removeFromCart(item.id, item.color, item.model)}
+                sx={{ color: "white" }}
+              >
+                <Delete />
+              </IconButton>
+            </Card>
+          ))}
+        </Grid>
+
+        {/* Right Section: Overview */}
+        <Grid item xs={12} md={5}>
+          <Box
+            sx={{
+              padding: 3,
+              border: "1px solid #D9D9D9",
+              borderRadius: 2,
+              backgroundColor: "transparent",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Overview
+            </Typography>
+            {cartItems.map((item) => (
+              <Box
+                key={`${item.id}-${item.color}-${item.model}`}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="body2">
+                  {item.quantity}x {item.name}
+                </Typography>
+                <Typography variant="body2">
+                  €{(item.price * item.quantity).toFixed(2)}
+                </Typography>
+              </Box>
+            ))}
+            <Typography
+              variant="body2"
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
                 marginTop: 1,
               }}
             >
-              <IconButton
-                size="small"
-                onClick={() =>
-                  updateQuantity(item.id, Math.max(item.quantity - 1, 1))
-                }
-              >
-                <Remove />
-              </IconButton>
-              <TextField
-                value={item.quantity}
-                size="small"
-                sx={{ width: 50, textAlign: "center" }}
-                inputProps={{
-                  style: { textAlign: "center" },
-                  type: "number",
-                  min: 1,
-                }}
-                onChange={(e) =>
-                  updateQuantity(item.id, Math.max(Number(e.target.value), 1))
-                }
+              <span>Postage Cost:</span>
+              <span>€{postageCost.toFixed(2)}</span>
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Typography
+              variant="h6"
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>Still to be paid:</span>
+              <span>€{finalAmount.toFixed(2)}</span>
+            </Typography>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{
+                marginTop: 2,
+                backgroundColor: "transparent",
+                border: "white 1px solid",
+              }}
+              onClick={() => navigate("/checkout")}
+            >
+              Buy
+            </Button>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 2,
+                gap: 2,
+              }}
+            >
+              <CardMedia
+                component="img"
+                image="https://www.cardgate.com/wp-content/uploads/iDEAL-302x266.png"
+                alt="iDEAL"
+                sx={{ width: 50, height: 40 }}
               />
-              <IconButton
-                size="small"
-                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-              >
-                <Add />
-              </IconButton>
+              <CardMedia
+                component="img"
+                image="https://www.emerce.nl/content/uploads/2022/06/logo-500x500-1.jpeg"
+                alt="Visa"
+                sx={{ width: 50, height: 30 }}
+              />
+              <CardMedia
+                component="img"
+                image="https://webshoptiger.com/wp-content/uploads/2023/09/American-Express-Color.png"
+                alt="American Express"
+                sx={{ width: 50, height: 30 }}
+              />
+              <CardMedia
+                component="img"
+                image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd7WTi09ocb0cv81W-PvbGbxbdfQVZJ7eGAA&s"
+                alt="MasterCard"
+                sx={{ width: 50, height: 30 }}
+              />
             </Box>
           </Box>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => removeFromCart(item.id)}
-            sx={{ marginLeft: 2 }}
-          >
-            Remove
-          </Button>
-        </Card>
-      ))}
-      <Divider sx={{ marginY: 4 }} />
-      <Typography variant="h5">
-        Total: €
-        {cartItems
-          .reduce((total, item) => total + item.price * item.quantity, 0)
-          .toFixed(2)}
-      </Typography>
-      <Button
-        variant="contained"
-        sx={{ marginTop: 2 }}
-        onClick={() => alert("Proceed to Checkout")}
-      >
-        Checkout
-      </Button>
+        </Grid>
+      </Grid>
     </Box>
   );
 }

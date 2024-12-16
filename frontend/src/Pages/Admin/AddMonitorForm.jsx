@@ -94,7 +94,6 @@ const AddMonitorForm = () => {
         "http://localhost:4000/api/monitors",
         formData
       );
-      console.log("Monitor added successfully:", response.data);
     } catch (error) {
       console.error("Error adding monitor:", error);
     }
@@ -198,6 +197,9 @@ const AddMonitorForm = () => {
                   name={checkboxField.name}
                   checked={formData[checkboxField.name]}
                   onChange={handleChange}
+                  sx={{
+                    color: "#fff",
+                  }}
                 />
               }
               label={checkboxField.label}
